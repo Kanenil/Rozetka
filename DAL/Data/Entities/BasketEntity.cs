@@ -9,10 +9,10 @@ namespace DAL.Data.Entities
     public class BasketEntity
     {
         public short Count { get; set; }
-        [ForeignKey("ProductId")]
+        [ForeignKey("Product")]
         public int ProductId { get; set; }
-        [ForeignKey("UserId")]
-        public short UserId { get; set; }
+        [ForeignKey("User")]
+        public int UserId { get; set; }
 
         public virtual ProductEntity Product { get; set; }
         public virtual UserEntity User { get; set; }
