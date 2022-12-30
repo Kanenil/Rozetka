@@ -1,0 +1,55 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <Style TargetType="TextBox" x:Key="PrimaryTextBoxStyle">
+        <Setter Property="Foreground" Value="{StaticResource PrimaryTextColor}"/>
+        <Setter Property="FontWeight" Value="Medium"/>
+        <Setter Property="Margin" Value="8"/>
+
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="TextBox">
+                    <Border CornerRadius="3"
+                            Background="{StaticResource SecundaryBackgroundColor}">
+                        <Grid>
+                            <TextBox VerticalAlignment="Stretch"
+                                     VerticalContentAlignment="Top"
+                                     HorizontalAlignment="Stretch"
+                                     Name="textBox"
+                                     FontSize="16"
+                                     Padding="7"
+                                     Background="Transparent"
+                                     TextWrapping="Wrap"
+                                     BorderThickness="0"
+                                     Foreground="{StaticResource SecundaryTextColor}"
+                                     CaretBrush="Gray"
+                                     Margin="8 0 0 0"
+                                     Text=""/>
+
+                            <TextBlock IsHitTestVisible="False"
+                                       Text="Вводьте сюди"
+                                       VerticalAlignment="Top"
+                                       FontSize="16"
+                                       HorizontalAlignment="Left"
+                                       Margin="16 8 0 0"
+                                       Foreground="{StaticResource SecundaryTextColor}">
+                                <TextBlock.Style>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding Text, ElementName=textBox}" Value="">
+                                                <Setter Property="Visibility" Value="Visible"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBlock.Style>
+                            </TextBlock>
+                        </Grid>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+
+    </Style>
+
+</ResourceDictionary>

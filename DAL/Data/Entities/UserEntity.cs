@@ -19,6 +19,7 @@ namespace DAL.Data.Entities
         public string Email { get; set; }
         [StringLength(255)]
         public string Password { get; set; }
-        public virtual ICollection<BasketEntity> Baskets { get;}
+        public virtual ICollection<BasketEntity> Baskets { get; set; }
+        public virtual ICollection<OrderEntity> Orders { get; set; } 
     }
 }
