@@ -19,5 +19,6 @@ namespace DAL.Data.Entities
         public virtual CategoryEntity Category { get; set; }
         public virtual ICollection<ProductImageEntity> Images { get; set; }
         public virtual ICollection<BasketEntity> Baskets { get; set; }
+        public virtual ICollection<OrderItemEntity> OrderItems { get; set; }
     }
 }
