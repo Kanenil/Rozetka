@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RozetkaUI.Pages;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,6 +24,11 @@ namespace RozetkaUI
         public MainWindow()
         {
             InitializeComponent();
+        }
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            pageFrame.Navigate(new AddProductPage());
         }
     }
 }
