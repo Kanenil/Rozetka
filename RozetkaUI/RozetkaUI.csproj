@@ -6,4 +6,22 @@
     <UseWPF>true</UseWPF>
   </PropertyGroup>
 
+  <ItemGroup>
+    <None Remove="Images\AppStore.png" />
+    <None Remove="Images\GooglePlay.png" />
+    <None Remove="Images\Logo.ico" />
+    <None Remove="Images\Logo.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Extended.Wpf.Toolkit" Version="4.5.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Images\AppStore.png" />
+    <Resource Include="Images\GooglePlay.png" />
+    <Resource Include="Images\Logo.ico" />
+    <Resource Include="Images\Logo.png" />
+  </ItemGroup>
+
 </Project>

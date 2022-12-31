@@ -1,31 +1,28 @@
 ﻿using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
-using System.Reflection;
-using System.Reflection.Metadata;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Markup;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace RozetkaUI.Windows
+namespace RozetkaUI.Pages
 {
     /// <summary>
-    /// Interaction logic for AddProductWindow.xaml
+    /// Interaction logic for AddProductPage.xaml
     /// </summary>
-    public partial class AddProductWindow : Window
+    public partial class AddProductPage : Page
     {
-        public AddProductWindow()
+        public AddProductPage()
         {
             InitializeComponent();
         }
-
         int lastIndex = 0;
 
         private void LoadPhoto_Click(object sender, RoutedEventArgs e)
@@ -39,7 +36,6 @@ namespace RozetkaUI.Windows
                     photosDockPanel.Children.Insert(photosDockPanel.Children.Count - 1, CreatePhoto(file));
             }
         }
-
         private Border CreatePhoto(string filePath)
         {
             /*
@@ -205,7 +201,7 @@ namespace RozetkaUI.Windows
             };
             delete.Click += DeletePhoto;
             grid.Children.Add(delete);
-            child.Child= grid;
+            child.Child = grid;
 
             child.Child = grid;
 
@@ -213,7 +209,6 @@ namespace RozetkaUI.Windows
 
             return main;
         }
-
         private void Image_MouseMove(object sender, MouseEventArgs e)
         {
             if (e.LeftButton == MouseButtonState.Pressed)
@@ -221,7 +216,6 @@ namespace RozetkaUI.Windows
                 DragDrop.DoDragDrop((Border)sender, (sender as Border).Name, DragDropEffects.Move);
             }
         }
-
         private void Image_Drop(object sender, DragEventArgs e)
         {
 
@@ -265,7 +259,6 @@ namespace RozetkaUI.Windows
 
             }
         }
-
         private void ChangePhoto(object sender, RoutedEventArgs e)
         {
             var mainName = (sender as Button).Name.Substring(0, (sender as Button).Name.IndexOf("Edit"));
@@ -290,7 +283,6 @@ namespace RozetkaUI.Windows
                 photosDockPanel.Children.Insert(index, CreatePhoto(fileDialog.FileName));
             }
         }
-
         private void DeletePhoto(object sender, RoutedEventArgs e)
         {
             var mainName = (sender as Button).Name.Substring(0, (sender as Button).Name.IndexOf("Delete"));
@@ -303,7 +295,6 @@ namespace RozetkaUI.Windows
                 }
             }
         }
-
         private void Button_Drop(object sender, DragEventArgs e)
         {
             if (e.Effects != DragDropEffects.None)
@@ -333,7 +324,7 @@ namespace RozetkaUI.Windows
 
             foreach (var f in files)
             {
-                
+
                 if (ImageExtensions.Contains(System.IO.Path.GetExtension(f).ToUpperInvariant()))
                 {
                     e.Effects = DragDropEffects.Move;
@@ -346,7 +337,20 @@ namespace RozetkaUI.Windows
                 }
             }
 
-            
+
+        }
+        private void add_Click(object sender, RoutedEventArgs e)
+        {
+            var title = productNameTextBox.Text;
+            var description = productDescriptionTextBox.Text;
+            var images = new List<string>();
+            for (int i = 0; i < photosDockPanel.Children.Count - 1; i++)
+            {
+                var photo = ((photosDockPanel.Children[i] as Border).Background as ImageBrush).ImageSource.ToString();
+                images.Add(photo);
+            }
+            var category = (categoriesComboBox.SelectedItem as ComboBoxItem).Content;
+            var price = priceTextBox.Text;
         }
     }
 }
