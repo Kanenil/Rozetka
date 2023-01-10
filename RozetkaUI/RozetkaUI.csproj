@@ -18,6 +18,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\DAL\DAL.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Resource Include="Images\AppStore.png" />
     <Resource Include="Images\GooglePlay.png" />
     <Resource Include="Images\Logo.ico" />

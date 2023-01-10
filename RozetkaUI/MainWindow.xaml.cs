@@ -1,4 +1,5 @@
-﻿using RozetkaUI.Pages;
+﻿using DAL.Data;
+using RozetkaUI.Pages;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,6 +25,7 @@ namespace RozetkaUI
         public MainWindow()
         {
             InitializeComponent();
+            DatabaseSeeder.Seed();
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
