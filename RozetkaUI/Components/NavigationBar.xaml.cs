@@ -56,5 +56,11 @@ namespace RozetkaUI.Components
             var mainWindow = (MainWindow)Application.Current.MainWindow;
             mainWindow.modalFrame.Navigate(new LoginPage());
         }
+
+        private void RegistrationClick(object sender, RoutedEventArgs e)
+        {
+            var mainWindow = (MainWindow)Application.Current.MainWindow;
+            mainWindow.modalFrame.Navigate(new RegistrationPage());
+        }
     }
 }

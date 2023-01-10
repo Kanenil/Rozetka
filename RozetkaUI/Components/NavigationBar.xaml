@@ -439,9 +439,11 @@
                             <StackPanel Orientation="Horizontal">
 
                                 <Button Style="{StaticResource LoginButtonMenu}"
-                                        Content="Вхід"/>
+                                        Content="Вхід"
+                                        Click="LoginClick"/>
                                 <Button Style="{StaticResource RegistartionButtonMenu}"
-                                        Content="Реєстрація"/>
+                                        Content="Реєстрація"
+                                        Click="RegistrationClick"/>
 
 
                             </StackPanel>

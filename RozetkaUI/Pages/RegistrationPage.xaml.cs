@@ -41,7 +41,8 @@ namespace RozetkaUI.Pages
 
         private void login_Click(object sender, RoutedEventArgs e)
         {
-            CloseModal();
+            var mainWindow = (MainWindow)Application.Current.MainWindow;
+            mainWindow.modalFrame.Navigate(new LoginPage());
         }
 
         private void ShowPassword_PreviewMouseDown(object sender, MouseButtonEventArgs e) => ShowPasswordFunction();
