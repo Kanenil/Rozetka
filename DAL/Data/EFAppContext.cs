@@ -21,7 +21,7 @@ namespace DAL.Data
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder
-                .UseNpgsql("Server=localhost;Port=5432;Database=teambv121;User Id=postgres;Password=123456;");
+                .UseNpgsql("Server=ep-restless-leaf-656128.eu-central-1.aws.neon.tech;Port=5432;Database=RozetkaDB;User Id=oleksandrburda2004;Password=4tudvL0JZDaT;SslMode=Require;");
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
