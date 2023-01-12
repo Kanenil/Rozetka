@@ -179,14 +179,24 @@
 
                 </StackPanel>
 
-                <Button Margin="30 25 0 50"
+                <StackPanel Orientation="Horizontal">
+                    <Button Margin="30 25 0 50"
                         HorizontalAlignment="Left"
                         Padding="10"
                         Click="add_Click"
                         Style="{StaticResource PrimaryButtonStyle}"
                         Content="Добавити продукт"/>
 
+                    <Button Margin="10 25 0 50"
+                        HorizontalAlignment="Left"
+                        Padding="10"
+                        Click="ReturnBackClick"
+                        Style="{StaticResource PrimaryButtonStyle}"
+                        Content="Повернутись назад"/>
 
+
+
+                </StackPanel>
             </StackPanel>
         </ScrollViewer>
 

@@ -6,6 +6,7 @@ using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Reflection.Metadata;
 using System.Text;
 using System.Threading;
 using System.Timers;
@@ -26,9 +27,11 @@ namespace RozetkaUI.Pages
     /// </summary>
     public partial class AddProductPage : Page
     {
-        public AddProductPage()
+        private CategoryEntityDTO _category;
+        public AddProductPage(CategoryEntityDTO category)
         {
             InitializeComponent();
+            _category = category;
         }
         int lastIndex = 0;
 
@@ -395,12 +398,13 @@ namespace RozetkaUI.Pages
             };
             await productService.CreateProduct(product);
 
+            _category.Products.Add(product);
+
             productNameTextBox.Text = "";
             productDescriptionTextBox.Text = "";
 
             photosDockPanel.Children.RemoveRange(0, photosDockPanel.Children.Count - 1);
 
-            categoriesComboBox.SelectedItem = null;
             priceTextBox.Text = "";
 
             var timer = new System.Timers.Timer();
@@ -423,8 +427,17 @@ namespace RozetkaUI.Pages
             var list = categoryService.GetCategories();
             foreach (var category in list)
             {
-                categoriesComboBox.Items.Add(new ComboBoxItem() { Content = category });
+                var item = new ComboBoxItem() { Content = category };
+                categoriesComboBox.Items.Add(item);
+                if (category.Id == _category.Id)
+                    categoriesComboBox.SelectedItem = item;
             }
+            categoriesComboBox.IsEnabled = false;
+        }
+
+        private void ReturnBackClick(object sender, RoutedEventArgs e)
+        {
+            (App.Current.MainWindow as MainWindow).pageFrame.Navigate(new ProductListPage(_category));
         }
     }
 }

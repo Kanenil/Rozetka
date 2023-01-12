@@ -1,4 +1,5 @@
-﻿using BAL.Interfaces;
+﻿using BAL.DTO.Models;
+using BAL.Interfaces;
 using BAL.Services;
 using DAL.Interfaces;
 using RozetkaUI.Pages;
@@ -88,8 +89,15 @@ namespace RozetkaUI.Components
 
         private void moveToCategory(object sender, RoutedEventArgs e)
         {
-            var content = ((sender as Button).TemplatedParent as ContentPresenter).Content;
-            
+            var content = (CategoryEntityDTO)((sender as Button).TemplatedParent as ContentPresenter).Content;
+            closeCategories.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+            (App.Current.MainWindow as MainWindow).pageFrame.Navigate(new ProductListPage(content));
+        }
+
+        private void CategoryMenu_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if (e.LeftButton == MouseButtonState.Pressed)
+                closeCategories.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
         }
     }
 }

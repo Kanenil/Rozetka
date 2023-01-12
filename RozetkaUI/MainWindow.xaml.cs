@@ -71,7 +71,7 @@ namespace RozetkaUI
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            pageFrame.Navigate(new AddProductPage());
+            //pageFrame.Navigate(new AddProductPage());
         }
     }
 }

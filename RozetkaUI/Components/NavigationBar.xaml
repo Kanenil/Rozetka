@@ -1030,12 +1030,12 @@
         </Grid>
 
         <Grid Grid.RowSpan="2">
-            <Grid Background="Black"
-                  Opacity="0.3"
-                  Name="CategoryMenu"
-                  Margin="0 0 0 5000">
-                <Grid.Triggers>
-                    <EventTrigger RoutedEvent="Grid.MouseDown">
+            <Button IsEnabled="False"
+                    Opacity="0"
+                    Margin="5000"
+                    Name="closeCategories">
+                <Button.Triggers>
+                    <EventTrigger RoutedEvent="Button.Click">
                         <EventTrigger.Actions>
                             <BeginStoryboard>
                                 <Storyboard>
@@ -1057,8 +1057,14 @@
                             </BeginStoryboard>
                         </EventTrigger.Actions>
                     </EventTrigger>
-                </Grid.Triggers>
-            </Grid>
+                </Button.Triggers>
+            </Button>
+            <Grid Background="Black"
+                  Opacity="0.3"
+                  Name="CategoryMenu"
+                  MouseDown="CategoryMenu_MouseDown"
+                  Margin="0 0 0 5000"/>
+
             <ItemsControl Grid.Row="1" 
                           HorizontalAlignment="Left"
                       Name="CategoryMenuMain"
