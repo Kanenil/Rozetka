@@ -3,15 +3,17 @@ using System;
 using DAL.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace DAL.Migrations
 {
     [DbContext(typeof(EFAppContext))]
-    partial class EFAppContextModelSnapshot : ModelSnapshot
+    [Migration("20230112181144_Added sales")]
+    partial class Addedsales
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -248,21 +250,6 @@ namespace DAL.Migrations
                     b.ToTable("tblSales");
                 });
 
-            modelBuilder.Entity("DAL.Data.Entities.Sales_ProductEntity", b =>
-                {
-                    b.Property<int>("SaleId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("ProductId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("SaleId", "ProductId");
-
-                    b.HasIndex("ProductId");
-
-                    b.ToTable("tblSales_ProductEnity");
-                });
-
             modelBuilder.Entity("DAL.Data.Entities.UserEntity", b =>
                 {
                     b.Property<int>("Id")
@@ -363,21 +350,6 @@ namespace DAL.Migrations
                     b.HasOne("DAL.Data.Entities.ProductEntity", "Product")
                         .WithMany("Images")
                         .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("DAL.Data.Entities.Sales_ProductEntity", b =>
-                {
-                    b.HasOne("DAL.Data.Entities.ProductEntity", "Product")
-                        .WithMany("Sales_Products")
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("DAL.Data.Entities.SaleEntity", "Sale")
-                        .WithMany("Sales_Products")
-                        .HasForeignKey("SaleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
