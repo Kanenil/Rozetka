@@ -1,4 +1,6 @@
-﻿using System;
+﻿using BAL.Interfaces;
+using BAL.Services;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Windows;
@@ -39,11 +41,41 @@ namespace RozetkaUI.Pages
             mainWindow.modalFrame.Navigate(null);
         }
 
-        private void login_Click(object sender, RoutedEventArgs e)
+        private async void login_Click(object sender, RoutedEventArgs e)
         {
             var login = loginTB.Text;
             var password = passwordHidden.Password;
-            CloseModal();
+
+            loginTB.BorderBrush = this.FindResource("PrimaryBackgroundColor") as SolidColorBrush;
+            passwordHidden.BorderBrush = this.FindResource("PrimaryBackgroundColor") as SolidColorBrush;
+
+            try
+            {
+                IUserService userService = new UserService();
+                var user = await userService.Login(new BAL.DTO.Models.UserEntityDTO()
+                {
+                    Email = login,
+                    Password = password
+                });
+
+                (App.Current.MainWindow as MainWindow).LoginedUser = user;
+
+                CloseModal();
+            }
+            catch (Exception ex)
+            {
+                switch (ex.Message)
+                {
+                    case "login error":
+                        loginTB.BorderBrush = new SolidColorBrush(Colors.Red);
+                        loginTB.Focus();
+                        break;
+                    case "password error":
+                        passwordHidden.BorderBrush = new SolidColorBrush(Colors.Red);
+                        passwordHidden.Focus();
+                        break;
+                }
+            }
         }
 
         private void ShowPassword_PreviewMouseDown(object sender, MouseButtonEventArgs e) => ShowPasswordFunction();

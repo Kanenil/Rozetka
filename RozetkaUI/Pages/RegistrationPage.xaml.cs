@@ -1,6 +1,9 @@
-﻿using System;
+﻿using BAL.Interfaces;
+using BAL.Services;
+using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -63,7 +66,7 @@ namespace RozetkaUI.Pages
             passwordHidden.Foreground = this.FindResource("SecundaryTextColor") as SolidColorBrush;
         }
 
-        private void Register_Click(object sender, RoutedEventArgs e)
+        private async void Register_Click(object sender, RoutedEventArgs e)
         {
             var firstName = firstNameTB.Text;
             var secondName = secondNameTB.Text;
@@ -71,7 +74,84 @@ namespace RozetkaUI.Pages
             var email = emailTB.Text;
             var password = passwordHidden.Password;
 
-            CloseModal();
+            if (!Validate(firstName, secondName, email, password))
+                return;
+
+            try
+            {
+                IUserService userService = new UserService();
+                var user = new BAL.DTO.Models.UserEntityDTO()
+                {
+                    FirstName = firstName,
+                    SecondName = secondName,
+                    Phone = phone,
+                    Email = email,
+                    Password = password
+                };
+                await userService.Registrate(user);
+
+                (App.Current.MainWindow as MainWindow).LoginedUser = user;
+
+                CloseModal();
+            }
+            catch (Exception ex)
+            {
+                switch (ex.Message)
+                {
+                    case "email error":
+                        emailTB.BorderBrush = new SolidColorBrush(Colors.Red);
+                        emailTB.Focus();
+                        break;
+                    case "phone error":
+                        phoneTB.BorderBrush = new SolidColorBrush(Colors.Red);
+                        phoneTB.Focus();
+                        break;
+                }
+            }
+
+        }
+
+        private bool Validate(string firstName, string secondName, string email, string password)
+        {
+            bool isValid = true;
+
+            firstNameTB.BorderBrush = this.FindResource("PrimaryBackgroundColor") as SolidColorBrush;
+            secondNameTB.BorderBrush = this.FindResource("PrimaryBackgroundColor") as SolidColorBrush;
+            phoneTB.BorderBrush = this.FindResource("PrimaryBackgroundColor") as SolidColorBrush;
+            emailTB.BorderBrush = this.FindResource("PrimaryBackgroundColor") as SolidColorBrush;
+            passwordHidden.BorderBrush = this.FindResource("PrimaryBackgroundColor") as SolidColorBrush;
+
+            if (firstName.Length == 0)
+            {
+                firstNameTB.BorderBrush = new SolidColorBrush(Colors.Red);
+                isValid = false;
+            }
+
+            if (secondName.Length == 0)
+            {
+                secondNameTB.BorderBrush = new SolidColorBrush(Colors.Red);
+                isValid = false;
+            }
+
+            if (phoneTB.Text.Contains('_'))
+            {
+                phoneTB.BorderBrush = new SolidColorBrush(Colors.Red);
+                isValid = false;
+            }
+
+            if (!Regex.IsMatch(email, @"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$"))
+            {
+                emailTB.BorderBrush = new SolidColorBrush(Colors.Red);
+                isValid = false;
+            }
+
+            if (password.Length == 0)
+            {
+                passwordHidden.BorderBrush = new SolidColorBrush(Colors.Red);
+                isValid = false;
+            }
+
+            return isValid;
         }
     }
 }

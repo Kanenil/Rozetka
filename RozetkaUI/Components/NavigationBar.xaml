@@ -7,6 +7,7 @@
              mc:Ignorable="d" 
              d:DesignHeight="1080" d:DesignWidth="1920"
              SizeChanged="UserControl_SizeChanged"
+             Loaded="navBar_Loaded"
              Name="navBar">
 
     <UserControl.Resources>
@@ -14,6 +15,7 @@
 
             <Setter Property="Foreground" Value="{StaticResource PrimaryTextColor}"/>
             <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Visibility" Value="Visible"/>
             <Setter Property="BorderThickness" Value="0"/>
             <Setter Property="Margin" Value="10 -10 0 0"/>
             <Setter Property="FontSize" Value="20"/>
@@ -41,6 +43,9 @@
                     <Setter Property="Background" Value="Transparent"/>
                     <Setter Property="Cursor" Value="Hand"/>
                 </Trigger>
+                <DataTrigger Binding="{Binding IsLogined}" Value="true">
+                    <Setter Property="Visibility" Value="Collapsed"/>
+                </DataTrigger>
             </Style.Triggers>
 
         </Style>
@@ -49,6 +54,7 @@
             <Setter Property="Foreground" Value="{StaticResource PrimaryTextColor}"/>
             <Setter Property="Background" Value="Transparent"/>
             <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Visibility" Value="Visible"/>
             <Setter Property="Margin" Value="10 -10 0 0"/>
             <Setter Property="FontSize" Value="20"/>
             <Setter Property="Cursor" Value="{x:Null}"/>
@@ -72,6 +78,9 @@
                     <Setter Property="Background" Value="Transparent"/>
                     <Setter Property="Cursor" Value="Hand"/>
                 </Trigger>
+                <DataTrigger Binding="{Binding IsLogined}" Value="true">
+                    <Setter Property="Visibility" Value="Collapsed"/>
+                </DataTrigger>
             </Style.Triggers>
 
         </Style>
@@ -181,6 +190,7 @@
                 </Trigger>
             </Style.Triggers>
         </Style>
+        <BooleanToVisibilityConverter x:Key="VisibleIfTrueConverter" />
     </UserControl.Resources>
 
     <Grid>
@@ -261,12 +271,34 @@
                 Padding="7 7 7 7"
                 Grid.Column="3"
                 Name="categoriesButton">
+                    <Button.Triggers>
+                        <EventTrigger RoutedEvent="Button.Click">
+                            <EventTrigger.Actions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <ThicknessAnimationUsingKeyFrames Storyboard.TargetProperty="Margin" Storyboard.TargetName="CategoryMenuMain" BeginTime="00:00:00">
+                                            <SplineThicknessKeyFrame KeyTime="00:00:00"
+                                         Value="20 -600 0 0"/>
+                                            <SplineThicknessKeyFrame KeyTime="0:0:.2"
+                                         Value="20 60 0 0"/>
+                                        </ThicknessAnimationUsingKeyFrames>
+                                        <ThicknessAnimationUsingKeyFrames Storyboard.TargetProperty="Margin" Storyboard.TargetName="CategoryMenu" BeginTime="00:00:00">
+                                            <SplineThicknessKeyFrame KeyTime="00:00:00"
+                                                                     Value="0 0 0 5000"/>
+                                            <SplineThicknessKeyFrame KeyTime="0:0:.01"
+                                                                     Value="0 0 0 0"/>
+                                        </ThicknessAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </EventTrigger.Actions>
+                        </EventTrigger>
+                    </Button.Triggers>
                     <StackPanel Orientation="Horizontal">
                         <Path Data="{StaticResource CatalogMenu}"
-                  Stretch="Uniform"
-                  Width="20" Height="20"
-                  Fill="{StaticResource PrimaryTextColor}"
-                  HorizontalAlignment="Center">
+                              Stretch="Uniform"
+                              Width="20" Height="20"
+                              Fill="{StaticResource PrimaryTextColor}"
+                              HorizontalAlignment="Center">
                             <Path.LayoutTransform>
                                 <MatrixTransform Matrix="1 0 0 -1 1 0"/>
                             </Path.LayoutTransform>
@@ -313,23 +345,64 @@
                 Margin="0 3 0 0"
                 Content="Знайти"/>
 
-                <Button Style="{StaticResource TransperentButtonStyle}"
+                <StackPanel Grid.Column="6">
+                    <StackPanel.Style>
+                        <Style TargetType="StackPanel">
+                            <Setter Property="Visibility" Value="Visible"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsLogined}" Value="true">
+                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </StackPanel.Style>
+                    <Button Style="{StaticResource TransperentButtonStyle}"
+                        Click="LoginClick"
+                        VerticalAlignment="Top"
+                        Margin="10 3 0 0"
+                        Grid.Column="6"
+                        Padding="7">
+                        <Path Data="{StaticResource Account}"
+                              Stretch="Uniform"
+                              Width="20" Height="20"
+                              Fill="{StaticResource PrimaryTextColor}"
+                              HorizontalAlignment="Center">
+                            <Path.LayoutTransform>
+                                <MatrixTransform Matrix="1 0 0 -1 1 0"/>
+                            </Path.LayoutTransform>
+                        </Path>
+                    </Button>
+                </StackPanel>
+
+                <StackPanel Grid.Column="6">
+                    <StackPanel.Style>
+                        <Style TargetType="StackPanel">
+                            <Setter Property="Visibility" Value="Collapsed"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsLogined}" Value="true">
+                                    <Setter Property="Visibility" Value="Visible"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </StackPanel.Style>
+                    <Button Style="{StaticResource TransperentButtonStyle}"
                         Click="LoginClick"
                 VerticalAlignment="Top"
                 Margin="10 3 0 0"
                 Grid.Column="6"
                 Padding="7">
-                    <Path Data="{StaticResource Account}"
+                        <Path Data="{StaticResource Orders}"
                   Stretch="Uniform"
                   Width="20" Height="20"
                   Fill="{StaticResource PrimaryTextColor}"
                   HorizontalAlignment="Center">
-                        <Path.LayoutTransform>
-                            <MatrixTransform Matrix="1 0 0 -1 1 0"/>
-                        </Path.LayoutTransform>
-                    </Path>
-                </Button>
-
+                            <Path.LayoutTransform>
+                                <MatrixTransform Matrix="1 0 0 -1 1 0"/>
+                            </Path.LayoutTransform>
+                        </Path>
+                    </Button>
+                </StackPanel>
+                
                 <Button Style="{StaticResource TransperentButtonStyle}"
                 VerticalAlignment="Top"
                 Margin="10 3 0 0"
@@ -356,7 +429,7 @@
                   Margin="0 0 5000 0"
                   MouseDown="Back_MouseDown"/>
             <ScrollViewer HorizontalAlignment="Left"
-                      Background="{StaticResource PrimaryBackgroundColor}"
+                      Background="White"
                       Name="main"
                       Grid.RowSpan="2"
                       Width="350"
@@ -364,20 +437,24 @@
                           Grid.Column="0"
                           VerticalScrollBarVisibility="Auto">
                 <StackPanel>
-                    <StackPanel Orientation="Horizontal"
-                                Margin="0 15 0 0">
-                        <Image Grid.Column="1"
+
+                    <StackPanel Background="{StaticResource PrimaryBackgroundColor}">
+                        <StackPanel Orientation="Horizontal"
+                                VerticalAlignment="Center"
+                                Margin="0 15 0 0"
+                                Background="{StaticResource PrimaryBackgroundColor}">
+                            <Image Grid.Column="1"
                            Source="/Images/Logo.png"
                            Width="35" Height="35"
                            VerticalAlignment="Top"
                            Margin="10 2 0 0"/>
-                        <TextBlock Grid.Column="2"
+                            <TextBlock Grid.Column="2"
                                Style="{StaticResource PrimaryHeaderTextBlockStyle}"
                                FontSize="29"
                                FontWeight="ExtraBlack"
                                Text="ROZETKA"
                                Margin="3 0 0 0"/>
-                        <Button Style="{StaticResource TransperentButtonStyle}"
+                            <Button Style="{StaticResource TransperentButtonStyle}"
                                 VerticalAlignment="Top"
                                 Margin="110 3 0 0"
                                 Padding="13"
@@ -416,11 +493,11 @@
                                 </EventTrigger>
                             </Button.Triggers>
                         </Button>
-                    </StackPanel>
-                    <StackPanel Orientation="Horizontal"
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal"
                                 Name="profile"
-                                Margin="10 30 0 0">
-                        <Border Width="45" Height="45"
+                                Margin="10 24 0 10">
+                            <Border Width="45" Height="45"
                                 CornerRadius="30"
                                 Background="#FF393636">
                             <Path Data="{StaticResource Account}"
@@ -434,33 +511,82 @@
                                 </Path.LayoutTransform>
                             </Path>
                         </Border>
-                        <StackPanel>
+                            <StackPanel >
 
                             <StackPanel Orientation="Horizontal">
 
-                                <Button Style="{StaticResource LoginButtonMenu}"
+                                    <Button Style="{StaticResource LoginButtonMenu}"
                                         Content="Вхід"
                                         Click="LoginClick"/>
-                                <Button Style="{StaticResource RegistartionButtonMenu}"
+                                    <Button Style="{StaticResource RegistartionButtonMenu}"
                                         Content="Реєстрація"
                                         Click="RegistrationClick"/>
+
+                                    <TextBlock Style="{StaticResource PrimaryHeaderTextBlockStyle}"
+                                           Text="{Binding LoginedUser.FirstName}"
+                                           Margin="10 0 0 0"/>
+                                <TextBlock Style="{StaticResource PrimaryHeaderTextBlockStyle}"
+                                           Text="{Binding LoginedUser.SecondName}"
+                                           Margin="5 0 0 0"/>
 
 
                             </StackPanel>
 
-                            <TextBlock Text="Авторизуйтесь для отримання розширених можливостей"
+                                <TextBlock Text="Авторизуйтесь для отримання розширених можливостей"
+                                           Name="tipProfile"
                                        Margin="10 0 0 0"
                                        Width="200"
                                        Style="{StaticResource CommonText}"/>
 
+                            </StackPanel>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal"
+                                Name="loginedProfile"
+                                Margin="10 30 0 10"
+                                    Visibility="Collapsed">
+                            <StackPanel.Style>
+                                <Style TargetType="StackPanel">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding IsLogined}" Value="true">
+                                            <Setter Property="Visibility" Value="Visible"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </StackPanel.Style>
+                            <Border Width="45" Height="45"
+                                CornerRadius="30"
+                                Background="#FF393636">
+                                <Path Data="{StaticResource Account}"
+                                  Stretch="Uniform"
+                                  Margin="0 0 0 0"
+                                  Width="30" Height="30"
+                                  Fill="{StaticResource PrimaryTextColor}"
+                                  HorizontalAlignment="Center">
+                                    <Path.LayoutTransform>
+                                        <MatrixTransform Matrix="1 0 0 -1 1 0"/>
+                                    </Path.LayoutTransform>
+                                </Path>
+                            </Border>
+                            <StackPanel >
+
+                                <StackPanel Orientation="Horizontal">
+
+                                    
+
+
+                                </StackPanel>
+
+                            </StackPanel>
                         </StackPanel>
                     </StackPanel>
-                    <StackPanel Background="White" 
-                                Margin="0 17 0 0">
+
+                    <StackPanel Margin="0 17 0 0">
 
                         <Button HorizontalAlignment="Left"
                                 Style="{StaticResource MenuItem}"
-                                x:Name="catalogButton">
+                                x:Name="catalogButton"
+                                Click="catalogButton_Click">
+                            
                             <StackPanel Orientation="Horizontal"
                                         HorizontalAlignment="Left">
 
@@ -581,7 +707,8 @@
 
                         <Button HorizontalAlignment="Left"
                                 Style="{StaticResource MenuItem}"
-                                x:Name="ordersButton">
+                                x:Name="ordersButton"
+                                Visibility="{Binding IsLogined, Converter={StaticResource VisibleIfTrueConverter}}">
                             <StackPanel Orientation="Horizontal"
                                         HorizontalAlignment="Left">
 
@@ -703,7 +830,7 @@
                                    FontSize="18"/>
 
                         <StackPanel Orientation="Horizontal"
-                                    Margin="10 0">
+                                    Margin="10 0 0 10">
 
                             <Button Style="{StaticResource IconButton}"
                                     x:Name="facebookButton"
@@ -873,14 +1000,16 @@
 
                         </StackPanel>
 
-                        <Separator Background="Gray" Margin="0 10 0 0"/>
+                        <StackPanel Visibility="{Binding IsLogined, Converter={StaticResource VisibleIfTrueConverter}}">
+                            <Separator Background="Gray" Margin="0 10 0 0"/>
 
-                        <Button HorizontalAlignment="Left"
-                                Style="{StaticResource MenuItem}"
-                                x:Name="exitButton">
-                            <StackPanel Orientation="Horizontal"
+                            <Button HorizontalAlignment="Left"
+                                    Style="{StaticResource MenuItem}"
+                                    x:Name="exitButton"
+                                    Click="LogoutClick">
+                                <StackPanel Orientation="Horizontal"
                                         HorizontalAlignment="Left">
-                                <TextBlock Style="{StaticResource PrimaryHeaderTextBlockStyle}"
+                                    <TextBlock Style="{StaticResource PrimaryHeaderTextBlockStyle}"
                                            VerticalAlignment="Center"
                                            Foreground="#221f1f"
                                            Text="Вийти з аккаунта"
@@ -888,13 +1017,88 @@
                                            FontSize="20"
                                            Padding="7"
                                            Margin="4 0 0 0"/>
-                            </StackPanel>
+                                </StackPanel>
 
-                        </Button>
+                            </Button>
 
+                        </StackPanel>
                     </StackPanel>
+
+
                 </StackPanel>
             </ScrollViewer>
+        </Grid>
+
+        <Grid Grid.RowSpan="2">
+            <Grid Background="Black"
+                  Opacity="0.3"
+                  Name="CategoryMenu"
+                  Margin="0 0 0 5000">
+                <Grid.Triggers>
+                    <EventTrigger RoutedEvent="Grid.MouseDown">
+                        <EventTrigger.Actions>
+                            <BeginStoryboard>
+                                <Storyboard>
+                                    <ThicknessAnimationUsingKeyFrames Storyboard.TargetProperty="Margin" Storyboard.TargetName="CategoryMenuMain" BeginTime="00:00:00">
+                                        <SplineThicknessKeyFrame KeyTime="00:00:00"
+                                                                             Value="20 60 0 0"/>
+                                        <SplineThicknessKeyFrame KeyTime="0:0:.2"
+                                                                             Value="20 -600 0 0"/>
+                                    </ThicknessAnimationUsingKeyFrames>
+                                    <ThicknessAnimationUsingKeyFrames Storyboard.TargetProperty="Margin" Storyboard.TargetName="CategoryMenu" BeginTime="00:00:00">
+                                        <SplineThicknessKeyFrame KeyTime="00:00:00"
+                                                                             Value="0 0 0 0"/>
+                                        <SplineThicknessKeyFrame KeyTime="0:0:.2"
+                                                                             Value="0 0 0 0"/>
+                                        <SplineThicknessKeyFrame KeyTime="0:0:.2"
+                                                                             Value="0 0 0 5000"/>
+                                    </ThicknessAnimationUsingKeyFrames>
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger.Actions>
+                    </EventTrigger>
+                </Grid.Triggers>
+            </Grid>
+            <ItemsControl Grid.Row="1" 
+                          HorizontalAlignment="Left"
+                      Name="CategoryMenuMain"
+                      Grid.RowSpan="2"
+                      MaxHeight="500"
+                      VerticalAlignment="Top"
+                      Margin="20 -600 0 0"
+                      Grid.Column="0">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Button Style="{StaticResource CategiriesButtonStyle}"
+                                Margin="5 5 5 3"
+                                HorizontalContentAlignment="Center"
+                                Click="moveToCategory">
+                            <StackPanel Orientation="Horizontal">
+                                <Border Width="60" Height="60"
+                                        CornerRadius="30"
+                                        Margin="5 0 5 0">
+                                    <Border.Background>
+                                        <ImageBrush ImageSource="{Binding Image}"/>
+                                    </Border.Background>
+                                </Border>
+                                <TextBlock Text="{Binding Name}"
+                                           Style="{StaticResource PrimaryHeaderTextBlockStyle}"
+                                           VerticalAlignment="Center"
+                                           Margin="0 0 5 0"/>
+                            </StackPanel>
+                        </Button>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+                <ItemsControl.Template>
+                    <ControlTemplate>
+                        <Border CornerRadius="4" Background="White" Padding="{TemplateBinding Padding}">
+                            <ScrollViewer x:Name="ScrollViewer">
+                                <ItemsPresenter />
+                            </ScrollViewer>
+                        </Border>
+                    </ControlTemplate>
+                </ItemsControl.Template>
+            </ItemsControl>
         </Grid>
 
     </Grid>

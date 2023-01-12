@@ -1,4 +1,7 @@
-﻿using RozetkaUI.Pages;
+﻿using BAL.Interfaces;
+using BAL.Services;
+using DAL.Interfaces;
+using RozetkaUI.Pages;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -53,14 +56,40 @@ namespace RozetkaUI.Components
 
         private void LoginClick(object sender, RoutedEventArgs e)
         {
-            var mainWindow = (MainWindow)Application.Current.MainWindow;
-            mainWindow.modalFrame.Navigate(new LoginPage());
+            if (!(App.Current.MainWindow as MainWindow).IsLogined)
+            {
+                var mainWindow = (MainWindow)Application.Current.MainWindow;
+                mainWindow.modalFrame.Navigate(new LoginPage());
+            }
         }
 
         private void RegistrationClick(object sender, RoutedEventArgs e)
         {
             var mainWindow = (MainWindow)Application.Current.MainWindow;
             mainWindow.modalFrame.Navigate(new RegistrationPage());
+        }
+
+        private void LogoutClick(object sender, RoutedEventArgs e)
+        {
+            (App.Current.MainWindow as MainWindow).LoginedUser = null;
+        }
+
+        private void navBar_Loaded(object sender, RoutedEventArgs e)
+        {
+            ICategoryService categoryService = new CategoryService();
+            CategoryMenuMain.ItemsSource = categoryService.GetCategories();
+        }
+
+        private void catalogButton_Click(object sender, RoutedEventArgs e)
+        {
+            closeMenu.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+            categoriesButton.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+        }
+
+        private void moveToCategory(object sender, RoutedEventArgs e)
+        {
+            var content = ((sender as Button).TemplatedParent as ContentPresenter).Content;
+            
         }
     }
 }

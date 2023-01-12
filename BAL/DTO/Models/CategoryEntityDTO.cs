@@ -9,5 +9,6 @@ namespace BAL.DTO.Models
         public string Name { get; set; }
         public string Image { get; set; }
         public virtual ICollection<ProductEntityDTO> Products { get; set; }
+        public override string ToString() => Name;
     }
 }

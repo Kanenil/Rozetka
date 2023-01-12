@@ -13,7 +13,7 @@ namespace DAL.Repository
     public class GenericRepository<TEntity> : IGenericRepository<TEntity, int>
         where TEntity : class, IEntity<int>
     {
-        private readonly EFAppContext _dbContext;
+        protected readonly EFAppContext _dbContext;
         public GenericRepository(EFAppContext context)
         {
             _dbContext = context;
