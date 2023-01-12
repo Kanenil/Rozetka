@@ -7,6 +7,7 @@
       mc:Ignorable="d" 
       d:DesignHeight="950" d:DesignWidth="1000"
       Title="AddProductPage"
+      Loaded="Page_Loaded"
       Background="{StaticResource ThirdBackgroundColor}">
 
     <Page.Resources>
@@ -82,6 +83,8 @@
                 <TextBox Style="{StaticResource PrimaryTextBoxStyle}"
                          Background="{StaticResource SecundaryBackgroundColor}"
                          Tag="Вводьте сюди"
+                         AcceptsReturn="True"
+                         AcceptsTab="True"
                          TextWrapping="Wrap"
                          FontWeight="SemiBold"
                          Width="550"
@@ -157,10 +160,7 @@
                               Height="33"
                               HorizontalAlignment="Left"
                               Style="{StaticResource PrimaryComboBoxStyle}"
-                              Name="categoriesComboBox">
-                            <ComboBoxItem>Ноутбуки та комп’ютери</ComboBoxItem>
-                            <ComboBoxItem>Побутова техніка</ComboBoxItem>
-                        </ComboBox>
+                              Name="categoriesComboBox"/>
                     </StackPanel>
 
                     <StackPanel>
@@ -179,14 +179,24 @@
 
                 </StackPanel>
 
-                <Button Margin="30 25 0 50"
-                    HorizontalAlignment="Left"
-                    Padding="10"
+                <StackPanel Orientation="Horizontal">
+                    <Button Margin="30 25 0 50"
+                        HorizontalAlignment="Left"
+                        Padding="10"
                         Click="add_Click"
-                    Style="{StaticResource PrimaryButtonStyle}"
-                    Content="Добавити продукт"/>
+                        Style="{StaticResource PrimaryButtonStyle}"
+                        Content="Добавити продукт"/>
+
+                    <Button Margin="10 25 0 50"
+                        HorizontalAlignment="Left"
+                        Padding="10"
+                        Click="ReturnBackClick"
+                        Style="{StaticResource PrimaryButtonStyle}"
+                        Content="Повернутись назад"/>
 
 
+
+                </StackPanel>
             </StackPanel>
         </ScrollViewer>
 

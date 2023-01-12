@@ -1,7 +1,15 @@
-﻿using Microsoft.Win32;
+﻿using BAL.DTO.Models;
+using BAL.Interfaces;
+using BAL.Services;
+using BAL.Utilities;
+using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Reflection.Metadata;
 using System.Text;
+using System.Threading;
+using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -19,9 +27,11 @@ namespace RozetkaUI.Pages
     /// </summary>
     public partial class AddProductPage : Page
     {
-        public AddProductPage()
+        private CategoryEntityDTO _category;
+        public AddProductPage(CategoryEntityDTO category)
         {
             InitializeComponent();
+            _category = category;
         }
         int lastIndex = 0;
 
@@ -157,7 +167,7 @@ namespace RozetkaUI.Pages
                 Style = this.Resources["CardButton"] as Style,
                 VerticalAlignment = VerticalAlignment.Bottom,
                 Margin = new Thickness(31, 0, 67, 10),
-                Content = new Path()
+                Content = new System.Windows.Shapes.Path()
                 {
                     Data = this.FindResource("EditImage") as PathGeometry,
                     Stretch = Stretch.Uniform,
@@ -182,7 +192,7 @@ namespace RozetkaUI.Pages
                 Style = this.Resources["CardButton"] as Style,
                 VerticalAlignment = VerticalAlignment.Bottom,
                 Margin = new Thickness(67, 0, 31, 10),
-                Content = new Path()
+                Content = new System.Windows.Shapes.Path()
                 {
                     Data = this.FindResource("Delete") as PathGeometry,
                     Stretch = Stretch.Uniform,
@@ -339,7 +349,7 @@ namespace RozetkaUI.Pages
 
 
         }
-        private void add_Click(object sender, RoutedEventArgs e)
+        private async void add_Click(object sender, RoutedEventArgs e)
         {
             var title = productNameTextBox.Text;
             var description = productDescriptionTextBox.Text;
@@ -347,10 +357,87 @@ namespace RozetkaUI.Pages
             for (int i = 0; i < photosDockPanel.Children.Count - 1; i++)
             {
                 var photo = ((photosDockPanel.Children[i] as Border).Background as ImageBrush).ImageSource.ToString();
-                images.Add(photo);
+                images.Add(photo.Substring(8));
             }
-            var category = (categoriesComboBox.SelectedItem as ComboBoxItem).Content;
-            var price = priceTextBox.Text;
+            var category = (CategoryEntityDTO)(categoriesComboBox.SelectedItem as ComboBoxItem).Content;
+            decimal price;
+
+            try
+            {
+                price = decimal.Parse(priceTextBox.Text);
+            }
+            catch (Exception)
+            {
+                priceTextBox.BorderBrush = Brushes.Red;
+                priceTextBox.Focus();
+                return;
+            }
+
+            var imagesList = new List<ProductImageEntityDTO>();
+            short priority = 0;
+            foreach (var image in images)
+            {
+                imagesList.Add(new ProductImageEntityDTO()
+                {
+                    Name = PhotoSaver.UploadImage(File.ReadAllBytes(image)),
+                    DateCreated= DateTime.Now,
+                    Priority = ++priority
+                });
+            }
+
+            IProductService productService = new ProductService();
+            var product = new BAL.DTO.Models.ProductEntityDTO()
+            {
+               Images = imagesList,
+               CategoryId = category.Id,
+               Category = category,
+               DateCreated= DateTime.Now,
+               Description= description,
+               Name = title,
+               Price = price,
+            };
+            await productService.CreateProduct(product);
+
+            _category.Products.Add(product);
+
+            productNameTextBox.Text = "";
+            productDescriptionTextBox.Text = "";
+
+            photosDockPanel.Children.RemoveRange(0, photosDockPanel.Children.Count - 1);
+
+            priceTextBox.Text = "";
+
+            var timer = new System.Timers.Timer();
+            (sender as Button).Content = "Успішно добавлено";
+            timer.Interval = 5000;
+            timer.Elapsed += (s, e) =>
+            {
+                App.Current.Dispatcher.Invoke(() =>
+                {
+                    (sender as Button).Content = "Добавити продукт";
+                    timer.Stop();
+                });
+            };
+            timer.Start();
+        }
+
+        private void Page_Loaded(object sender, RoutedEventArgs e)
+        {
+            ICategoryService categoryService = new CategoryService();
+            var list = categoryService.GetCategories();
+            foreach (var category in list)
+            {
+                var item = new ComboBoxItem() { Content = category };
+                categoriesComboBox.Items.Add(item);
+                if (category.Id == _category.Id)
+                    categoriesComboBox.SelectedItem = item;
+            }
+            categoriesComboBox.IsEnabled = false;
+        }
+
+        private void ReturnBackClick(object sender, RoutedEventArgs e)
+        {
+            (App.Current.MainWindow as MainWindow).pageFrame.Navigate(new ProductListPage(_category));
         }
     }
 }

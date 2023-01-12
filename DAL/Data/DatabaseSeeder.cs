@@ -108,7 +108,7 @@ namespace DAL.Data
                 dataContext.Products.Add(lenovoIdeaPad);
                 #endregion
                 #region Комп'ютери
-                var computers = categories.Where(c => c.Name == "Ноутбуки").First().Id;
+                var computers = categories.Where(c => c.Name == "Комп'ютери").First().Id;
 
                 var artlineGaming = new ProductEntity
                 {

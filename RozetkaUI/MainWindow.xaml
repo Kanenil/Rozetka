@@ -14,13 +14,14 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="60"/>
-            <RowDefinition/>
+            <RowDefinition Height="235*"/>
+            <RowDefinition Height="152*"/>
         </Grid.RowDefinitions>
 
-        <components:NavigationBar Grid.RowSpan="2" Panel.ZIndex="1"/>
+        <components:NavigationBar x:Name="navBar" Grid.RowSpan="3" Panel.ZIndex="1"/>
 
         <ScrollViewer Grid.Row="1" 
-                      VerticalScrollBarVisibility="Auto">
+                      VerticalScrollBarVisibility="Auto" Grid.RowSpan="2">
             <Frame x:Name="pageFrame"
                    NavigationUIVisibility="Hidden"/>
         </ScrollViewer>
@@ -28,7 +29,7 @@
         <Frame x:Name="modalFrame"
                NavigationUIVisibility="Hidden"
                Panel.ZIndex="10"
-               Grid.RowSpan="2"/>
+               Grid.RowSpan="3"/>
 
     </Grid>
 </Window>
