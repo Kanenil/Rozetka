@@ -9,5 +9,7 @@ namespace BAL.Interfaces
     public interface IProductService
     {
         Task CreateProduct(ProductEntityDTO entity);
+        Task EditProduct(ProductEntityDTO entity);
+        Task DeleteProduct(ProductEntityDTO entity);
     }
 }

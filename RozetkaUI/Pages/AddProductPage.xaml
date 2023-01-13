@@ -183,6 +183,7 @@
                     <Button Margin="30 25 0 50"
                         HorizontalAlignment="Left"
                         Padding="10"
+                        Name="submit"
                         Click="add_Click"
                         Style="{StaticResource PrimaryButtonStyle}"
                         Content="Добавити продукт"/>

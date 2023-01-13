@@ -1,4 +1,6 @@
 ﻿using BAL.DTO.Models;
+using BAL.Interfaces;
+using BAL.Services;
 using System;
 using System.Collections.Generic;
 using System.Reflection.Metadata;
@@ -37,6 +39,26 @@ namespace RozetkaUI.Pages
         private void AddProduct(object sender, RoutedEventArgs e)
         {
             (App.Current.MainWindow as MainWindow).pageFrame.Navigate(new AddProductPage(Category));
+        }
+
+        private void EditProduct(object sender, RoutedEventArgs e)
+        {
+            var content = (ProductEntityDTO)((sender as Button).TemplatedParent as ContentPresenter).Content;
+            (App.Current.MainWindow as MainWindow).pageFrame.Navigate(new AddProductPage(Category, content));
+            e.Handled = true;
+        }
+
+        private async void DeleteProduct(object sender, RoutedEventArgs e)
+        {
+            e.Handled = true;
+            var content = (ProductEntityDTO)((sender as Button).TemplatedParent as ContentPresenter).Content;
+            if (MessageBox.Show($"Видалити {content.Name}?","Увага", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+            {
+                IProductService productService = new ProductService();
+                await productService.DeleteProduct(content);
+                Category.Products.Remove(content);
+                CollectionViewSource.GetDefaultView(Category.Products).Refresh();
+            }
         }
     }
 }

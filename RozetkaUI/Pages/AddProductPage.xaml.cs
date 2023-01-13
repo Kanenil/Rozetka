@@ -6,6 +6,7 @@ using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection.Metadata;
 using System.Text;
 using System.Threading;
@@ -28,10 +29,23 @@ namespace RozetkaUI.Pages
     public partial class AddProductPage : Page
     {
         private CategoryEntityDTO _category;
-        public AddProductPage(CategoryEntityDTO category)
+        private ProductEntityDTO _product;
+        public AddProductPage(CategoryEntityDTO category, ProductEntityDTO product = null)
         {
             InitializeComponent();
             _category = category;
+            _product = product;
+
+            if (_product != null)
+            {
+                submit.Content = "Відредагувати";
+
+                productNameTextBox.Text = _product.Name;
+                productDescriptionTextBox.Text = _product.Description;
+                priceTextBox.Text = _product.Price.ToString();
+                foreach (var image in _product.Images)
+                    photosDockPanel.Children.Insert(photosDockPanel.Children.Count - 1, CreatePhoto(image.Name));
+            }
         }
         int lastIndex = 0;
 
@@ -365,6 +379,8 @@ namespace RozetkaUI.Pages
             try
             {
                 price = decimal.Parse(priceTextBox.Text);
+                if (price < 0)
+                    throw new Exception();
             }
             catch (Exception)
             {
@@ -373,52 +389,109 @@ namespace RozetkaUI.Pages
                 return;
             }
 
-            var imagesList = new List<ProductImageEntityDTO>();
-            short priority = 0;
-            foreach (var image in images)
+            IProductService productService = new ProductService();
+
+            if (_product == null)
             {
-                imagesList.Add(new ProductImageEntityDTO()
+                var imagesList = new List<ProductImageEntityDTO>();
+                short priority = 0;
+                foreach (var image in images)
                 {
-                    Name = PhotoSaver.UploadImage(File.ReadAllBytes(image)),
-                    DateCreated= DateTime.Now,
-                    Priority = ++priority
-                });
+                    imagesList.Add(new ProductImageEntityDTO()
+                    {
+                        Name = PhotoSaver.UploadImage(File.ReadAllBytes(image)),
+                        DateCreated = DateTime.Now,
+                        Priority = ++priority
+                    });
+                }
+
+                var product = new BAL.DTO.Models.ProductEntityDTO()
+                {
+                   Images = imagesList,
+                   CategoryId = category.Id,
+                   Category = category,
+                   DateCreated = DateTime.Now,
+                   Description = description,
+                   Name = title,
+                   Price = price,
+                };
+                await productService.CreateProduct(product);
+
+                _category.Products.Add(product);
+
+                productNameTextBox.Text = "";
+                productDescriptionTextBox.Text = "";
+
+                photosDockPanel.Children.RemoveRange(0, photosDockPanel.Children.Count - 1);
+
+                priceTextBox.Text = "";
+
+                var timer = new System.Timers.Timer();
+                (sender as Button).Content = "Успішно добавлено";
+                timer.Interval = 5000;
+                timer.Elapsed += (s, e) =>
+                {
+                    App.Current.Dispatcher.Invoke(() =>
+                    {
+                        (sender as Button).Content = "Добавити продукт";
+                        timer.Stop();
+                    });
+                };
+                timer.Start();
+            }
+            else
+            {
+                var imagesList = new List<ProductImageEntityDTO>();
+                short priority = 0;
+                foreach (var image in images)
+                {
+                    if (!image.Contains(@"https://") && !image.Contains(@"solido.tk") && !image.Contains(@"rozetka.com"))
+                    {
+                        imagesList.Add(new ProductImageEntityDTO()
+                        {
+                            Name = PhotoSaver.UploadImage(File.ReadAllBytes(image)),
+                            DateCreated = DateTime.Now,
+                            Priority = ++priority,
+                            ProductId = _product.Id
+                        });
+                    }
+                    else
+                    {
+                        imagesList.Add(new ProductImageEntityDTO()
+                        {
+                            Id = _product.Images.Where(x=>x.Name == @"https://"+image).First().Id,
+                            Name = @"https://"+image,
+                            DateCreated = DateTime.Now,
+                            Priority = ++priority,
+                            ProductId = _product.Id
+                        });
+                    }
+                }
+
+                _product.Images = imagesList;
+                _product.CategoryId = category.Id;
+                _product.Category = category;
+                _product.DateCreated = DateTime.Now;
+                _product.Description = description;
+                _product.Name = title;
+                _product.Price = price;
+
+                await productService.EditProduct(_product);
+
+                var timer = new System.Timers.Timer();
+                (sender as Button).Content = "Успішно відредаговано";
+                timer.Interval = 5000;
+                timer.Elapsed += (s, e) =>
+                {
+                    App.Current.Dispatcher.Invoke(() =>
+                    {
+                        (sender as Button).Content = "Відредагувати";
+                        timer.Stop();
+                    });
+                };
+                timer.Start();
             }
 
-            IProductService productService = new ProductService();
-            var product = new BAL.DTO.Models.ProductEntityDTO()
-            {
-               Images = imagesList,
-               CategoryId = category.Id,
-               Category = category,
-               DateCreated= DateTime.Now,
-               Description= description,
-               Name = title,
-               Price = price,
-            };
-            await productService.CreateProduct(product);
-
-            _category.Products.Add(product);
-
-            productNameTextBox.Text = "";
-            productDescriptionTextBox.Text = "";
-
-            photosDockPanel.Children.RemoveRange(0, photosDockPanel.Children.Count - 1);
-
-            priceTextBox.Text = "";
-
-            var timer = new System.Timers.Timer();
-            (sender as Button).Content = "Успішно добавлено";
-            timer.Interval = 5000;
-            timer.Elapsed += (s, e) =>
-            {
-                App.Current.Dispatcher.Invoke(() =>
-                {
-                    (sender as Button).Content = "Добавити продукт";
-                    timer.Stop();
-                });
-            };
-            timer.Start();
         }
 
         private void Page_Loaded(object sender, RoutedEventArgs e)

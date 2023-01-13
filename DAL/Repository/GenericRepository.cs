@@ -35,7 +35,7 @@ namespace DAL.Repository
 
         public IQueryable<TEntity> GetAll()
         {
-            return _dbContext.Set<TEntity>().AsNoTracking().Where(e => e.IsDelete == false);
+            return _dbContext.Set<TEntity>().AsNoTracking();
         }
 
         public async Task<TEntity> GetById(int id)
