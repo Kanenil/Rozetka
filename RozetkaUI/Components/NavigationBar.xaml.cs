@@ -5,7 +5,9 @@ using DAL.Interfaces;
 using RozetkaUI.Pages;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using System.Reflection.Metadata;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -24,6 +26,8 @@ namespace RozetkaUI.Components
     /// </summary>
     public partial class NavigationBar : UserControl
     {
+        public IList<CategoryEntityDTO> Categories { get; set; }
+
         public NavigationBar()
         {
             InitializeComponent();
@@ -84,7 +88,11 @@ namespace RozetkaUI.Components
                 foreach (var product in cat.Products)
                     product.Images = product.Images.OrderBy(x => x.Priority).ToList();
 
-            CategoryMenuMain.ItemsSource = list;
+            Categories = list.ToList();
+
+            categoriesItemControl.ItemsSource = Categories;
+
+            (App.Current.MainWindow as MainWindow).pageFrame.Navigate(new AllCategoriesPage(Categories.ToList()));
         }
 
         private void catalogButton_Click(object sender, RoutedEventArgs e)
@@ -104,6 +112,177 @@ namespace RozetkaUI.Components
         {
             if (e.LeftButton == MouseButtonState.Pressed)
                 closeCategories.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+        }
+
+        private async void DeleteCategory(object sender, RoutedEventArgs e)
+        {
+            e.Handled = true;
+            var content = (CategoryEntityDTO)((sender as Button).TemplatedParent as ContentPresenter).Content;
+            if (MessageBox.Show($"Видалити {content.Name}?", "Увага", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+            {
+                ICategoryService categoryService = new CategoryService();
+                await categoryService.DeleteCategory(content);
+                Categories.Remove(content);
+                CollectionViewSource.GetDefaultView(Categories).Refresh();
+            }
+        }
+
+        private void EditCategory(object sender, RoutedEventArgs e)
+        {
+            e.Handled = true;
+            var content = (CategoryEntityDTO)((sender as Button).TemplatedParent as ContentPresenter).Content;
+            (App.Current.MainWindow as MainWindow).pageFrame.Navigate(new AddCategoryPage((Page)(App.Current.MainWindow as MainWindow).pageFrame.Content, content));
+            closeCategories.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+        }
+
+        private void AddCategory(object sender, RoutedEventArgs e)
+        {
+            e.Handled = true;
+            (App.Current.MainWindow as MainWindow).pageFrame.Navigate(new AddCategoryPage((Page)(App.Current.MainWindow as MainWindow).pageFrame.Content));
+            closeCategories.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+        }
+
+        private void moveToAllCategories(object sender, RoutedEventArgs e)
+        {
+            (App.Current.MainWindow as MainWindow).pageFrame.Navigate(new AllCategoriesPage(Categories.ToList()));
+            closeCategories.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+        }
+
+        private void HomeMenuClick(object sender, RoutedEventArgs e)
+        {
+            (App.Current.MainWindow as MainWindow).pageFrame.Navigate(new AllCategoriesPage(Categories.ToList()));
+            closeMenu.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+        }
+
+        private void HomeClick(object sender, RoutedEventArgs e)
+        {
+            (App.Current.MainWindow as MainWindow).pageFrame.Navigate(new AllCategoriesPage(Categories.ToList()));
+        }
+
+        private void QuestionClick(object sender, RoutedEventArgs e)
+        {
+            Process.Start(new ProcessStartInfo
+            {
+                FileName = "https://help.rozetka.com.ua",
+                UseShellExecute = true
+            });
+        }
+
+        private void ChatClick(object sender, RoutedEventArgs e)
+        {
+            Process.Start(new ProcessStartInfo
+            {
+                FileName = "https://t.me/Rozetka_helpBot?start=src=hc",
+                UseShellExecute = true
+            });
+        }
+
+        private void AboutUs(object sender, RoutedEventArgs e)
+        {
+            Process.Start(new ProcessStartInfo
+            {
+                FileName = "https://rozetka.com.ua/ua/pages/about/",
+                UseShellExecute = true
+            });
+        }
+
+        private void TermsClick(object sender, RoutedEventArgs e)
+        {
+            Process.Start(new ProcessStartInfo
+            {
+                FileName = "https://rozetka.com.ua/ua/pages/legal_terms/",
+                UseShellExecute = true
+            });
+        }
+
+        private void CareersClick(object sender, RoutedEventArgs e)
+        {
+            Process.Start(new ProcessStartInfo
+            {
+                FileName = "https://rozetka.com.ua/ua/careers/",
+                UseShellExecute = true
+            });
+        }
+
+        private void ContactsClick(object sender, RoutedEventArgs e)
+        {
+            Process.Start(new ProcessStartInfo
+            {
+                FileName = "https://rozetka.com.ua/ua/contacts/",
+                UseShellExecute = true
+            });
+        }
+
+        private void DownloadFromGooglePlay(object sender, RoutedEventArgs e)
+        {
+            Process.Start(new ProcessStartInfo
+            {
+                FileName = "https://play.google.com/store/apps/details/?id=ua.com.rozetka.shop",
+                UseShellExecute = true
+            });
+        }
+
+        private void DownloadFromAppStore(object sender, RoutedEventArgs e)
+        {
+            Process.Start(new ProcessStartInfo
+            {
+                FileName = "https://apps.apple.com/app/apple-store/id740469631",
+                UseShellExecute = true
+            });
+        }
+
+        private void FacebookClick(object sender, RoutedEventArgs e)
+        {
+            Process.Start(new ProcessStartInfo
+            {
+                FileName = "https://www.facebook.com/rozetka.ua",
+                UseShellExecute = true
+            });
+        }
+
+        private void TwitterClick(object sender, RoutedEventArgs e)
+        {
+            Process.Start(new ProcessStartInfo
+            {
+                FileName = "https://twitter.com/rozetka_ua",
+                UseShellExecute = true
+            });
+        }
+
+        private void YoutubeClick(object sender, RoutedEventArgs e)
+        {
+            Process.Start(new ProcessStartInfo
+            {
+                FileName = "https://www.youtube.com/channel/UCr7r1-z79TYfqS2IPeRR47A",
+                UseShellExecute = true
+            });
+        }
+
+        private void InstagramClick(object sender, RoutedEventArgs e)
+        {
+            Process.Start(new ProcessStartInfo
+            {
+                FileName = "https://www.instagram.com/rozetkaua/",
+                UseShellExecute = true
+            });
+        }
+
+        private void ViberClick(object sender, RoutedEventArgs e)
+        {
+            Process.Start(new ProcessStartInfo
+            {
+                FileName = "https://invite.viber.com/?g2=AQB9mwM%2F5f%2FxJUlMxP4V9flr2%2BvXTC1MpxdGFZ0P6d%2Fs6Ws%2FFe%2FQtLiZwA4E28sj&lang=ru",
+                UseShellExecute = true
+            });
+        }
+
+        private void TelegramClick(object sender, RoutedEventArgs e)
+        {
+            Process.Start(new ProcessStartInfo
+            {
+                FileName = "https://t.me/rrozetka",
+                UseShellExecute = true
+            });
         }
     }
 }

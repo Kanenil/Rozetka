@@ -68,10 +68,5 @@ namespace RozetkaUI
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
-
-        private void Window_Loaded(object sender, RoutedEventArgs e)
-        {
-            //pageFrame.Navigate(new AddProductPage());
-        }
     }
 }

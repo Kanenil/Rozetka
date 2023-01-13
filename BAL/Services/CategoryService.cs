@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using BAL.DTO.Models;
 using BAL.Interfaces;
+using BAL.Utilities;
 using DAL.Data;
 using DAL.Data.Entities;
 using DAL.Interfaces;
@@ -23,7 +24,32 @@ namespace BAL.Services
             _categoryRepository = new CategoryRepository(context);
         }
 
+        public async Task CreateCategory(CategoryEntityDTO entity)
+        {
+            var category = MapCategory<CategoryEntityDTO, CategoryEntity>(entity);
+
+            await _categoryRepository.Create(category);
+
+            entity.Id = category.Id;
+        }
+
+        public async Task DeleteCategory(CategoryEntityDTO entity)
+        {
+            await _categoryRepository.Delete(entity.Id);
+        }
+
+        public async Task EditCategory(CategoryEntityDTO entity)
+        {
+            var category = MapCategory<CategoryEntityDTO, CategoryEntity>(entity);
+
+            await _categoryRepository.Update(category.Id, category);
+        }
+
         public IEnumerable<CategoryEntityDTO> GetCategories()
+        {
+            return MapCategory<IEnumerable<CategoryEntity>, IEnumerable<CategoryEntityDTO>>(_categoryRepository.GetAll().Include(x => x.Products).ThenInclude(x => x.Images));
+        }
+        private TEntityTo MapCategory<TEntityFrom, TEntityTo>(TEntityFrom entityDTOs)
         {
             var config = new MapperConfiguration(cfg =>
             {
@@ -31,14 +57,17 @@ namespace BAL.Services
                 cfg.CreateMap<CategoryEntity, CategoryEntityDTO>()
                    .ForMember(dto => dto.Products, opt => opt.MapFrom(x => x.Products));
                 cfg.CreateMap<ProductEntity, ProductEntityDTO>()
-                   .ForMember(dto=>dto.Images,opt=>opt.MapFrom(x => x.Images));
+                   .ForMember(dto => dto.Images, opt => opt.MapFrom(x => x.Images));
 
+                cfg.CreateMap<ProductImageEntityDTO, ProductImageEntity>();
+                cfg.CreateMap<CategoryEntityDTO, CategoryEntity>()
+                   .ForMember(dto => dto.Products, opt => opt.MapFrom(x => x.Products));
+                cfg.CreateMap<ProductEntityDTO, ProductEntity>()
+                   .ForMember(dto => dto.Images, opt => opt.MapFrom(x => x.Images));
             });
             var mapper = new Mapper(config);
 
-            var list = _categoryRepository.GetAll().Include(x=>x.Products).ThenInclude(x=>x.Images);
-
-            return mapper.Map<IEnumerable<CategoryEntity>, IEnumerable<CategoryEntityDTO>>(list);
+            return mapper.Map<TEntityFrom, TEntityTo>(entityDTOs);
         }
     }
 }

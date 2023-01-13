@@ -5,12 +5,10 @@ using BAL.Utilities;
 using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Reflection.Metadata;
 using System.Text;
-using System.Threading;
-using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -20,46 +18,38 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Xceed.Wpf.Toolkit;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace RozetkaUI.Pages
 {
     /// <summary>
-    /// Interaction logic for AddProductPage.xaml
+    /// Interaction logic for AddCategoryPage.xaml
     /// </summary>
-    public partial class AddProductPage : Page
+    public partial class AddCategoryPage : Page
     {
         private CategoryEntityDTO _category;
-        private ProductEntityDTO _product;
-        public AddProductPage(CategoryEntityDTO category, ProductEntityDTO product = null)
+        private Page _prevPage;
+        public AddCategoryPage(Page prevPage, CategoryEntityDTO category = null)
         {
             InitializeComponent();
             _category = category;
-            _product = product;
+            _prevPage = prevPage;
 
-            if (_product != null)
+            if (_category != null)
             {
                 submit.Content = "Відредагувати";
 
-                productNameTextBox.Text = _product.Name;
-                productDescriptionTextBox.Text = _product.Description;
-                priceTextBox.Text = _product.Price.ToString();
-                foreach (var image in _product.Images)
-                    photosDockPanel.Children.Insert(photosDockPanel.Children.Count - 1, CreatePhoto(image.Name));
-            }
-        }
-        int lastIndex = 0;
+                categoryNameTextBox.Text = _category.Name;
 
-        private void LoadPhoto_Click(object sender, RoutedEventArgs e)
-        {
-            OpenFileDialog fileDialog = new OpenFileDialog();
-            fileDialog.Filter = "Image Files|*.jpg;*.jpeg;*.png;*.gif;*.tif;...";
-            fileDialog.Multiselect = true;
-            if (fileDialog.ShowDialog() != false)
-            {
-                foreach (var file in fileDialog.FileNames)
-                    photosDockPanel.Children.Insert(photosDockPanel.Children.Count - 1, CreatePhoto(file));
+                if (!String.IsNullOrEmpty(_category.Image))
+                {
+                    photosDockPanel.Children.Insert(photosDockPanel.Children.Count - 1, CreatePhoto(_category.Image));
+                    photosDockPanel.Children[1].Visibility = Visibility.Hidden;
+                }
             }
         }
+
         private Border CreatePhoto(string filePath)
         {
             /*
@@ -124,9 +114,7 @@ namespace RozetkaUI.Pages
 
             var main = new Border();
             main.Style = this.Resources["PhotoCard"] as Style;
-            main.Drop += Image_Drop;
-            main.MouseMove += Image_MouseMove;
-            main.Name = $"image{++lastIndex}";
+            main.Name = $"image1";
             var image = new ImageBrush();
             image.ImageSource = new BitmapImage(new Uri(filePath));
             image.Stretch = Stretch.UniformToFill;
@@ -233,54 +221,18 @@ namespace RozetkaUI.Pages
 
             return main;
         }
-        private void Image_MouseMove(object sender, MouseEventArgs e)
+
+        private void DeletePhoto(object sender, RoutedEventArgs e)
         {
-            if (e.LeftButton == MouseButtonState.Pressed)
+            var mainName = (sender as Button).Name.Substring(0, (sender as Button).Name.IndexOf("Delete"));
+            foreach (Border photo in photosDockPanel.Children)
             {
-                DragDrop.DoDragDrop((Border)sender, (sender as Border).Name, DragDropEffects.Move);
-            }
-        }
-        private void Image_Drop(object sender, DragEventArgs e)
-        {
-
-            e.Handled = true;
-            string tstring = e.Data.GetData(DataFormats.StringFormat).ToString();
-            var source = e.OriginalSource;
-
-            if ((source as Border).Name != tstring)
-            {
-                var index1 = photosDockPanel.Children.IndexOf(sender as Border);
-                int index2 = 0;
-
-                for (int i = 0; i < photosDockPanel.Children.Count; i++)
+                if (photo.Name == mainName)
                 {
-                    if ((photosDockPanel.Children[i] as Border).Name == tstring)
-                    {
-                        index2 = i;
-                        break;
-                    }
+                    photosDockPanel.Children[1].Visibility = Visibility.Visible;
+                    photosDockPanel.Children.Remove(photo);
+                    break;
                 }
-
-                var photo1 = photosDockPanel.Children[index1];
-                var photo2 = photosDockPanel.Children[index2];
-
-                if (index1 < index2)
-                {
-                    photosDockPanel.Children.Remove(photosDockPanel.Children[index1]);
-                    photosDockPanel.Children.Remove(photosDockPanel.Children[index2 - 1]);
-
-                    photosDockPanel.Children.Insert(index1, photo2);
-                    photosDockPanel.Children.Insert(index2, photo1);
-                }
-                else
-                {
-                    photosDockPanel.Children.Remove(photosDockPanel.Children[index2]);
-                    photosDockPanel.Children.Remove(photosDockPanel.Children[index1 - 1]);
-
-                    photosDockPanel.Children.Insert(index2, photo1);
-                    photosDockPanel.Children.Insert(index1, photo2);
-                }
-
             }
         }
         private void ChangePhoto(object sender, RoutedEventArgs e)
@@ -305,36 +257,22 @@ namespace RozetkaUI.Pages
             {
                 photosDockPanel.Children.Remove(realPhoto);
                 photosDockPanel.Children.Insert(index, CreatePhoto(fileDialog.FileName));
+                photosDockPanel.Children[1].Visibility = Visibility.Hidden;
             }
         }
-        private void DeletePhoto(object sender, RoutedEventArgs e)
-        {
-            var mainName = (sender as Button).Name.Substring(0, (sender as Button).Name.IndexOf("Delete"));
-            foreach (Border photo in photosDockPanel.Children)
-            {
-                if (photo.Name == mainName)
-                {
-                    photosDockPanel.Children.Remove(photo);
-                    break;
-                }
-            }
-        }
+
         private void Button_Drop(object sender, DragEventArgs e)
         {
             if (e.Effects != DragDropEffects.None)
             {
                 string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
 
-                foreach (var file in files)
-                {
-                    photosDockPanel.Children.Insert(photosDockPanel.Children.Count - 1, CreatePhoto(file));
-                }
+                photosDockPanel.Children.Insert(photosDockPanel.Children.Count - 1, CreatePhoto(files[0]));
             }
         }
-        public static readonly List<string> ImageExtensions = new List<string> { ".JPG", ".JPEG", ".JPE", ".BMP", ".GIF", ".PNG" };
+        public readonly List<string> ImageExtensions = new List<string> { ".JPG", ".JPEG", ".JPE", ".BMP", ".GIF", ".PNG" };
         private void Button_DragOver(object sender, DragEventArgs e)
         {
-
             if (!e.Data.GetDataPresent(DataFormats.FileDrop))
             {
                 e.Effects = DragDropEffects.None;
@@ -346,85 +284,97 @@ namespace RozetkaUI.Pages
 
             string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
 
-            foreach (var f in files)
+            if (files.Length > 1)
             {
-
-                if (ImageExtensions.Contains(System.IO.Path.GetExtension(f).ToUpperInvariant()))
-                {
-                    e.Effects = DragDropEffects.Move;
-                }
-                else
-                {
-                    e.Effects = DragDropEffects.None;
-                    e.Handled = true;
-                    return;
-                }
-            }
-
-
-        }
-        private async void add_Click(object sender, RoutedEventArgs e)
-        {
-            var title = productNameTextBox.Text;
-            var description = productDescriptionTextBox.Text;
-            var images = new List<string>();
-            for (int i = 0; i < photosDockPanel.Children.Count - 1; i++)
-            {
-                var photo = ((photosDockPanel.Children[i] as Border).Background as ImageBrush).ImageSource.ToString();
-                images.Add(photo.Substring(8));
-            }
-            var category = (CategoryEntityDTO)(categoriesComboBox.SelectedItem as ComboBoxItem).Content;
-            decimal price;
-
-            try
-            {
-                price = decimal.Parse(priceTextBox.Text);
-                if (price < 0)
-                    throw new Exception();
-            }
-            catch (Exception)
-            {
-                priceTextBox.BorderBrush = Brushes.Red;
-                priceTextBox.Focus();
+                e.Effects = DragDropEffects.None;
+                e.Handled = true;
                 return;
             }
 
-            IProductService productService = new ProductService();
-
-            if (_product == null)
+            if (ImageExtensions.Contains(System.IO.Path.GetExtension(files[0]).ToUpperInvariant()))
             {
-                var imagesList = new List<ProductImageEntityDTO>();
-                short priority = 0;
-                foreach (var image in images)
-                {
-                    imagesList.Add(new ProductImageEntityDTO()
-                    {
-                        Name = PhotoSaver.UploadImage(File.ReadAllBytes(image)),
-                        DateCreated = DateTime.Now,
-                        Priority = ++priority
-                    });
-                }
+                e.Effects = DragDropEffects.Move;
+            }
+            else
+            {
+                e.Effects = DragDropEffects.None;
+                e.Handled = true;
+                return;
+            }
+        }
 
-                var product = new BAL.DTO.Models.ProductEntityDTO()
+        private void LoadPhoto_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog fileDialog = new OpenFileDialog();
+            fileDialog.Filter = "Image Files|*.jpg;*.jpeg;*.png;*.gif;*.tif;...";
+            fileDialog.Multiselect = false;
+            if (fileDialog.ShowDialog() != false)
+            {
+                photosDockPanel.Children.Insert(photosDockPanel.Children.Count - 1, CreatePhoto(fileDialog.FileName));
+                photosDockPanel.Children[1].Visibility = Visibility.Hidden;
+            }
+        }
+
+        private void ReturnBackClick(object sender, RoutedEventArgs e)
+        {
+            if (_prevPage == null || _prevPage.GetType() != typeof(AllCategoriesPage))
+            {
+                (App.Current.MainWindow as MainWindow).navBar.categoriesButton.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+                (App.Current.MainWindow as MainWindow).pageFrame.Navigate(_prevPage);
+            }
+            else
+            {
+                (App.Current.MainWindow as MainWindow).pageFrame.Navigate(_prevPage);
+            }
+        }
+
+        private async void add_Click(object sender, RoutedEventArgs e)
+        {
+            var name = categoryNameTextBox.Text;
+            string photo = null;
+            try
+            {
+                photo = ((photosDockPanel.Children[0] as Border).Background as ImageBrush).ImageSource.ToString();
+                photo = photo.Substring(8);
+            }
+            catch 
+            {
+
+            }
+
+            if (name.Length == 0)
+            {
+                categoryNameTextBox.BorderBrush = Brushes.Red;
+                categoryNameTextBox.Focus();
+                return;
+            }
+
+            ICategoryService categoryService = new CategoryService();
+            if (_category == null)
+            {
+                if (photo != null)
+                    photo = PhotoSaver.UploadImage(File.ReadAllBytes(photo));
+
+                var category = new CategoryEntityDTO()
                 {
-                   Images = imagesList,
-                   CategoryId = category.Id,
-                   Category = category,
-                   DateCreated = DateTime.Now,
-                   Description = description,
-                   Name = title,
-                   Price = price,
+                    Name = name,
+                    Image = photo,
+                    DateCreated= DateTime.Now
                 };
-                await productService.CreateProduct(product);
+                await categoryService.CreateCategory(category);
+                category.Products = new List<ProductEntityDTO>();
 
-                _category.Products.Add(product);
+                (App.Current.MainWindow as MainWindow).navBar.Categories.Add(category);
+                CollectionViewSource.GetDefaultView((App.Current.MainWindow as MainWindow).navBar.Categories).Refresh();
 
-                productNameTextBox.Text = "";
-                productDescriptionTextBox.Text = "";
-
-                photosDockPanel.Children.RemoveRange(0, photosDockPanel.Children.Count - 1);
-
-                priceTextBox.Text = "";
+                if (_prevPage != null)
+                {
+                    if (_prevPage.GetType() == typeof(AllCategoriesPage))
+                    {
+                        (_prevPage as AllCategoriesPage).Categories.Add(category);
+                        CollectionViewSource.GetDefaultView((_prevPage as AllCategoriesPage).Categories).Refresh();
+                    }
+                }
 
                 var timer = new System.Timers.Timer();
                 (sender as Button).Content = "Успішно добавлено";
@@ -433,7 +383,7 @@ namespace RozetkaUI.Pages
                 {
                     App.Current.Dispatcher.Invoke(() =>
                     {
-                        (sender as Button).Content = "Добавити продукт";
+                        (sender as Button).Content = "Добавити категорію";
                         timer.Stop();
                     });
                 };
@@ -441,41 +391,34 @@ namespace RozetkaUI.Pages
             }
             else
             {
-                var imagesList = new List<ProductImageEntityDTO>();
-                short priority = 0;
-                foreach (var image in images)
+                if (photo != null)
                 {
-                    if (!image.Contains(@"https://") && !image.Contains(@"solido.tk") && !image.Contains(@"rozetka.com"))
-                    {
-                        imagesList.Add(new ProductImageEntityDTO()
-                        {
-                            Name = PhotoSaver.UploadImage(File.ReadAllBytes(image)),
-                            DateCreated = DateTime.Now,
-                            Priority = ++priority,
-                            ProductId = _product.Id
-                        });
-                    }
+                    if (!photo.Contains(@"https://") && !photo.Contains(@"solido.tk") && !photo.Contains(@"rozetka.com"))
+                        photo = PhotoSaver.UploadImage(File.ReadAllBytes(photo));
                     else
-                    {
-                        imagesList.Add(new ProductImageEntityDTO()
-                        {
-                            Id = _product.Images.Where(x=>x.Name == @"https://"+image).First().Id,
-                            Name = @"https://"+image,
-                            DateCreated = DateTime.Now,
-                            Priority = ++priority,
-                            ProductId = _product.Id
-                        });
-                    }
+                        photo = "https://" + photo;
                 }
 
-                _product.Images = imagesList;
-                _product.CategoryId = category.Id;
-                _product.Category = category;
-                _product.Description = description;
-                _product.Name = title;
-                _product.Price = price;
+                _category.Image = photo;
+                _category.Name = name;
 
-                await productService.EditProduct(_product);
+                await categoryService.EditCategory(_category);
+
+                var category = (App.Current.MainWindow as MainWindow).navBar.Categories.First(c => c.Id == _category.Id);
+                category.Name = _category.Name;
+                category.Image = _category.Image;
+                CollectionViewSource.GetDefaultView((App.Current.MainWindow as MainWindow).navBar.Categories).Refresh();
+
+                if (_prevPage != null)
+                {
+                    if (_prevPage.GetType() == typeof(AllCategoriesPage))
+                    {
+                        var cat = (_prevPage as AllCategoriesPage).Categories.First(c => c.Id == _category.Id);
+                        cat.Name = _category.Name;
+                        cat.Image = _category.Image;
+                        CollectionViewSource.GetDefaultView((_prevPage as AllCategoriesPage).Categories).Refresh();
+                    }
+                }
 
                 var timer = new System.Timers.Timer();
                 (sender as Button).Content = "Успішно відредаговано";
@@ -491,25 +434,6 @@ namespace RozetkaUI.Pages
                 timer.Start();
             }
 
-        }
-
-        private void Page_Loaded(object sender, RoutedEventArgs e)
-        {
-            ICategoryService categoryService = new CategoryService();
-            var list = categoryService.GetCategories();
-            foreach (var category in list)
-            {
-                var item = new ComboBoxItem() { Content = category };
-                categoriesComboBox.Items.Add(item);
-                if (category.Id == _category.Id)
-                    categoriesComboBox.SelectedItem = item;
-            }
-            categoriesComboBox.IsEnabled = false;
-        }
-
-        private void ReturnBackClick(object sender, RoutedEventArgs e)
-        {
-            (App.Current.MainWindow as MainWindow).pageFrame.Navigate(new ProductListPage(_category));
         }
     }
 }
