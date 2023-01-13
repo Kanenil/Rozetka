@@ -9,8 +9,7 @@
         Title="Rozetka" 
         Height="850" Width="1000"
         MinHeight="800" MinWidth="660"
-        Icon="Images/Logo.ico"
-        Loaded="Window_Loaded">
+        Icon="Images/Logo.ico">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="60"/>

@@ -9,5 +9,8 @@ namespace BAL.Interfaces
     public interface ICategoryService
     {
         IEnumerable<CategoryEntityDTO> GetCategories();
+        Task CreateCategory(CategoryEntityDTO entity);
+        Task EditCategory(CategoryEntityDTO entity);
+        Task DeleteCategory(CategoryEntityDTO entity);
     }
 }

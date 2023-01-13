@@ -190,6 +190,19 @@
                 </Trigger>
             </Style.Triggers>
         </Style>
+        <Style x:Key="MyButton" TargetType="Button">
+            <Setter Property="OverridesDefaultStyle" Value="True" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border BorderThickness="0" BorderBrush="Black" Background="{TemplateBinding Background}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
         <BooleanToVisibilityConverter x:Key="VisibleIfTrueConverter" />
     </UserControl.Resources>
 
@@ -251,7 +264,27 @@
                     </Button.Triggers>
                 </Button>
 
-                <Image Grid.Column="1"
+                <Button Style="{StaticResource MyButton}"
+                        Click="HomeClick"
+                        Grid.Column="1"
+                        Grid.ColumnSpan="2">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Grid.Column="1"
+                               Source="/Images/Logo.png"
+                               Width="35" Height="35"
+                               VerticalAlignment="Top"
+                               Margin="10 2 0 0"/>
+                        <TextBlock Grid.Column="2"
+                                   Name="logoText"
+                                   Style="{StaticResource PrimaryHeaderTextBlockStyle}"
+                                   FontSize="29"
+                                   FontWeight="ExtraBlack"
+                                   Text="ROZETKA"
+                                   Margin="3 0 0 0"/>
+                    </StackPanel>
+                </Button>
+
+                <!--<Image Grid.Column="1"
                Source="/Images/Logo.png"
                Width="35" Height="35"
                VerticalAlignment="Top"
@@ -263,7 +296,7 @@
                    FontSize="29"
                    FontWeight="ExtraBlack"
                    Text="ROZETKA"
-                   Margin="3 0 0 0"/>
+                   Margin="3 0 0 0"/>-->
 
                 <Button Style="{StaticResource CategiriesButtonStyle}"
                 VerticalAlignment="Top"
@@ -278,7 +311,7 @@
                                     <Storyboard>
                                         <ThicknessAnimationUsingKeyFrames Storyboard.TargetProperty="Margin" Storyboard.TargetName="CategoryMenuMain" BeginTime="00:00:00">
                                             <SplineThicknessKeyFrame KeyTime="00:00:00"
-                                         Value="20 -600 0 0"/>
+                                         Value="20 -700 0 0"/>
                                             <SplineThicknessKeyFrame KeyTime="0:0:.2"
                                          Value="20 60 0 0"/>
                                         </ThicknessAnimationUsingKeyFrames>
@@ -443,17 +476,22 @@
                                 VerticalAlignment="Center"
                                 Margin="0 15 0 0"
                                 Background="{StaticResource PrimaryBackgroundColor}">
-                            <Image Grid.Column="1"
-                           Source="/Images/Logo.png"
-                           Width="35" Height="35"
-                           VerticalAlignment="Top"
-                           Margin="10 2 0 0"/>
-                            <TextBlock Grid.Column="2"
-                               Style="{StaticResource PrimaryHeaderTextBlockStyle}"
-                               FontSize="29"
-                               FontWeight="ExtraBlack"
-                               Text="ROZETKA"
-                               Margin="3 0 0 0"/>
+                            <Button Style="{StaticResource MyButton}"
+                                    Click="HomeMenuClick">
+                                <StackPanel Orientation="Horizontal">
+                                    <Image Grid.Column="1"
+                                           Source="/Images/Logo.png"
+                                           Width="35" Height="35"
+                                           VerticalAlignment="Top"
+                                           Margin="10 2 0 0"/>
+                                    <TextBlock Grid.Column="2"
+                                               Style="{StaticResource PrimaryHeaderTextBlockStyle}"
+                                               FontSize="29"
+                                               FontWeight="ExtraBlack"
+                                               Text="ROZETKA"
+                                               Margin="3 0 0 0"/>
+                                </StackPanel>
+                            </Button>
                             <Button Style="{StaticResource TransperentButtonStyle}"
                                 VerticalAlignment="Top"
                                 Margin="110 3 0 0"
@@ -627,7 +665,8 @@
 
                         <Button HorizontalAlignment="Left"
                                 Style="{StaticResource MenuItem}"
-                                x:Name="questionButton">
+                                x:Name="questionButton"
+                                Click="QuestionClick">
                             <StackPanel Orientation="Horizontal"
                                         HorizontalAlignment="Left">
 
@@ -666,7 +705,8 @@
 
                         <Button HorizontalAlignment="Left"
                                 Style="{StaticResource MenuItem}"
-                                x:Name="chatButton">
+                                x:Name="chatButton"
+                                Click="ChatClick">
                             <StackPanel Orientation="Horizontal"
                                         HorizontalAlignment="Left">
 
@@ -791,18 +831,23 @@
                                    Margin="10 7"
                                    FontSize="18"/>
                         <Button Content="Про нас"
+                                Click="AboutUs"
                                 Margin="10 18 0 0"
                                 Style="{StaticResource LinkButton}"/>
                         <Button Content="Умови використання додатку"
+                                Click="TermsClick"
                                 Margin="10 18 0 0"
                                 Style="{StaticResource LinkButton}"/>
                         <Button Content="Вакансії"
+                                Click="CareersClick"
                                 Margin="10 18 0 0"
                                 Style="{StaticResource LinkButton}"/>
                         <Button Content="Контакти"
+                                Click="ContactsClick"
                                 Margin="10 18 0 0"
                                 Style="{StaticResource LinkButton}"/>
                         <Button Content="Усі категорії"
+                                Click="HomeMenuClick"
                                 Margin="10 18 0 0"
                                 Style="{StaticResource LinkButton}"/>
 
@@ -815,11 +860,17 @@
 
                         <StackPanel Orientation="Horizontal"
                                     Margin="10 0">
-                            <Image Source="/Images/GooglePlay.png"
+                            <Button Style="{StaticResource MyButton}"
+                                    Click="DownloadFromGooglePlay">
+                                <Image Source="/Images/GooglePlay.png"
                                    Width="140"/>
-                            <Image Source="/Images/AppStore.png"
+                            </Button>
+                            <Button Style="{StaticResource MyButton}"
+                                    Click="DownloadFromAppStore">
+                                <Image Source="/Images/AppStore.png"
                                    Width="165"
                                    Margin="5 0 0 0"/>
+                            </Button>
                         </StackPanel>
 
                         <Separator Background="Gray" Margin="0 10"/>
@@ -834,7 +885,8 @@
 
                             <Button Style="{StaticResource IconButton}"
                                     x:Name="facebookButton"
-                                    ToolTip="Facebook">
+                                    ToolTip="Facebook"
+                                    Click="FacebookClick">
                                 <Border CornerRadius="20"
                                         Background="White">
                                     <Path Data="{StaticResource Facebook}"
@@ -859,7 +911,8 @@
                             <Button Style="{StaticResource IconButton}"
                                     Margin="5 0 0 0"
                                     x:Name="twitterButton"
-                                    ToolTip="Twitter">
+                                    ToolTip="Twitter"
+                                    Click="TwitterClick">
                                 <Border CornerRadius="15"
                                         Background="White">
                                     <Path Data="{StaticResource Twitter}"
@@ -884,7 +937,8 @@
                             <Button Style="{StaticResource IconButton}"
                                     Margin="5 0 0 0"
                                     x:Name="youtubeButton"
-                                    ToolTip="Youtube">
+                                    ToolTip="Youtube"
+                                    Click="YoutubeClick">
                                 <Border CornerRadius="15"
                                         Background="White">
                                     <Path Data="{StaticResource Youtube}"
@@ -909,7 +963,8 @@
                             <Button Style="{StaticResource IconButton}"
                                     Margin="5 0 0 0"
                                     x:Name="instagramButton"
-                                    ToolTip="Instagram">
+                                    ToolTip="Instagram"
+                                    Click="InstagramClick">
                                 <Border CornerRadius="15"
                                         Background="White">
                                     <Path Data="{StaticResource Instagram}"
@@ -950,7 +1005,8 @@
                             <Button Style="{StaticResource IconButton}"
                                     Margin="5 0 0 0"
                                     x:Name="viberButton"
-                                    ToolTip="Viber">
+                                    ToolTip="Viber"
+                                    Click="ViberClick">
                                 <Border CornerRadius="15"
                                         Background="White">
                                     <Path Data="{StaticResource Viber}"
@@ -975,7 +1031,8 @@
                             <Button Style="{StaticResource IconButton}"
                                     Margin="5 0 0 0"
                                     x:Name="telegramButton"
-                                    ToolTip="Telegram">
+                                    ToolTip="Telegram"
+                                    Click="TelegramClick">
                                 <Border CornerRadius="15"
                                         Background="White">
                                     <Path Data="{StaticResource TelegramCircle}"
@@ -1032,7 +1089,7 @@
         <Grid Grid.RowSpan="2">
             <Button IsEnabled="False"
                     Opacity="0"
-                    Margin="5000"
+                    Margin="0 0 0 5000"
                     Name="closeCategories">
                 <Button.Triggers>
                     <EventTrigger RoutedEvent="Button.Click">
@@ -1043,7 +1100,7 @@
                                         <SplineThicknessKeyFrame KeyTime="00:00:00"
                                                                              Value="20 60 0 0"/>
                                         <SplineThicknessKeyFrame KeyTime="0:0:.2"
-                                                                             Value="20 -600 0 0"/>
+                                                                             Value="20 -700 0 0"/>
                                     </ThicknessAnimationUsingKeyFrames>
                                     <ThicknessAnimationUsingKeyFrames Storyboard.TargetProperty="Margin" Storyboard.TargetName="CategoryMenu" BeginTime="00:00:00">
                                         <SplineThicknessKeyFrame KeyTime="00:00:00"
@@ -1065,39 +1122,113 @@
                   MouseDown="CategoryMenu_MouseDown"
                   Margin="0 0 0 5000"/>
 
-            <ItemsControl Grid.Row="1" 
+            <ScrollViewer Grid.Row="1" 
                           HorizontalAlignment="Left"
-                      Name="CategoryMenuMain"
-                      Grid.RowSpan="2"
-                      MaxHeight="500"
-                      VerticalAlignment="Top"
-                      Margin="20 -600 0 0"
-                      Grid.Column="0">
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <Button Style="{StaticResource MenuItem}"
+                          Name="CategoryMenuMain"
+                          Grid.RowSpan="2"
+                          MaxHeight="500"
+                          VerticalAlignment="Top"
+                          Margin="20 -700 0 0"
+                          Grid.Column="0"
+                          Background="White">
+                <StackPanel>
+                    <Button Style="{StaticResource MenuItem}"
+                        Margin="5 5 5 3"
+                        HorizontalContentAlignment="Center"
+                        Click="moveToAllCategories">
+                        <Grid Width="320">
+                            <TextBlock Text="Всі категорії"
+                                   Style="{StaticResource SecundaryHeaderTextBlockStyle}"
+                                   VerticalAlignment="Center"
+                                   HorizontalAlignment="Left"
+                                   Margin="0 0 5 0"/>
+                            <StackPanel Orientation="Horizontal"
+                                    HorizontalAlignment="Right"
+                                    Margin="0 0 10 0">
+                                <Button HorizontalAlignment="Right" 
+                                    Click="AddCategory"
+                                    Style="{StaticResource TransperentButtonStyle}"
+                                    VerticalAlignment="Top"
+                                    Padding="7"
+                                    ToolTip="Добавити категорію">
+                                    <Path Data="{StaticResource Plus}"
+                                                  Stretch="Uniform"
+                                                  Width="20" Height="20"
+                                                  Fill="{StaticResource PrimaryBackgroundColor}"
+                                                  HorizontalAlignment="Center">
+                                        <Path.LayoutTransform>
+                                            <MatrixTransform Matrix="1 0 0 -1 1 0"/>
+                                        </Path.LayoutTransform>
+                                    </Path>
+                                </Button>
+                            </StackPanel>
+
+                        </Grid>
+                    </Button>
+                    <ItemsControl Name="categoriesItemControl">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Button Style="{StaticResource MenuItem}"
                                 Margin="5 5 5 3"
                                 HorizontalContentAlignment="Center"
                                 Click="moveToCategory">
-                            <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="{Binding Name}"
+                                    <Grid Width="320">
+                                        <TextBlock Text="{Binding Name}"
                                            Style="{StaticResource SecundaryHeaderTextBlockStyle}"
                                            VerticalAlignment="Center"
+                                           HorizontalAlignment="Left"
                                            Margin="0 0 5 0"/>
-                            </StackPanel>
-                        </Button>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-                <ItemsControl.Template>
-                    <ControlTemplate>
-                        <Border CornerRadius="4" Background="White" Padding="{TemplateBinding Padding}">
-                            <ScrollViewer x:Name="ScrollViewer">
-                                <ItemsPresenter />
-                            </ScrollViewer>
-                        </Border>
-                    </ControlTemplate>
-                </ItemsControl.Template>
-            </ItemsControl>
+                                        <StackPanel Orientation="Horizontal"
+                                            HorizontalAlignment="Right"
+                                            Margin="0 0 10 0">
+                                            <Button HorizontalAlignment="Right" 
+                                                Click="EditCategory"
+                                                Style="{StaticResource TransperentButtonStyle}"
+                                                VerticalAlignment="Top"
+                                                Padding="7">
+                                                <Path Data="{StaticResource Edit}"
+                                                  Stretch="Uniform"
+                                                  Width="20" Height="20"
+                                                  Fill="{StaticResource PrimaryBackgroundColor}"
+                                                  HorizontalAlignment="Center">
+                                                    <Path.LayoutTransform>
+                                                        <MatrixTransform Matrix="1 0 0 -1 1 0"/>
+                                                    </Path.LayoutTransform>
+                                                </Path>
+                                            </Button>
+                                            <Button HorizontalAlignment="Right" 
+                                                Click="DeleteCategory"
+                                                Style="{StaticResource TransperentButtonStyle}"
+                                                VerticalAlignment="Top"
+                                                Padding="7">
+                                                <Path Data="{StaticResource Delete}"
+                                                  Stretch="Uniform"
+                                                  Width="20" Height="20"
+                                                  Fill="{StaticResource PrimaryBackgroundColor}"
+                                                  HorizontalAlignment="Center">
+                                                    <Path.LayoutTransform>
+                                                        <MatrixTransform Matrix="1 0 0 -1 1 0"/>
+                                                    </Path.LayoutTransform>
+                                                </Path>
+                                            </Button>
+                                        </StackPanel>
+
+                                    </Grid>
+                                </Button>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                        <ItemsControl.Template>
+                            <ControlTemplate>
+                                <Border CornerRadius="4" Background="White" Padding="{TemplateBinding Padding}">
+                                    <ItemsPresenter />
+                                </Border>
+                            </ControlTemplate>
+                        </ItemsControl.Template>
+                    </ItemsControl>
+
+                </StackPanel>
+            </ScrollViewer>
+            
         </Grid>
 
     </Grid>

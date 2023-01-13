@@ -27,16 +27,7 @@ namespace BAL.Services
         }
         public async Task CreateProduct(ProductEntityDTO entity)
         {
-            var config = new MapperConfiguration(cfg =>
-            {
-                cfg.CreateMap<CategoryEntityDTO, CategoryEntity>();
-                cfg.CreateMap<ProductImageEntityDTO, ProductImageEntity>();
-                cfg.CreateMap<ProductEntityDTO, ProductEntity>()
-                    .ForMember(dto => dto.Category, opt => opt.MapFrom(x => x.Category));
-            });
-            var mapper = new Mapper(config);
-
-            var product = mapper.Map<ProductEntityDTO, ProductEntity>(entity);
+            var product = MapProduct<ProductEntityDTO, ProductEntity>(entity);
 
             var images = product.Images;
 
@@ -61,16 +52,7 @@ namespace BAL.Services
 
         public async Task EditProduct(ProductEntityDTO entity)
         {
-            var config = new MapperConfiguration(cfg =>
-            {
-                cfg.CreateMap<CategoryEntityDTO, CategoryEntity>();
-                cfg.CreateMap<ProductImageEntityDTO, ProductImageEntity>();
-                cfg.CreateMap<ProductEntityDTO, ProductEntity>()
-                    .ForMember(dto => dto.Category, opt => opt.MapFrom(x => x.Category));
-            });
-            var mapper = new Mapper(config);
-
-            var product = mapper.Map<ProductEntityDTO, ProductEntity>(entity);
+            var product = MapProduct<ProductEntityDTO, ProductEntity>(entity);
 
             var images = product.Images;
 
@@ -113,6 +95,25 @@ namespace BAL.Services
             }
 
 
+        }
+
+        private TEntityTo MapProduct<TEntityFrom, TEntityTo>(TEntityFrom entityDTOs)
+        {
+            var config = new MapperConfiguration(cfg =>
+            {
+                cfg.CreateMap<CategoryEntityDTO, CategoryEntity>();
+                cfg.CreateMap<ProductImageEntityDTO, ProductImageEntity>();
+                cfg.CreateMap<ProductEntityDTO, ProductEntity>()
+                    .ForMember(dto => dto.Category, opt => opt.MapFrom(x => x.Category));
+
+                cfg.CreateMap<CategoryEntity, CategoryEntityDTO>();
+                cfg.CreateMap<ProductImageEntity, ProductImageEntityDTO>();
+                cfg.CreateMap<ProductEntity, ProductEntityDTO>()
+                    .ForMember(dto => dto.Category, opt => opt.MapFrom(x => x.Category));
+            });
+            var mapper = new Mapper(config);
+
+            return mapper.Map<TEntityFrom, TEntityTo>(entityDTOs);
         }
     }
 }
