@@ -1075,20 +1075,13 @@
                       Grid.Column="0">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <Button Style="{StaticResource CategiriesButtonStyle}"
+                        <Button Style="{StaticResource MenuItem}"
                                 Margin="5 5 5 3"
                                 HorizontalContentAlignment="Center"
                                 Click="moveToCategory">
                             <StackPanel Orientation="Horizontal">
-                                <Border Width="60" Height="60"
-                                        CornerRadius="30"
-                                        Margin="5 0 5 0">
-                                    <Border.Background>
-                                        <ImageBrush ImageSource="{Binding Image}"/>
-                                    </Border.Background>
-                                </Border>
                                 <TextBlock Text="{Binding Name}"
-                                           Style="{StaticResource PrimaryHeaderTextBlockStyle}"
+                                           Style="{StaticResource SecundaryHeaderTextBlockStyle}"
                                            VerticalAlignment="Center"
                                            Margin="0 0 5 0"/>
                             </StackPanel>

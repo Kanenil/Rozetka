@@ -5,6 +5,7 @@ using DAL.Interfaces;
 using RozetkaUI.Pages;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -78,7 +79,12 @@ namespace RozetkaUI.Components
         private void navBar_Loaded(object sender, RoutedEventArgs e)
         {
             ICategoryService categoryService = new CategoryService();
-            CategoryMenuMain.ItemsSource = categoryService.GetCategories();
+            var list = categoryService.GetCategories();
+            foreach (var cat in list)
+                foreach (var product in cat.Products)
+                    product.Images = product.Images.OrderBy(x => x.Priority).ToList();
+
+            CategoryMenuMain.ItemsSource = list;
         }
 
         private void catalogButton_Click(object sender, RoutedEventArgs e)

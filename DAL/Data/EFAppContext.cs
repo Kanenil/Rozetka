@@ -34,6 +34,15 @@ namespace DAL.Data
             {
                 sales.HasKey(b => new { b.SaleId, b.ProductId });
             });
+
+            modelBuilder.Entity<CategoryEntity>().HasQueryFilter(p => !p.IsDelete);
+            modelBuilder.Entity<ProductEntity>().HasQueryFilter(p => !p.IsDelete);
+            modelBuilder.Entity<ProductImageEntity>().HasQueryFilter(p => !p.IsDelete);
+            modelBuilder.Entity<UserEntity>().HasQueryFilter(p => !p.IsDelete);
+            modelBuilder.Entity<OrderStatusEntity>().HasQueryFilter(p => !p.IsDelete);
+            modelBuilder.Entity<OrderItemEntity>().HasQueryFilter(p => !p.IsDelete);
+            modelBuilder.Entity<OrderEntity>().HasQueryFilter(p => !p.IsDelete);
+            modelBuilder.Entity<SaleEntity>().HasQueryFilter(p => !p.IsDelete);
         }
     }
 }

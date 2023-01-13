@@ -25,8 +25,8 @@
                             Padding="{TemplateBinding Padding}"
                                 BorderThickness="1"
                             BorderBrush="Gray">
-                            <ContentPresenter HorizontalAlignment="Center" 
-                                          VerticalAlignment="Center"/>
+                            <ContentPresenter HorizontalAlignment="Stretch" 
+                                              VerticalAlignment="Stretch"/>
 
                         </Border>
                     </ControlTemplate>
@@ -42,6 +42,19 @@
                     <Setter Property="Cursor" Value="Hand"/>
                 </Trigger>
             </Style.Triggers>
+        </Style>
+        <Style x:Key="MyButton" TargetType="Button">
+            <Setter Property="OverridesDefaultStyle" Value="True" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border BorderThickness="0" BorderBrush="Black" Background="{TemplateBinding Background}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
         </Style>
     </Page.Resources>
     
@@ -70,32 +83,71 @@
             </Button>
         </Grid>
 
-        <ItemsControl Margin="40 10 0 0" ItemsSource="{Binding Category.Products}">
+        <ItemsControl Margin="40 10 0 0" ItemsSource="{Binding Category.Products}" Name="products">
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
                     <Button Style="{StaticResource CategoryButtonStyle}"
                             Width="300"
                             Height="400"
                             Click="Button_Click">
-                        <StackPanel VerticalAlignment="Top">
-                            <Image Source="{Binding Images[0].Name}"
+                        <Button Background="Transparent"
+                                BorderThickness="0"
+                                Style="{StaticResource MyButton}">
+                            
+                            <StackPanel VerticalAlignment="Top">
+                                <Image Source="{Binding Images[0].Name}"
                                    Stretch="Uniform"
                                    Height="200"
                                    MaxWidth="280"/>
-                            <TextBlock Text="{Binding Name}"
+                                <TextBlock Text="{Binding Name}"
                                        TextWrapping="WrapWithOverflow"
                                        FontSize="16"
                                        Style="{StaticResource SecundaryHeaderTextBlockStyle}"
                                        VerticalAlignment="Center"
                                        Margin="0 0 5 0"/>
-                            <TextBlock Text="{Binding Price}"
+                                <TextBlock Text="{Binding Price}"
                                        TextWrapping="WrapWithOverflow"
                                        FontSize="20"
                                        Foreground="Red"
                                        Style="{StaticResource SecundaryHeaderTextBlockStyle}"
                                        VerticalAlignment="Center"
                                        Margin="0 0 5 0"/>
-                        </StackPanel>
+                                <StackPanel Orientation="Horizontal">
+                                    <Button HorizontalAlignment="Right" 
+                                    Click="EditProduct"
+                                    Style="{StaticResource TransperentButtonStyle}"
+                                    VerticalAlignment="Top"
+                                    Margin="0 20 10 0"
+                                    Padding="7">
+                                        <Path Data="{StaticResource Edit}"
+                                      Stretch="Uniform"
+                                      Width="20" Height="20"
+                                      Fill="{StaticResource PrimaryBackgroundColor}"
+                                      HorizontalAlignment="Center">
+                                            <Path.LayoutTransform>
+                                                <MatrixTransform Matrix="1 0 0 -1 1 0"/>
+                                            </Path.LayoutTransform>
+                                        </Path>
+                                    </Button>
+                                    <Button HorizontalAlignment="Right" 
+                                    Click="DeleteProduct"
+                                    Style="{StaticResource TransperentButtonStyle}"
+                                    VerticalAlignment="Top"
+                                    Margin="0 20 10 0"
+                                    Padding="7">
+                                        <Path Data="{StaticResource Delete}"
+                                      Stretch="Uniform"
+                                      Width="20" Height="20"
+                                      Fill="{StaticResource PrimaryBackgroundColor}"
+                                      HorizontalAlignment="Center">
+                                            <Path.LayoutTransform>
+                                                <MatrixTransform Matrix="1 0 0 -1 1 0"/>
+                                            </Path.LayoutTransform>
+                                        </Path>
+                                    </Button>
+                                </StackPanel>
+                            </StackPanel>
+                        </Button>
                     </Button>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
