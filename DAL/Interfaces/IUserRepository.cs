@@ -9,5 +9,6 @@ namespace DAL.Interfaces
     public interface IUserRepository : IGenericRepository<UserEntity, int>
     {
         Task<UserEntity> FindByEmailOrPhone(string findBy);
+        Task AddProductToBasket(BasketEntity entity);
     }
 }

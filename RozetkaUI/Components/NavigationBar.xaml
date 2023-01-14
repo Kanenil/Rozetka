@@ -440,6 +440,7 @@
                 VerticalAlignment="Top"
                 Margin="10 3 0 0"
                 Grid.Column="7"
+                        Click="BasketClick"
                 Padding="7">
                     <Path Data="{StaticResource Cart}"
                   Stretch="Uniform"

@@ -10,6 +10,7 @@ namespace BAL.Interfaces
     public interface IUserService
     {
         Task Registrate(UserEntityDTO entity);
+        Task AddProductToBasket(BasketEntityDTO entity);
         Task<UserEntityDTO> Login(UserEntityDTO entity);
     }
 }

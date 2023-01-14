@@ -277,5 +277,19 @@ namespace RozetkaUI.Components
                 UseShellExecute = true
             });
         }
+
+        private void BasketClick(object sender, RoutedEventArgs e)
+        {
+            var mainWindow = (MainWindow)Application.Current.MainWindow;
+            if (!(App.Current.MainWindow as MainWindow).IsLogined)
+            {
+                mainWindow.modalFrame.Navigate(new LoginPage());
+            }
+            else
+            {
+                mainWindow.pageFrame.Navigate(new BasketPage(mainWindow.LoginedUser));
+            }
+
+        }
     }
 }

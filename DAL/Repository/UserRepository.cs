@@ -17,10 +17,17 @@ namespace DAL.Repository
         {
         }
 
+        public async Task AddProductToBasket(BasketEntity entity)
+        {
+            await _dbContext.Set<BasketEntity>().AddAsync(entity);
+            await _dbContext.SaveChangesAsync();
+        }
+
         public async Task<UserEntity> FindByEmailOrPhone(string findBy)
         {
             return await _dbContext.Set<UserEntity>()
                 .AsNoTracking()
+                .Include(x => x.Baskets)
                 .Where(e=>e.IsDelete == false)
                 .FirstOrDefaultAsync(e => e.Email.ToLower() == findBy.ToLower() || e.Phone == findBy);
         }

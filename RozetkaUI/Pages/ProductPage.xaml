@@ -6,6 +6,8 @@
       xmlns:local="clr-namespace:RozetkaUI.Pages"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
+      SizeChanged="Page_SizeChanged"
+      Loaded="Page_Loaded"
       Title="ProductPage">
 
     <StackPanel Background="White">
@@ -57,10 +59,131 @@
                          Width="300"/>
 
             </StackPanel>
-            <TextBlock Style="{StaticResource SecundaryHeaderTextBlockStyle}"
-                       Foreground="Red"
-                       Margin="10 0 0 0"
-                       Text="{Binding Product.Price}"/>
+            <StackPanel x:Name="rightBlock">
+                <Border Margin="15 20 0 0"
+                    BorderBrush="LightGray"
+                    BorderThickness="1"
+                    CornerRadius="6"
+                    Padding="10"
+                    VerticalAlignment="Top">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Style="{StaticResource SecundaryHeaderTextBlockStyle}"
+                               Foreground="Black"
+                               Margin="10 0 0 0"
+                               FontSize="36"
+                               Text="{Binding Product.Price}"/>
+                        <TextBlock Style="{StaticResource SecundaryHeaderTextBlockStyle}"
+                               Foreground="Black"
+                               Margin="5 12 0 0"
+                               FontSize="24"
+                               Text="₴"/>
+                        <Button Style="{StaticResource PrimaryIconButtonStyle}"
+                                Click="BasketClick"
+                            VerticalAlignment="Top"
+                            Margin="20 6 0 0"
+                            Padding="15 10">
+                            <StackPanel Orientation="Horizontal">
+                                <Path Data="{StaticResource Cart}"
+                              Stretch="Uniform"
+                              Width="20" Height="20"
+                              Fill="{StaticResource PrimaryTextColor}"
+                              HorizontalAlignment="Center">
+                                    <Path.LayoutTransform>
+                                        <MatrixTransform Matrix="1 0 0 -1 1 0"/>
+                                    </Path.LayoutTransform>
+                                </Path>
+                                <TextBlock Style="{StaticResource PrimaryHeaderTextBlockStyle}"
+                                           Text="Купити"
+                                           FontWeight="Regular"
+                                           FontSize="13"
+                                           Margin="4 0 0 0"/>
+                            </StackPanel>
+                        </Button>
+                    </StackPanel>
+                </Border>
+                <Border Margin="15 20 0 0"
+                    BorderBrush="LightGray"
+                    BorderThickness="1"
+                    CornerRadius="6 6 0 0"
+                    Padding="10"
+                    VerticalAlignment="Top">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+
+                        <Border Background="LightGray"
+                                Height="40" Width="40"
+                                CornerRadius="20">
+                            <Path Data="{StaticResource Wallet}"
+                                  Stretch="Uniform"
+                                  Width="24" Height="24"
+                                  Fill="Black"
+                                  HorizontalAlignment="Center">
+                                <Path.LayoutTransform>
+                                    <MatrixTransform Matrix="1 0 0 -1 1 0"/>
+                                </Path.LayoutTransform>
+                            </Path>
+                        </Border>
+
+                        <TextBlock Grid.Column="1"
+                                   Margin="5 0 0 0"
+                                   Style="{StaticResource SecundaryHeaderTextBlockStyle}"
+                                   Foreground="Black"
+                                   FontSize="14"
+                                   TextWrapping="WrapWithOverflow">
+                            <Run FontWeight="SemiBold">Оплата.</Run>
+                            Оплата під час отримання товару, Картою онлайн, Google Pay, Безготівковими для юридичних осіб, Оплатити онлайн соціальною картою "Пакунок малюка", Безготівковий для фізичних осіб, PrivatPay, Visa, Apple Pay, Оплатити онлайн картою "єПідтримка", Mastercard
+                        </TextBlock>
+
+                    </Grid>
+                </Border>
+                <Border Margin="15 0 0 0"
+                    BorderBrush="LightGray"
+                    BorderThickness="1"
+                    CornerRadius="0 0 6 6"
+                    Padding="10"
+                    VerticalAlignment="Top">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+
+                        <Border Background="LightGray"
+                                Height="40" Width="40"
+                                CornerRadius="20">
+                            <Path Data="{StaticResource Shield}"
+                                  Stretch="Uniform"
+                                  Width="24" Height="24"
+                                  Fill="Black"
+                                  HorizontalAlignment="Center">
+                                <Path.LayoutTransform>
+                                    <MatrixTransform Matrix="1 0 0 -1 1 0"/>
+                                </Path.LayoutTransform>
+                            </Path>
+                        </Border>
+
+                        <TextBlock Grid.Column="1"
+                                   Margin="5 0 0 0"
+                                   Style="{StaticResource SecundaryHeaderTextBlockStyle}"
+                                   Foreground="Black"
+                                   FontSize="14"
+                                   TextWrapping="WrapWithOverflow">
+                            <Run FontWeight="SemiBold">Гарантія.</Run>
+                             Обмін/повернення товару протягом 14 днів <LineBreak/>
+                             Гарантійні терміни товарів<LineBreak/>
+                            60 днів з дня продажу або з початку сезону.<LineBreak/>
+                            На сезонні товари гарантійний термін обчислюється з початку відповідного сезону<LineBreak/>
+                            - для зимового асортименту - з 15 листопада по 15 березня;<LineBreak/>
+                            - для весняно-осіннього асортименту - з 15 березня по 15 травня і з 15 вересня по 15 листопада;<LineBreak/>
+                            - для літнього асортименту - з 15 травня по 15 вересня.
+                        </TextBlock>
+
+                    </Grid>
+                </Border>
+            </StackPanel>
         </StackPanel>
         
         

@@ -1,4 +1,6 @@
 ﻿using BAL.DTO.Models;
+using BAL.Interfaces;
+using BAL.Services;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -57,8 +59,78 @@ namespace RozetkaUI.Pages
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            //(App.Current.MainWindow as MainWindow).pageFrame.Navigate(new ProductListPage(_category));
             (App.Current.MainWindow as MainWindow).pageFrame.Navigate(_prevPage);
+        }
+
+        private void Page_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            if (e.PreviousSize.Width > e.NewSize.Width)
+            {
+                if (rightBlock.ActualWidth > 280 && ActualWidth <= 980)
+                {
+                    var newSize = rightBlock.ActualWidth - (e.PreviousSize.Width - e.NewSize.Width);
+                    if (newSize < 0)
+                    {
+                        rightBlock.Width = ActualWidth - 350;
+                    }
+                    else
+                    {
+                        rightBlock.Width = newSize;
+                    }
+                }
+            }
+            else
+            {
+                if (rightBlock.ActualWidth < 600)
+                {
+                    var newSize = rightBlock.ActualWidth + (e.NewSize.Width - e.PreviousSize.Width);
+                    if (newSize > 600)
+                    {
+                        rightBlock.Width = 600;
+                    }
+                    else
+                    {
+                        rightBlock.Width = newSize;   
+                    }
+
+                }
+            }
+
+        }
+
+        private void Page_Loaded(object sender, RoutedEventArgs e)
+        {
+            if (ActualWidth < 980)
+            {
+                rightBlock.Width = ActualWidth - 350;
+            }
+            else
+            {
+                rightBlock.Width = 600;
+            }
+
+        }
+
+        private async void BasketClick(object sender, RoutedEventArgs e)
+        {
+            var mainWindow = (MainWindow)Application.Current.MainWindow;
+            if (mainWindow.LoginedUser == null)
+            {
+                mainWindow.modalFrame.Navigate(new LoginPage());
+                return;
+            }
+
+            var user = mainWindow.LoginedUser;
+            var basketItem = new BasketEntityDTO()
+            {
+                Count = 1,
+                ProductId = Product.Id,
+                UserId = user.Id
+            };
+            IUserService userService = new UserService();
+            await userService.AddProductToBasket(basketItem);
+            user.Baskets.Add(basketItem);
+
         }
     }
 }
