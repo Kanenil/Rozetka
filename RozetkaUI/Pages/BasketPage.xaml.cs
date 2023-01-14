@@ -1,7 +1,15 @@
 ﻿using BAL.DTO.Models;
+using BAL.Interfaces;
+using BAL.Services;
+using Microsoft.EntityFrameworkCore.Internal;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
+using System.Reflection;
+using System.Reflection.Metadata;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -25,6 +33,111 @@ namespace RozetkaUI.Pages
             InitializeComponent();
             DataContext = this;
             User = user;
+            ChangeSumBalance();
+        }
+
+        private async void Plus_Click(object sender, RoutedEventArgs e)
+        {
+            var content = (BasketEntityDTO)((sender as Button).TemplatedParent as ContentPresenter).Content;
+
+            await ChangeItemContent(sender, content, (short)(content.Count + 1));
+        }
+
+        private void ChangeSumBalance()
+        {
+            decimal sum = 0;
+            foreach (var basket in User.Baskets)
+            {
+                sum += basket.Count * basket.Product.Price;
+            }
+
+            sumBalance.Text = sum.ToString();
+        }
+
+        private async Task ChangeItemContent(object sender ,BasketEntityDTO basketEntity, short count)
+        {
+            basketEntity.Count = count;
+
+            var parent = (sender as Button).Parent;
+            var textBlock = (TextBlock)(parent as StackPanel).Children[3];
+            textBlock.Text = (basketEntity.Count * basketEntity.Product.Price).ToString();
+
+            ChangeSumBalance();
+
+            IUserService userService = new UserService();
+            await userService.EditProductBasket(basketEntity);
+
+            CollectionViewSource.GetDefaultView(User.Baskets).Refresh();
+        }
+
+        private async void Minus_Click(object sender, RoutedEventArgs e)
+        {
+            var content = (BasketEntityDTO)((sender as Button).TemplatedParent as ContentPresenter).Content;
+            if (content.Count - 1 > 0)
+            {
+                await ChangeItemContent(sender, content, (short)(content.Count - 1));
+            }
+        }
+
+        private async void DeleteAll(object sender, RoutedEventArgs e)
+        {
+            if (MessageBox.Show("Видалити всі товари з кошика?","Увага!",MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+            {
+                for (int i = User.Baskets.Count - 1; i >= 0; i--)
+                {
+                    await DeleteBasket(User.Baskets.ElementAt(i));
+                    User.Baskets.Remove(User.Baskets.ElementAt(i));
+                }
+                CollectionViewSource.GetDefaultView(User.Baskets).Refresh();
+
+                productsEmpty.Visibility = Visibility.Visible;
+                productsList.Visibility = Visibility.Collapsed;
+            }
+
+        }
+
+        private async void DeleteClick(object sender, RoutedEventArgs e)
+        {
+            var content = (BasketEntityDTO)((sender as Button).TemplatedParent as ContentPresenter).Content;
+
+            await DeleteBasket(content);
+            User.Baskets.Remove(content);
+            ChangeSumBalance();
+
+            if (User.Baskets.Count == 0)
+            {
+                productsEmpty.Visibility = Visibility.Visible;
+                productsList.Visibility = Visibility.Collapsed;
+            }
+
+            CollectionViewSource.GetDefaultView(User.Baskets).Refresh();
+        }
+
+        private async Task DeleteBasket(BasketEntityDTO basketEntity)
+        {
+            IUserService userService = new UserService();
+            await userService.DeleteProductBasket(basketEntity);
+        }
+
+        private void TextBlock_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            var content = (BasketEntityDTO)((sender as TextBlock).TemplatedParent as ContentPresenter).Content;
+
+            var mainWindow = (MainWindow)App.Current.MainWindow;
+            mainWindow.pageFrame.Navigate(new ProductPage(this, content.Product, content.Product.Category));
+        }
+    }
+    public class BasketPriceConverter : IMultiValueConverter
+    {
+
+        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+        {
+            return ((decimal)values[0] * (short)values[1]).ToString();
+        }
+
+        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
         }
     }
 }

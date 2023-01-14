@@ -32,6 +32,20 @@ namespace BAL.Services
 
             await _userRepository.AddProductToBasket(basket);
         }
+        public async Task EditProductBasket(BasketEntityDTO entity)
+        {
+            var basket = MapBasket<BasketEntityDTO, BasketEntity>(entity);
+            basket.Product = null;
+            basket.User = null;
+            await _userRepository.EditProductBasket(basket);
+        }
+        public async Task DeleteProductBasket(BasketEntityDTO entity)
+        {
+            var basket = MapBasket<BasketEntityDTO, BasketEntity>(entity);
+            basket.Product = null;
+            basket.User = null;
+            await _userRepository.DeleteProductBasket(basket);
+        }
 
         public async Task<UserEntityDTO> Login(UserEntityDTO entity)
         {
@@ -106,7 +120,9 @@ namespace BAL.Services
             var config = new MapperConfiguration(cfg =>
             {
                 cfg.CreateMap<BasketEntityDTO, BasketEntity>();
-                cfg.CreateMap<UserEntityDTO, BasketEntity>();
+                cfg.CreateMap<UserEntityDTO, UserEntity>()
+                   .ForMember(dto => dto.Orders, opt => opt.MapFrom(x => x.Orders));
+                cfg.CreateMap<OrderEntityDTO, OrderEntity>();
                 cfg.CreateMap<CategoryEntityDTO, CategoryEntity>();
                 cfg.CreateMap<ProductImageEntityDTO, ProductImageEntity>();
                 cfg.CreateMap<ProductEntityDTO, ProductEntity>()
@@ -145,5 +161,6 @@ namespace BAL.Services
 
             return mapper.Map<TEntityFrom, TEntityTo>(entityDTOs);
         }
+
     }
 }

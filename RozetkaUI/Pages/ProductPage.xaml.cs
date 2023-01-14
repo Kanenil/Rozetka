@@ -33,6 +33,16 @@ namespace RozetkaUI.Pages
             SelectedImage = Product.Images.FirstOrDefault();
             DataContext = this;
             _prevPage= prevPage;
+
+            var mainWindow = (MainWindow)App.Current.MainWindow;
+            if (mainWindow.IsLogined)
+            {
+                if (mainWindow.LoginedUser.Baskets.Where(x=>x.ProductId == product.Id).FirstOrDefault() != null)
+                {
+                    inBasketBtn.Visibility = Visibility.Visible;
+                    basketBtn.Visibility = Visibility.Collapsed;
+                }
+            }
         }
         private CategoryEntityDTO _category;
         public ProductEntityDTO Product { get; }
@@ -129,8 +139,20 @@ namespace RozetkaUI.Pages
             };
             IUserService userService = new UserService();
             await userService.AddProductToBasket(basketItem);
+
+            basketItem.User = user;
+            basketItem.Product = Product;
+
             user.Baskets.Add(basketItem);
 
+            inBasketBtn.Visibility = Visibility.Visible;
+            basketBtn.Visibility = Visibility.Collapsed;
+        }
+
+        private void MoveToBasket(object sender, RoutedEventArgs e)
+        {
+            var mainWindow = (MainWindow)Application.Current.MainWindow;
+            mainWindow.pageFrame.Navigate(new BasketPage(mainWindow.LoginedUser));
         }
     }
 }

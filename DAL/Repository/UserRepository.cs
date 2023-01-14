@@ -23,6 +23,18 @@ namespace DAL.Repository
             await _dbContext.SaveChangesAsync();
         }
 
+        public async Task DeleteProductBasket(BasketEntity entity)
+        {
+            _dbContext.Set<BasketEntity>().Remove(entity);
+            await _dbContext.SaveChangesAsync();
+        }
+
+        public async Task EditProductBasket(BasketEntity entity)
+        {
+            _dbContext.Set<BasketEntity>().Update(entity);
+            await _dbContext.SaveChangesAsync();
+        }
+
         public async Task<UserEntity> FindByEmailOrPhone(string findBy)
         {
             return await _dbContext.Set<UserEntity>()

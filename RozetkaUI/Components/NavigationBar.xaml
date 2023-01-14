@@ -788,7 +788,8 @@
 
                         <Button HorizontalAlignment="Left"
                                 Style="{StaticResource MenuItem}"
-                                x:Name="basketButton">
+                                x:Name="basketButton"
+                                Click="BasketMenuClick">
                             <StackPanel Orientation="Horizontal"
                                         HorizontalAlignment="Left">
 

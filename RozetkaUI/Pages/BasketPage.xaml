@@ -93,6 +93,7 @@
                 </Trigger>
             </Style.Triggers>
         </Style>
+        <local:BasketPriceConverter x:Key="PriceConverter"/>
     </Page.Resources>
 
     <StackPanel Background="White">
@@ -107,62 +108,209 @@
 
         <Border Margin="0 10 0 0" HorizontalAlignment="Center"
                 BorderBrush="Gray" CornerRadius="7"
-                BorderThickness="1">
-            <ItemsControl ItemsSource="{Binding User.Baskets}" Name="products">
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <StackPanel HorizontalAlignment="Center"
+                BorderThickness="1" Height="500"
+                Width="500" Name="productsEmpty">
+            <Border.Style>
+                <Style TargetType="Border">
+                    <Setter Property="Visibility" Value="Collapsed"/>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding User.Baskets.Count}" Value="0">
+                            <Setter Property="Visibility" Value="Visible"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Border.Style>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition Height="0.3*"/>
+                    <RowDefinition Height="0.3*"/>
+                </Grid.RowDefinitions>
+                <Image HorizontalAlignment="Center"
+                       VerticalAlignment="Center"
+                       Source="../Images/CartImage.png"/>
+                <TextBlock Text="Кошик порожній"
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Bottom"
+                           FontSize="28"
+                           FontWeight="SemiBold"
+                           Style="{StaticResource SecundaryHeaderTextBlockStyle}"
+                           Grid.Row="1"/>
+                <TextBlock Text="Але це ніколи не пізно виправити :)"
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Center"
+                           FontSize="20"
+                           FontWeight="SemiBold"
+                           Style="{StaticResource SecundaryHeaderTextBlockStyle}"
+                           Grid.Row="2"/>
+            </Grid>
+        </Border>
+
+        <Border Margin="0 10 0 20" HorizontalAlignment="Center"
+                BorderBrush="Gray" CornerRadius="7"
+                BorderThickness="1" Name="productsList">
+            <Border.Style>
+                <Style TargetType="Border">
+                    <Setter Property="Visibility" Value="Visible"/>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding User.Baskets.Count}" Value="0">
+                            <Setter Property="Visibility" Value="Collapsed"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Border.Style>
+            <StackPanel>
+                <Button Style="{StaticResource LinkButton}"
+                        Content="Видалити всі"
+                        Click="DeleteAll"
+                        HorizontalAlignment="Right"
+                        Margin="0 10 20 10"/>
+                <ItemsControl ItemsSource="{Binding User.Baskets}" Name="products">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel HorizontalAlignment="Center"
                                     Width="500"
                                     Margin="0 0 0 10">
-                            <StackPanel Orientation="Horizontal"
+                                <StackPanel Orientation="Horizontal"
                                         Margin="10 5 0 0">
-                                <Image Width="100" Height="100"
+                                    <Image Width="100" Height="100"
                                        Source="{Binding Product.Images[0].Name}"/>
-                                <TextBlock Text="{Binding Product.Name}"
+                                    <TextBlock Text="{Binding Product.Name}"
                                            FontSize="16"
                                            Margin="10 10 0 0"
-                                           Width="300" TextWrapping="Wrap"/>
-                                <Button HorizontalAlignment="Right" 
+                                               MouseDown="TextBlock_MouseDown"
+                                           Width="300" TextWrapping="Wrap">
+                                        <TextBlock.Style>
+                                            <Style TargetType="TextBlock">
+                                                <Setter Property="Cursor" Value="{x:Null}"/>
+                                                <Style.Triggers>
+                                                    <Trigger Property="IsMouseOver" Value="True">
+                                                        <Setter Property="Cursor" Value="Hand"/>
+                                                    </Trigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </TextBlock.Style>
+                                    </TextBlock>
+                                    <Button HorizontalAlignment="Right" 
+                                            Click="DeleteClick"
                                         Style="{StaticResource TransperentButtonStyle}"
                                         VerticalAlignment="Top"
                                         Margin="40 10 10 0"
                                         Padding="7">
-                                    <Path Data="{StaticResource Delete}"
+                                        <Path Data="{StaticResource Delete}"
                                           Stretch="Uniform"
                                           Width="18" Height="18"
                                           Fill="{StaticResource PrimaryBackgroundColor}"
                                           HorizontalAlignment="Center">
-                                        <Path.LayoutTransform>
-                                            <MatrixTransform Matrix="1 0 0 -1 1 0"/>
-                                        </Path.LayoutTransform>
-                                    </Path>
-                                </Button>
-                            </StackPanel>
-                            <StackPanel Orientation="Horizontal"
+                                            <Path.LayoutTransform>
+                                                <MatrixTransform Matrix="1 0 0 -1 1 0"/>
+                                            </Path.LayoutTransform>
+                                        </Path>
+                                    </Button>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal"
                                         HorizontalAlignment="Right"
                                         Margin="0 0 10 0">
-                                <TextBlock Style="{StaticResource SecundaryHeaderTextBlockStyle}"
+
+                                    <Button HorizontalAlignment="Right"
+                                            Click="Minus_Click"
+                                        Style="{StaticResource TransperentButtonStyle}"
+                                        VerticalAlignment="Top"
+                                        Margin="10 0 10 10"
+                                        Padding="7">
+                                        <Path Data="{StaticResource Minus}"
+                                          Stretch="Uniform"
+                                          Width="18" Height="18"
+                                          Fill="{StaticResource PrimaryBackgroundColor}"
+                                          HorizontalAlignment="Center">
+                                            <Path.LayoutTransform>
+                                                <MatrixTransform Matrix="1 0 0 -1 1 0"/>
+                                            </Path.LayoutTransform>
+                                        </Path>
+                                    </Button>
+                                    
+                                    <TextBlock Style="{StaticResource SecundaryHeaderTextBlockStyle}"
                                            Foreground="Black"
-                                           Margin="10 0 0 0"
+                                           Margin="10 5 10 0"
                                            FontSize="16"
-                                           Text="{Binding Product.Price}"/>
-                                <TextBlock Style="{StaticResource SecundaryHeaderTextBlockStyle}"
+                                           Text="{Binding Count}"/>
+
+                                    <Button HorizontalAlignment="Right"
+                                            Click="Plus_Click"
+                                        Style="{StaticResource TransperentButtonStyle}"
+                                        VerticalAlignment="Top"
+                                        Margin="10 0 30 10"
+                                        Padding="7">
+                                        <Path Data="{StaticResource Plus}"
+                                          Stretch="Uniform"
+                                          Width="18" Height="18"
+                                          Fill="{StaticResource PrimaryBackgroundColor}"
+                                          HorizontalAlignment="Center">
+                                            <Path.LayoutTransform>
+                                                <MatrixTransform Matrix="1 0 0 -1 1 0"/>
+                                            </Path.LayoutTransform>
+                                        </Path>
+                                    </Button>
+                                    
+                                    <TextBlock Foreground="Black"
+                                           Margin="10 0 0 0"
+                                           FontSize="16">
+                                        <TextBlock.Style>
+                                            <Style TargetType="TextBlock">
+                                                <Setter Property="Text">
+                                                    <Setter.Value>
+                                                        <MultiBinding Converter="{StaticResource PriceConverter}">
+                                                            <Binding Path="Product.Price" />
+                                                            <Binding Path="Count" />
+                                                        </MultiBinding>
+                                                    </Setter.Value>
+                                                </Setter>
+                                            </Style>
+                                        </TextBlock.Style>
+                                    </TextBlock>
+                                    <TextBlock Style="{StaticResource SecundaryHeaderTextBlockStyle}"
                                            Foreground="Black"
                                            FontWeight="SemiBold"
-                                           Margin="5 12 0 0"
+                                           Margin="5 0 0 0"
                                            FontSize="16"
                                            Text="₴"/>
+                                </StackPanel>
                             </StackPanel>
-                        </StackPanel>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-                <ItemsControl.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <WrapPanel Orientation="Horizontal"/>
-                    </ItemsPanelTemplate>
-                </ItemsControl.ItemsPanel>
-            </ItemsControl>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel Orientation="Vertical"/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                </ItemsControl>
+                <Border Background="#FFE5F5EC"
+                        BorderBrush="#FF00A046"
+                        BorderThickness="2" CornerRadius="7"
+                        Padding="20"
+                        Margin="0 0 10 20"
+                        HorizontalAlignment="Right">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Foreground="Black"
+                                   Margin="10 0 0 0"
+                                   FontSize="36"
+                                   Name="sumBalance"/>
 
+                        <TextBlock Style="{StaticResource SecundaryHeaderTextBlockStyle}"
+                                   Foreground="Black"
+                                   FontWeight="SemiBold"
+                                   Margin="5 13 0 0"
+                                   FontSize="24"
+                                   Text="₴"/>
+
+                        <Button Style="{StaticResource PrimaryButtonStyle}"
+                                Padding="15"
+                                Margin="40 0 0 0"
+                                Content="Оформити замовлення"/>
+
+                    </StackPanel>
+                </Border>
+            </StackPanel>
         </Border>
         
         

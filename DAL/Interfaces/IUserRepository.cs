@@ -10,5 +10,7 @@ namespace DAL.Interfaces
     {
         Task<UserEntity> FindByEmailOrPhone(string findBy);
         Task AddProductToBasket(BasketEntity entity);
+        Task EditProductBasket(BasketEntity entity);
+        Task DeleteProductBasket(BasketEntity entity);
     }
 }

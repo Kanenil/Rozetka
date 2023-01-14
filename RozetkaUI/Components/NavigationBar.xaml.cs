@@ -291,5 +291,19 @@ namespace RozetkaUI.Components
             }
 
         }
+
+        private void BasketMenuClick(object sender, RoutedEventArgs e)
+        {
+            var mainWindow = (MainWindow)Application.Current.MainWindow;
+            if (!(App.Current.MainWindow as MainWindow).IsLogined)
+            {
+                mainWindow.modalFrame.Navigate(new LoginPage());
+            }
+            else
+            {
+                mainWindow.pageFrame.Navigate(new BasketPage(mainWindow.LoginedUser));
+                closeMenu.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+            }
+        }
     }
 }

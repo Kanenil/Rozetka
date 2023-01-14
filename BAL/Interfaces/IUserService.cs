@@ -11,6 +11,8 @@ namespace BAL.Interfaces
     {
         Task Registrate(UserEntityDTO entity);
         Task AddProductToBasket(BasketEntityDTO entity);
+        Task EditProductBasket(BasketEntityDTO entity);
+        Task DeleteProductBasket(BasketEntityDTO entity);
         Task<UserEntityDTO> Login(UserEntityDTO entity);
     }
 }
