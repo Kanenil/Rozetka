@@ -47,7 +47,11 @@ namespace BAL.Services
 
         public IEnumerable<CategoryEntityDTO> GetCategories()
         {
-            return MapCategory<IEnumerable<CategoryEntity>, IEnumerable<CategoryEntityDTO>>(_categoryRepository.GetAll().Include(x => x.Products).ThenInclude(x => x.Images));
+            var list = MapCategory<IEnumerable<CategoryEntity>, IEnumerable<CategoryEntityDTO>>(_categoryRepository.GetAll().Include(x => x.Products).ThenInclude(x => x.Images));
+            foreach (var category in list)
+                foreach (var product in category.Products)
+                    product.Images = product.Images.OrderBy(x => x.Priority).ToList();
+            return list;
         }
         private TEntityTo MapCategory<TEntityFrom, TEntityTo>(TEntityFrom entityDTOs)
         {

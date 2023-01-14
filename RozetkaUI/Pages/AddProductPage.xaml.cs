@@ -30,11 +30,13 @@ namespace RozetkaUI.Pages
     {
         private CategoryEntityDTO _category;
         private ProductEntityDTO _product;
-        public AddProductPage(CategoryEntityDTO category, ProductEntityDTO product = null)
+        private Page _prevPage;
+        public AddProductPage(Page prevPage, CategoryEntityDTO category, ProductEntityDTO product = null)
         {
             InitializeComponent();
             _category = category;
             _product = product;
+            _prevPage = prevPage;
 
             if (_product != null)
             {
@@ -509,7 +511,8 @@ namespace RozetkaUI.Pages
 
         private void ReturnBackClick(object sender, RoutedEventArgs e)
         {
-            (App.Current.MainWindow as MainWindow).pageFrame.Navigate(new ProductListPage(_category));
+            //(App.Current.MainWindow as MainWindow).pageFrame.Navigate(new ProductListPage(_category));
+            (App.Current.MainWindow as MainWindow).pageFrame.Navigate(_prevPage);
         }
     }
 }

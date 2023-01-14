@@ -21,99 +21,97 @@
         </Style>
     </Page.Resources>
     <Grid>
-        <ScrollViewer VerticalScrollBarVisibility="Auto">
-            <StackPanel Background="White">
-                <StackPanel Margin="10" Height="300">
-                </StackPanel>
-                <Grid x:Name="Notebooks" Margin="30">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition></ColumnDefinition>
-                        <ColumnDefinition></ColumnDefinition>
-                        <ColumnDefinition></ColumnDefinition>
-                        <ColumnDefinition></ColumnDefinition>
-                    </Grid.ColumnDefinitions>
-                    <StackPanel>
-                        <Image Source="{Binding Category1.Products[0].Images[0].Name}"></Image>
-                        <TextBlock Height="80" FontSize="20" Text="{Binding Category1.Products[0].Name}"></TextBlock>
-                        <TextBlock FontSize="15" Foreground="black" Text="{Binding Category1.Products[0].Price}"></TextBlock>
-                        <Button Margin="5 40" Click="Button_Click_1" Background="green" Foreground="White">Look</Button>
-                    </StackPanel>
-                    <StackPanel Grid.Column="1">
-                        <Image Source="{Binding Category1.Products[1].Images[0].Name}"></Image>
-                        <TextBlock Height="80" FontSize="20" Text="{Binding Category1.Products[1].Name}"></TextBlock>
-                        <TextBlock FontSize="15" Foreground="black" Text="{Binding Category1.Products[1].Price}"></TextBlock>
-                        <Button Margin="5 40" Click="Button_Click_1" Background="green" Foreground="White">Look</Button>
-                    </StackPanel>
-                    <StackPanel Grid.Column="2">
-                        <Image Source="{Binding Category1.Products[2].Images[0].Name}"></Image>
-                        <TextBlock Height="80" FontSize="20" Text="{Binding Category1.Products[2].Name}"></TextBlock>
-                        <TextBlock FontSize="15" Foreground="black" Text="{Binding Category1.Products[2].Price}"></TextBlock>
-                        <Button Margin="5 40" Click="Button_Click_1" Background="green" Foreground="White">Look</Button>
-                    </StackPanel>
-                    <Button Click="MoreNotebooks_Click" x:Name="MoreNotebooks" Grid.Column="3">
-                        <TextBlock>Find more notebooks...</TextBlock>
-                    </Button>
-                </Grid>
-                <Grid x:Name="Computers" Margin="30">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition></ColumnDefinition>
-                        <ColumnDefinition></ColumnDefinition>
-                        <ColumnDefinition></ColumnDefinition>
-                        <ColumnDefinition></ColumnDefinition>
-                    </Grid.ColumnDefinitions>
-                    <StackPanel>
-                        <Image Source="{Binding Category2.Products[0].Images[0].Name}"></Image>
-                        <TextBlock Height="80" FontSize="20" Text="{Binding Category2.Products[0].Name}"></TextBlock>
-                        <TextBlock FontSize="15" Foreground="black" Text="{Binding Category2.Products[0].Price}"></TextBlock>
-                        <Button Margin="5 40" Click="Button_Click_2" Background="green" Foreground="White">Look</Button>
-                    </StackPanel>
-                    <StackPanel Grid.Column="1">
-                        <Image Source="{Binding Category2.Products[1].Images[0].Name}"></Image>
-                        <TextBlock Height="80" FontSize="20" Text="{Binding Category2.Products[1].Name}"></TextBlock>
-                        <TextBlock FontSize="15" Foreground="black" Text="{Binding Category2.Products[1].Price}"></TextBlock>
-                        <Button Margin="5 40" Click="Button_Click_2" Background="green" Foreground="White">Look</Button>
-                    </StackPanel>
-                    <StackPanel Grid.Column="2">
-                        <Image Source="{Binding Category2.Products[2].Images[0].Name}"></Image>
-                        <TextBlock Height="80" FontSize="20" Text="{Binding Category2.Products[2].Name}"></TextBlock>
-                        <TextBlock FontSize="15" Foreground="black" Text="{Binding Category2.Products[2].Price}"></TextBlock>
-                        <Button Margin="5 40" Click="Button_Click_2" Background="green" Foreground="White">Look</Button>
-                    </StackPanel>
-                    <Button Click="MoreComputers_Click" x:Name="MoreComputers" Grid.Column="3">
-                        <TextBlock>Find more computers...</TextBlock>
-                    </Button>
-                </Grid>
-                <Grid x:Name="Monitors" Margin="30">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition></ColumnDefinition>
-                        <ColumnDefinition></ColumnDefinition>
-                        <ColumnDefinition></ColumnDefinition>
-                        <ColumnDefinition></ColumnDefinition>
-                    </Grid.ColumnDefinitions>
-                    <StackPanel>
-                        <Image Source="{Binding Category3.Products[0].Images[0].Name}"></Image>
-                        <TextBlock Height="80" FontSize="20" Text="{Binding Category3.Products[0].Name}"></TextBlock>
-                        <TextBlock FontSize="15" Foreground="black" Text="{Binding Category3.Products[0].Price}"></TextBlock>
-                        <Button Margin="5 70" Click="Button_Click_3" Background="green" Foreground="White">Look</Button>
-                    </StackPanel>
-                    <StackPanel Grid.Column="1">
-                        <Image Source="{Binding Category3.Products[1].Images[0].Name}"></Image>
-                        <TextBlock Height="80" FontSize="20" Text="{Binding Category1.Products[1].Name}"></TextBlock>
-                        <TextBlock FontSize="15" Foreground="black" Text="{Binding Category3.Products[1].Price}"></TextBlock>
-                        <Button Margin="5 70" Click="Button_Click_3" Background="green" Foreground="White">Look</Button>
-                    </StackPanel>
-                    <StackPanel Grid.Column="2">
-                        <Image Source="{Binding Category3.Products[2].Images[0].Name}"></Image>
-                        <TextBlock Height="80" FontSize="20" Text="{Binding Category3.Products[2].Name}"></TextBlock>
-                        <TextBlock FontSize="15" Foreground="black" Text="{Binding Category3.Products[2].Price}"></TextBlock>
-                        <Button Margin="5 70" Click="Button_Click_3" Background="green" Foreground="White">Look</Button>
-                    </StackPanel>
-                    <Button Click="MoreMonitors_Click" x:Name="MoreMonitors" Grid.Column="3">
-                        <TextBlock>Find more monitors...</TextBlock>
-                    </Button>
-                </Grid>
+        <StackPanel Background="White">
+            <StackPanel Margin="10" Height="300">
             </StackPanel>
-        </ScrollViewer>
+            <Grid x:Name="Notebooks" Margin="30">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <StackPanel>
+                    <Image Source="{Binding Category1.Products[0].Images[0].Name}"></Image>
+                    <TextBlock Height="80" FontSize="20" Text="{Binding Category1.Products[0].Name}"></TextBlock>
+                    <TextBlock FontSize="15" Foreground="black" Text="{Binding Category1.Products[0].Price}"></TextBlock>
+                    <Button Margin="5 40" Click="Button_Click_1" Background="green" Foreground="White">Look</Button>
+                </StackPanel>
+                <StackPanel Grid.Column="1">
+                    <Image Source="{Binding Category1.Products[1].Images[0].Name}"></Image>
+                    <TextBlock Height="80" FontSize="20" Text="{Binding Category1.Products[1].Name}"></TextBlock>
+                    <TextBlock FontSize="15" Foreground="black" Text="{Binding Category1.Products[1].Price}"></TextBlock>
+                    <Button Margin="5 40" Click="Button_Click_1" Background="green" Foreground="White">Look</Button>
+                </StackPanel>
+                <StackPanel Grid.Column="2">
+                    <Image Source="{Binding Category1.Products[2].Images[0].Name}"></Image>
+                    <TextBlock Height="80" FontSize="20" Text="{Binding Category1.Products[2].Name}"></TextBlock>
+                    <TextBlock FontSize="15" Foreground="black" Text="{Binding Category1.Products[2].Price}"></TextBlock>
+                    <Button Margin="5 40" Click="Button_Click_1" Background="green" Foreground="White">Look</Button>
+                </StackPanel>
+                <Button Click="MoreNotebooks_Click" x:Name="MoreNotebooks" Grid.Column="3">
+                    <TextBlock>Find more notebooks...</TextBlock>
+                </Button>
+            </Grid>
+            <Grid x:Name="Computers" Margin="30">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <StackPanel>
+                    <Image Source="{Binding Category2.Products[0].Images[0].Name}"></Image>
+                    <TextBlock Height="80" FontSize="20" Text="{Binding Category2.Products[0].Name}"></TextBlock>
+                    <TextBlock FontSize="15" Foreground="black" Text="{Binding Category2.Products[0].Price}"></TextBlock>
+                    <Button Margin="5 40" Click="Button_Click_2" Background="green" Foreground="White">Look</Button>
+                </StackPanel>
+                <StackPanel Grid.Column="1">
+                    <Image Source="{Binding Category2.Products[1].Images[0].Name}"></Image>
+                    <TextBlock Height="80" FontSize="20" Text="{Binding Category2.Products[1].Name}"></TextBlock>
+                    <TextBlock FontSize="15" Foreground="black" Text="{Binding Category2.Products[1].Price}"></TextBlock>
+                    <Button Margin="5 40" Click="Button_Click_2" Background="green" Foreground="White">Look</Button>
+                </StackPanel>
+                <StackPanel Grid.Column="2">
+                    <Image Source="{Binding Category2.Products[2].Images[0].Name}"></Image>
+                    <TextBlock Height="80" FontSize="20" Text="{Binding Category2.Products[2].Name}"></TextBlock>
+                    <TextBlock FontSize="15" Foreground="black" Text="{Binding Category2.Products[2].Price}"></TextBlock>
+                    <Button Margin="5 40" Click="Button_Click_2" Background="green" Foreground="White">Look</Button>
+                </StackPanel>
+                <Button Click="MoreComputers_Click" x:Name="MoreComputers" Grid.Column="3">
+                    <TextBlock>Find more computers...</TextBlock>
+                </Button>
+            </Grid>
+            <Grid x:Name="Monitors" Margin="30">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <StackPanel>
+                    <Image Source="{Binding Category3.Products[0].Images[0].Name}"></Image>
+                    <TextBlock Height="80" FontSize="20" Text="{Binding Category3.Products[0].Name}"></TextBlock>
+                    <TextBlock FontSize="15" Foreground="black" Text="{Binding Category3.Products[0].Price}"></TextBlock>
+                    <Button Margin="5 70" Click="Button_Click_3" Background="green" Foreground="White">Look</Button>
+                </StackPanel>
+                <StackPanel Grid.Column="1">
+                    <Image Source="{Binding Category3.Products[1].Images[0].Name}"></Image>
+                    <TextBlock Height="80" FontSize="20" Text="{Binding Category3.Products[1].Name}"></TextBlock>
+                    <TextBlock FontSize="15" Foreground="black" Text="{Binding Category3.Products[1].Price}"></TextBlock>
+                    <Button Margin="5 70" Click="Button_Click_3" Background="green" Foreground="White">Look</Button>
+                </StackPanel>
+                <StackPanel Grid.Column="2">
+                    <Image Source="{Binding Category3.Products[2].Images[0].Name}"></Image>
+                    <TextBlock Height="80" FontSize="20" Text="{Binding Category3.Products[2].Name}"></TextBlock>
+                    <TextBlock FontSize="15" Foreground="black" Text="{Binding Category3.Products[2].Price}"></TextBlock>
+                    <Button Margin="5 70" Click="Button_Click_3" Background="green" Foreground="White">Look</Button>
+                </StackPanel>
+                <Button Click="MoreMonitors_Click" x:Name="MoreMonitors" Grid.Column="3">
+                    <TextBlock>Find more monitors...</TextBlock>
+                </Button>
+            </Grid>
+        </StackPanel>
     </Grid>
    
 </Page>

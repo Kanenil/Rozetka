@@ -22,13 +22,15 @@ namespace RozetkaUI.Pages
     /// </summary>
     public partial class ProductPage : Page, INotifyPropertyChanged
     {
-        public ProductPage(ProductEntityDTO product, CategoryEntityDTO category)
+        private Page _prevPage;
+        public ProductPage(Page prevPage, ProductEntityDTO product, CategoryEntityDTO category)
         {
             InitializeComponent();
             Product = product;
             _category = category;
             SelectedImage = Product.Images.FirstOrDefault();
             DataContext = this;
+            _prevPage= prevPage;
         }
         private CategoryEntityDTO _category;
         public ProductEntityDTO Product { get; }
@@ -55,7 +57,8 @@ namespace RozetkaUI.Pages
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            (App.Current.MainWindow as MainWindow).pageFrame.Navigate(new ProductListPage(_category));
+            //(App.Current.MainWindow as MainWindow).pageFrame.Navigate(new ProductListPage(_category));
+            (App.Current.MainWindow as MainWindow).pageFrame.Navigate(_prevPage);
         }
     }
 }

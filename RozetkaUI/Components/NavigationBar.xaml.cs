@@ -83,16 +83,9 @@ namespace RozetkaUI.Components
         private void navBar_Loaded(object sender, RoutedEventArgs e)
         {
             ICategoryService categoryService = new CategoryService();
-            var list = categoryService.GetCategories();
-            foreach (var cat in list)
-                foreach (var product in cat.Products)
-                    product.Images = product.Images.OrderBy(x => x.Priority).ToList();
-
-            Categories = list.ToList();
+            Categories = categoryService.GetCategories().ToList();
 
             categoriesItemControl.ItemsSource = Categories;
-
-            (App.Current.MainWindow as MainWindow).pageFrame.Navigate(new AllCategoriesPage(Categories.ToList()));
         }
 
         private void catalogButton_Click(object sender, RoutedEventArgs e)
@@ -150,13 +143,13 @@ namespace RozetkaUI.Components
 
         private void HomeMenuClick(object sender, RoutedEventArgs e)
         {
-            (App.Current.MainWindow as MainWindow).pageFrame.Navigate(new AllCategoriesPage(Categories.ToList()));
+            (App.Current.MainWindow as MainWindow).pageFrame.Navigate(new Main_Page());
             closeMenu.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
         }
 
         private void HomeClick(object sender, RoutedEventArgs e)
         {
-            (App.Current.MainWindow as MainWindow).pageFrame.Navigate(new AllCategoriesPage(Categories.ToList()));
+            (App.Current.MainWindow as MainWindow).pageFrame.Navigate(new Main_Page());
         }
 
         private void QuestionClick(object sender, RoutedEventArgs e)

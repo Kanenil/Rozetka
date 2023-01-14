@@ -2,6 +2,7 @@
 using BAL.Services;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -25,9 +26,12 @@ namespace RozetkaUI.Pages
             InitializeComponent();
             DataContext = this;
             _categoryService = new CategoryService();
-            Category1 = GetCategoriesList()[0];
-            Category2 = GetCategoriesList()[1];
-            Category3 = GetCategoriesList()[2];
+
+            var categories = GetCategoriesList();
+
+            Category1 = categories[0];
+            Category2 = categories[1];
+            Category3 = categories[2];
         }
         private CategoryService _categoryService;
         public CategoryEntityDTO Category1 { get; }
@@ -38,7 +42,8 @@ namespace RozetkaUI.Pages
         private List<CategoryEntityDTO> GetCategoriesList()
         {
             List<CategoryEntityDTO> list = new List<CategoryEntityDTO>();
-            foreach (CategoryEntityDTO item in _categoryService.GetCategories())
+            var tempList = _categoryService.GetCategories();
+            foreach (CategoryEntityDTO item in tempList)
             {
                 list.Add(item);
             }
@@ -46,7 +51,6 @@ namespace RozetkaUI.Pages
         }
         private void MoreNotebooks_Click(object sender, RoutedEventArgs e)
         {
-
             (App.Current.MainWindow as MainWindow).pageFrame.Navigate(new ProductListPage(Category1));
         }
 
@@ -97,19 +101,19 @@ namespace RozetkaUI.Pages
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
             string product = (((sender as Button).Parent as StackPanel).Children[1] as TextBlock).Text;
-            (App.Current.MainWindow as MainWindow).pageFrame.Navigate(new ProductPage(GetProduct1(product), Category1));
+            (App.Current.MainWindow as MainWindow).pageFrame.Navigate(new ProductPage(this ,GetProduct1(product), Category1));
         }
 
         private void Button_Click_2(object sender, RoutedEventArgs e)
         {
             string product = (((sender as Button).Parent as StackPanel).Children[1] as TextBlock).Text;
-            (App.Current.MainWindow as MainWindow).pageFrame.Navigate(new ProductPage(GetProduct2(product), Category2));
+            (App.Current.MainWindow as MainWindow).pageFrame.Navigate(new ProductPage(this, GetProduct2(product), Category2));
         }
 
         private void Button_Click_3(object sender, RoutedEventArgs e)
         {
             string product = (((sender as Button).Parent as StackPanel).Children[1] as TextBlock).Text;
-            (App.Current.MainWindow as MainWindow).pageFrame.Navigate(new ProductPage(GetProduct3(product), Category3));
+            (App.Current.MainWindow as MainWindow).pageFrame.Navigate(new ProductPage(this,GetProduct3(product), Category3));
         }
     }
 }

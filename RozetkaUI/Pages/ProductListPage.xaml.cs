@@ -33,18 +33,18 @@ namespace RozetkaUI.Pages
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             var content = (ProductEntityDTO)((sender as Button).TemplatedParent as ContentPresenter).Content;
-            (App.Current.MainWindow as MainWindow).pageFrame.Navigate(new ProductPage(content, Category));
+            (App.Current.MainWindow as MainWindow).pageFrame.Navigate(new ProductPage(this, content, Category));
         }
 
         private void AddProduct(object sender, RoutedEventArgs e)
         {
-            (App.Current.MainWindow as MainWindow).pageFrame.Navigate(new AddProductPage(Category));
+            (App.Current.MainWindow as MainWindow).pageFrame.Navigate(new AddProductPage(this, Category));
         }
 
         private void EditProduct(object sender, RoutedEventArgs e)
         {
             var content = (ProductEntityDTO)((sender as Button).TemplatedParent as ContentPresenter).Content;
-            (App.Current.MainWindow as MainWindow).pageFrame.Navigate(new AddProductPage(Category, content));
+            (App.Current.MainWindow as MainWindow).pageFrame.Navigate(new AddProductPage(this, Category, content));
             e.Handled = true;
         }
 
