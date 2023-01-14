@@ -30,6 +30,7 @@ namespace RozetkaUI
             DatabaseSeeder.Seed();
             DataContext = this;
             IsLogined = false;
+            pageFrame.Content = new Main_Page();
         }
 
         private UserEntityDTO _loginedUser;
