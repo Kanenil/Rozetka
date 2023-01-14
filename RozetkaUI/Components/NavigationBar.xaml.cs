@@ -78,6 +78,7 @@ namespace RozetkaUI.Components
         private void LogoutClick(object sender, RoutedEventArgs e)
         {
             (App.Current.MainWindow as MainWindow).LoginedUser = null;
+            (App.Current.MainWindow as MainWindow).pageFrame.Navigate(new Main_Page());
         }
 
         private void navBar_Loaded(object sender, RoutedEventArgs e)
