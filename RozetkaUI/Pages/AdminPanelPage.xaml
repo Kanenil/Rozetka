@@ -156,28 +156,51 @@
                 </Style>
             </TabControl.Resources>
             <TabItem Header="Users">
-                <DataGrid ItemsSource="{Binding Users}"
-                          IsReadOnly="True" AutoGenerateColumns="False">
-                    <DataGrid.Columns>
-                        <DataGridTextColumn Header="Зареєстрований"
+                <Grid>
+                    <DataGrid ItemsSource="{Binding Users}"
+                          IsReadOnly="True" AutoGenerateColumns="False"
+                              Name="userPanel">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Зареєстрований"
                                         Width="*"
                                         Binding="{Binding DateCreated}"/>
-                        <DataGridTextColumn Header="Email"
+                            <DataGridTextColumn Header="Email"
                                         Width="*"
                                         Binding="{Binding Email}"/>
-                        <DataGridTextColumn Header="Моб. телефон"
+                            <DataGridTextColumn Header="Моб. телефон"
                                         Width="*"
                                         Binding="{Binding Phone}"/>
-                        <DataGridTextColumn Header="Ім'я"
+                            <DataGridTextColumn Header="Ім'я"
                                         Width="*"
                                         Binding="{Binding FirstName}"/>
-                        <DataGridTextColumn Header="Прізвище"
+                            <DataGridTextColumn Header="Прізвище"
                                         Width="*"
                                         Binding="{Binding FirstName}"/>
-                        <DataGridTemplateColumn Width="*">
-                            <DataGridTemplateColumn.CellTemplate>
-                                <DataTemplate>
-                                    <Button Style="{StaticResource PrimaryButtonStyle}"
+                        </DataGrid.Columns>
+                    </DataGrid>
+                    <DataGrid ItemsSource="{Binding Users}"
+                          IsReadOnly="True" AutoGenerateColumns="False"
+                              Name="userSuperPanel">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Зареєстрований"
+                                        Width="*"
+                                        Binding="{Binding DateCreated}"/>
+                            <DataGridTextColumn Header="Email"
+                                        Width="*"
+                                        Binding="{Binding Email}"/>
+                            <DataGridTextColumn Header="Моб. телефон"
+                                        Width="*"
+                                        Binding="{Binding Phone}"/>
+                            <DataGridTextColumn Header="Ім'я"
+                                        Width="*"
+                                        Binding="{Binding FirstName}"/>
+                            <DataGridTextColumn Header="Прізвище"
+                                        Width="*"
+                                        Binding="{Binding FirstName}"/>
+                            <DataGridTemplateColumn Width="*">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Button Style="{StaticResource PrimaryButtonStyle}"
                                             FontWeight="Regular"
                                             FontSize="12"
                                             Padding="10 5 10 5"
@@ -185,11 +208,12 @@
                                             VerticalAlignment="Top"
                                             Content="Зробити адміном"
                                             Click="MakeAdmin"/>
-                                </DataTemplate>
-                            </DataGridTemplateColumn.CellTemplate>
-                        </DataGridTemplateColumn>
-                    </DataGrid.Columns>
-                </DataGrid>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Grid>
             </TabItem>
             <TabItem Header="Admins" >
                 <Grid>

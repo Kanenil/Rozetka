@@ -35,11 +35,17 @@ namespace RozetkaUI.Pages
             {
                 adminPanel.Visibility = Visibility.Collapsed;
                 superAdminPanel.Visibility = Visibility.Visible;
+
+                userPanel.Visibility = Visibility.Collapsed;
+                userSuperPanel.Visibility = Visibility.Visible;
             }
             else
             {
                 adminPanel.Visibility = Visibility.Visible;
                 superAdminPanel.Visibility = Visibility.Collapsed;
+
+                userPanel.Visibility = Visibility.Visible;
+                userSuperPanel.Visibility = Visibility.Collapsed;
             }
         }
         private void Page_Loaded(object sender, RoutedEventArgs e)
