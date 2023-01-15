@@ -11,7 +11,7 @@ namespace DAL.Interfaces
         Task<UserEntity> FindByEmailOrPhone(string findBy);
         IEnumerable<RoleEntity> GetAllRoles();
         Task AddUserRole(UserRoleEntity roleEntity);
-        Task DeleteUserRole(UserRoleEntity roleEntity);
+        Task EditUserRole(UserRoleEntity roleEntity, UserRoleEntity entity);
         Task AddProductToBasket(BasketEntity entity);
         Task EditProductBasket(BasketEntity entity);
         Task DeleteProductBasket(BasketEntity entity);

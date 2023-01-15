@@ -35,9 +35,19 @@ namespace DAL.Repository
             await _dbContext.SaveChangesAsync();
         }
 
-        public async Task DeleteUserRole(UserRoleEntity roleEntity)
+        public async Task EditUserRole(UserRoleEntity roleEntity, UserRoleEntity entity)
         {
+            var local = _dbContext.Set<UserRoleEntity>()
+                                 .Local
+                                 .FirstOrDefault(entry => entry.RoleId.Equals(roleEntity.RoleId));
+
+            if (local != null)
+            {
+                _dbContext.Entry(local).State = EntityState.Detached;
+            }
+
             _dbContext.Set<UserRoleEntity>().Remove(roleEntity);
+            await _dbContext.Set<UserRoleEntity>().AddAsync(entity);
             await _dbContext.SaveChangesAsync();
         }
 

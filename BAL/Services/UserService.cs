@@ -137,22 +137,15 @@ namespace BAL.Services
             oldUserRole.User = null;
             oldUserRole.Role = null;
 
-            await _userRepository.DeleteUserRole(oldUserRole);
-
-
             var roles = _userRepository.GetAllRoles();
-            //oldUserRole.RoleId = roles.First(x => x.Name == entityDTO).Id;
-
-            var role = new UserRoleEntity()
+            await _userRepository.EditUserRole(oldUserRole, new UserRoleEntity()
             {
-                UserId = old.UserId,
-                RoleId = roles.FirstOrDefault(x => x.Name == entityDTO).Id
-            };
+                UserId = oldUserRole.UserId,
+                RoleId = roles.FirstOrDefault(x=>x.Name == entityDTO).Id
+            });
 
-            await _userRepository.AddUserRole(role);
-            
-            //old.RoleId = oldUserRole.RoleId;
-            //old.Role = MapUser<RoleEntity, RoleEntityDTO>(roles.First(x => x.Name == entityDTO));
+            old.RoleId = roles.FirstOrDefault(x => x.Name == entityDTO).Id;
+            old.Role = MapUser<RoleEntity, RoleEntityDTO>(roles.FirstOrDefault(x => x.Name == entityDTO));
         }
 
         private TEntityTo MapUser<TEntityFrom, TEntityTo>(TEntityFrom entityDTOs)
