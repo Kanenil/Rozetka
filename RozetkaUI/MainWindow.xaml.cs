@@ -50,10 +50,14 @@ namespace RozetkaUI
                     this.navBar.tipProfile.Visibility = Visibility.Visible;
                     IsLogined = false;
                 }
-                _loginedUser = value; 
+
+                CollectionViewSource.GetDefaultView(this.navBar.Categories).Refresh();
+                _loginedUser = value;
+                OnLoginedUserChanged?.Invoke();
                 OnPropertyChanged(); 
             }
         }
+        public event Action OnLoginedUserChanged;
 
         private bool _isLogined;
 

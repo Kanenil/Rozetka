@@ -23,9 +23,21 @@ namespace DAL.Repository
             await _dbContext.SaveChangesAsync();
         }
 
+        public async Task AddUserRole(UserRoleEntity roleEntity)
+        {
+            await _dbContext.Set<UserRoleEntity>().AddAsync(roleEntity);
+            await _dbContext.SaveChangesAsync();
+        }
+
         public async Task DeleteProductBasket(BasketEntity entity)
         {
             _dbContext.Set<BasketEntity>().Remove(entity);
+            await _dbContext.SaveChangesAsync();
+        }
+
+        public async Task DeleteUserRole(UserRoleEntity roleEntity)
+        {
+            _dbContext.Set<UserRoleEntity>().Remove(roleEntity);
             await _dbContext.SaveChangesAsync();
         }
 
@@ -40,8 +52,15 @@ namespace DAL.Repository
             return await _dbContext.Set<UserEntity>()
                 .AsNoTracking()
                 .Include(x => x.Baskets)
+                .Include(x => x.UserRoles)
                 .Where(e=>e.IsDelete == false)
                 .FirstOrDefaultAsync(e => e.Email.ToLower() == findBy.ToLower() || e.Phone == findBy);
+        }
+
+        public IEnumerable<RoleEntity> GetAllRoles()
+        {
+            return _dbContext.Set<RoleEntity>()
+                             .AsNoTracking();
         }
     }
 }

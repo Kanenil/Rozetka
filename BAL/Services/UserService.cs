@@ -2,6 +2,7 @@
 using BAL.DTO.Models;
 using BAL.Interfaces;
 using BAL.Utilities;
+using DAL.Constants;
 using DAL.Data;
 using DAL.Data.Entities;
 using DAL.Interfaces;
@@ -50,6 +51,11 @@ namespace BAL.Services
         public async Task<UserEntityDTO> Login(UserEntityDTO entity)
         {
             var user = MapUser<UserEntity, UserEntityDTO>(await _userRepository.FindByEmailOrPhone(entity.Email));
+            var roles = MapUser<IEnumerable<RoleEntity>, IEnumerable<RoleEntityDTO>>(_userRepository.GetAllRoles());
+            foreach (var item in user.UserRoles)
+            {
+                item.Role = roles.First(x => x.Id == item.RoleId);
+            }
 
             if (user == null)
                 throw new Exception("login error");
@@ -93,7 +99,60 @@ namespace BAL.Services
 
             await _userRepository.Create(user);
 
+            var roles = _userRepository.GetAllRoles();
+
+            var role = new UserRoleEntity()
+            {
+                UserId = user.Id,
+                RoleId = roles.FirstOrDefault(x => x.Name == "User").Id
+            };
+
+            await _userRepository.AddUserRole(role);
+
+            role.User = user;
+            role.Role = roles.FirstOrDefault(x => x.Id == role.RoleId);
+
+            entity.UserRoles = new List<UserRoleEntityDTO>()
+            {
+                MapUser<UserRoleEntity,UserRoleEntityDTO>(role)
+            };
+
             entity.Id = user.Id;
+        }
+
+        public IEnumerable<UserEntityDTO> GetAllUsers()
+        {
+            var users = MapUser<IEnumerable<UserEntity>, IEnumerable<UserEntityDTO>>(_userRepository.GetAll().Include(x => x.UserRoles));
+            var roles = MapUser<IEnumerable<RoleEntity>, IEnumerable<RoleEntityDTO>>(_userRepository.GetAllRoles());
+            foreach (var user in users)
+            {
+                user.UserRoles.First().Role = roles.First(x => x.Id == user.UserRoles.First().RoleId);
+            }
+            return users;
+        }
+
+        public async Task EditUserRole(UserRoleEntityDTO old, string entityDTO)
+        {
+            var oldUserRole = MapUser<UserRoleEntityDTO, UserRoleEntity>(old);
+            oldUserRole.User = null;
+            oldUserRole.Role = null;
+
+            await _userRepository.DeleteUserRole(oldUserRole);
+
+
+            var roles = _userRepository.GetAllRoles();
+            //oldUserRole.RoleId = roles.First(x => x.Name == entityDTO).Id;
+
+            var role = new UserRoleEntity()
+            {
+                UserId = old.UserId,
+                RoleId = roles.FirstOrDefault(x => x.Name == entityDTO).Id
+            };
+
+            await _userRepository.AddUserRole(role);
+            
+            //old.RoleId = oldUserRole.RoleId;
+            //old.Role = MapUser<RoleEntity, RoleEntityDTO>(roles.First(x => x.Name == entityDTO));
         }
 
         private TEntityTo MapUser<TEntityFrom, TEntityTo>(TEntityFrom entityDTOs)
@@ -104,11 +163,17 @@ namespace BAL.Services
                    .ForMember(dto => dto.Orders, opt => opt.MapFrom(x => x.Orders));
                 cfg.CreateMap<OrderEntityDTO, OrderEntity>();
                 cfg.CreateMap<BasketEntityDTO, BasketEntity>();
+                cfg.CreateMap<UserRoleEntityDTO, UserRoleEntity>()
+                    .ForMember(dto => dto.Role, opt => opt.MapFrom(x => x.Role));
+                cfg.CreateMap<RoleEntityDTO, RoleEntity>();
 
                 cfg.CreateMap<UserEntity, UserEntityDTO>()
                    .ForMember(dto => dto.Orders, opt => opt.MapFrom(x => x.Orders));
                 cfg.CreateMap<OrderEntity, OrderEntityDTO>();
                 cfg.CreateMap<BasketEntity, BasketEntityDTO>();
+                cfg.CreateMap<UserRoleEntity, UserRoleEntityDTO>()
+                   .ForMember(dto => dto.Role, opt => opt.MapFrom(x => x.Role));
+                cfg.CreateMap<RoleEntity, RoleEntityDTO>();
             });
             var mapper = new Mapper(config);
 
@@ -122,6 +187,9 @@ namespace BAL.Services
                 cfg.CreateMap<BasketEntityDTO, BasketEntity>();
                 cfg.CreateMap<UserEntityDTO, UserEntity>()
                    .ForMember(dto => dto.Orders, opt => opt.MapFrom(x => x.Orders));
+                cfg.CreateMap<UserRoleEntityDTO, UserRoleEntity>()
+                    .ForMember(dto => dto.Role, opt => opt.MapFrom(x => x.Role));
+                cfg.CreateMap<RoleEntityDTO, RoleEntity>();
                 cfg.CreateMap<OrderEntityDTO, OrderEntity>();
                 cfg.CreateMap<CategoryEntityDTO, CategoryEntity>();
                 cfg.CreateMap<ProductImageEntityDTO, ProductImageEntity>();

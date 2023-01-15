@@ -1,4 +1,5 @@
-﻿using DAL.Data.Entities;
+﻿using DAL.Constants;
+using DAL.Data.Entities;
 using DAL.Interfaces;
 using DAL.Repository;
 using System;
@@ -17,6 +18,22 @@ namespace DAL.Data
                 SeedCategories(dataContext);
                 SeedProducts(dataContext);
                 SeedImages(dataContext);
+                SeedRoles(dataContext);
+            }
+        }
+        private static void SeedRoles(EFAppContext dataContext)
+        {
+            if (!dataContext.Roles.Any())
+            {
+                foreach (var role in Roles.All)
+                {
+                    dataContext.Roles.Add(new RoleEntity()
+                    {
+                        DateCreated = DateTime.Now,
+                        Name = role
+                    });
+                }
+                dataContext.SaveChanges();
             }
         }
         private static void SeedCategories(EFAppContext dataContext)

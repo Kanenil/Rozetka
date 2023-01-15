@@ -3,6 +3,7 @@ using BAL.Interfaces;
 using BAL.Services;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -19,13 +20,35 @@ namespace RozetkaUI.Pages
     /// <summary>
     /// Interaction logic for AllCategoriesPage.xaml
     /// </summary>
-    public partial class AllCategoriesPage : Page
+    public partial class AllCategoriesPage : Page, INotifyPropertyChanged
     {
+        public event PropertyChangedEventHandler PropertyChanged;
+        protected virtual void OnPropertyChanged(string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+        private UserEntityDTO _loginedUser;
+
+        public UserEntityDTO LoginedUser
+        {
+            get => _loginedUser;
+            set
+            {
+                _loginedUser = value;
+                OnPropertyChanged();
+            }
+        }
         public AllCategoriesPage(List<CategoryEntityDTO> categories)
         {
             InitializeComponent();
             DataContext = this;
             Categories = categories;
+            var mainWindow = (App.Current.MainWindow as MainWindow);
+            mainWindow.OnLoginedUserChanged += () =>
+            {
+                LoginedUser = mainWindow.LoginedUser;
+            };
+            LoginedUser = mainWindow.LoginedUser;
         }
         public List<CategoryEntityDTO> Categories { get; }
         private void AddCategory(object sender, RoutedEventArgs e)

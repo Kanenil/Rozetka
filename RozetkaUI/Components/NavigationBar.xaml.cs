@@ -6,6 +6,7 @@ using RozetkaUI.Pages;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
 using System.Reflection.Metadata;
 using System.Text;
@@ -32,6 +33,7 @@ namespace RozetkaUI.Components
         {
             InitializeComponent();
         }
+
         private void UserControl_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             var size = e.NewSize;
@@ -305,6 +307,30 @@ namespace RozetkaUI.Components
                 mainWindow.pageFrame.Navigate(new BasketPage(mainWindow.LoginedUser));
                 closeMenu.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
             }
+        }
+
+        private void AdminPanelClick(object sender, RoutedEventArgs e)
+        {
+            var mainWindow = (MainWindow)Application.Current.MainWindow;
+            mainWindow.pageFrame.Navigate(new AdminPanelPage());
+            closeMenu.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+        }
+    }
+    public class IfAdminConverter : IValueConverter
+    {
+
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value is UserEntityDTO)
+            {
+                return (value as UserEntityDTO).UserRoles.FirstOrDefault(x => x.Role.Name == "Admin") == null ? Visibility.Collapsed : Visibility.Visible;
+            }
+            return Visibility.Collapsed;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
         }
     }
 }

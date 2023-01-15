@@ -9,6 +9,8 @@ namespace BAL.Interfaces
 {
     public interface IUserService
     {
+        IEnumerable<UserEntityDTO> GetAllUsers();
+        Task EditUserRole(UserRoleEntityDTO old, string entityDTO);
         Task Registrate(UserEntityDTO entity);
         Task AddProductToBasket(BasketEntityDTO entity);
         Task EditProductBasket(BasketEntityDTO entity);

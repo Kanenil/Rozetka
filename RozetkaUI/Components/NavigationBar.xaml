@@ -125,6 +125,109 @@
             </Style.Triggers>
 
         </Style>
+        <Style x:Key="CategoriesMenuItem" TargetType="Button">
+
+            <EventSetter Event="Button.Click" Handler="moveToCategory"></EventSetter>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Padding" Value="10 4"/>
+            <Setter Property="Margin" Value="10 6"/>
+            <Setter Property="Width" Value="320"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="HorizontalContentAlignment" Value="Left"/>
+
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                                Padding="5"
+                                CornerRadius="7">
+                            <ContentPresenter HorizontalAlignment="Left"
+                                              VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#d0ecdb"/>
+                    <Setter Property="Cursor" Value="Hand"/>
+                </Trigger>
+                <Trigger Property="IsMouseCaptured" Value="True">
+                    <Setter Property="Background" Value="#d0ecdb"/>
+                    <Setter Property="Cursor" Value="Hand"/>
+                </Trigger>
+            </Style.Triggers>
+
+        </Style>
+        <Style x:Key="EditCategoryButtonStyle" TargetType="Button">
+            <EventSetter Event="Button.Click" Handler="EditCategory"></EventSetter>
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="{StaticResource PrimaryTextColor}"/>
+            <Setter Property="HorizontalAlignment" Value="Left"/>
+            <Setter Property="Cursor" Value="{x:Null}"/>
+            <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border CornerRadius="7" 
+                            Padding="{TemplateBinding Padding}"
+                            Background="{TemplateBinding Background}">
+                            <ContentPresenter HorizontalAlignment="Center" 
+                                          VerticalAlignment="Center"/>
+
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="{StaticResource SecundaryButtonHoverColor}"/>
+                    <Setter Property="Cursor" Value="Hand"/>
+                </Trigger>
+                <Trigger Property="IsMouseCaptured" Value="True">
+                    <Setter Property="Background" Value="{StaticResource SecundaryButtonHoverColor}"/>
+                    <Setter Property="Cursor" Value="Hand"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        <Style x:Key="DeleteCategoryButtonStyle" TargetType="Button">
+            <EventSetter Event="Button.Click" Handler="DeleteCategory"></EventSetter>
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="{StaticResource PrimaryTextColor}"/>
+            <Setter Property="HorizontalAlignment" Value="Left"/>
+            <Setter Property="Cursor" Value="{x:Null}"/>
+            <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border CornerRadius="7" 
+                            Padding="{TemplateBinding Padding}"
+                            Background="{TemplateBinding Background}">
+                            <ContentPresenter HorizontalAlignment="Center" 
+                                          VerticalAlignment="Center"/>
+
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="{StaticResource SecundaryButtonHoverColor}"/>
+                    <Setter Property="Cursor" Value="Hand"/>
+                </Trigger>
+                <Trigger Property="IsMouseCaptured" Value="True">
+                    <Setter Property="Background" Value="{StaticResource SecundaryButtonHoverColor}"/>
+                    <Setter Property="Cursor" Value="Hand"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
         <Style x:Key="LinkButton"
            BasedOn="{StaticResource ResourceKey={x:Type Button}}"
            TargetType="Button">
@@ -204,6 +307,7 @@
             </Setter>
         </Style>
         <BooleanToVisibilityConverter x:Key="VisibleIfTrueConverter" />
+        <local:IfAdminConverter x:Key="IfAdminConverter" />
     </UserControl.Resources>
 
     <Grid>
@@ -621,6 +725,47 @@
 
                     <StackPanel Margin="0 17 0 0">
 
+                        <Button HorizontalAlignment="Left"
+                                Style="{StaticResource MenuItem}"
+                                Click="AdminPanelClick"
+                                x:Name="adminButton"
+                                Visibility="{Binding LoginedUser, Converter={StaticResource IfAdminConverter}}">
+                            <StackPanel Orientation="Horizontal"
+                                        HorizontalAlignment="Left">
+
+                                <Border Width="45" Height="45"
+                                        CornerRadius="30">
+                                    <Path Data="{StaticResource AdminPanel}"
+                                      Stretch="Uniform"
+                                      Width="25" Height="25"
+                                      Fill="#221f1f"
+                                      HorizontalAlignment="Center">
+                                        <Path.LayoutTransform>
+                                            <MatrixTransform Matrix="1 0 0 -1 1 0"/>
+                                        </Path.LayoutTransform>
+                                    </Path>
+                                    <Border.Style>
+                                        <Style>
+                                            <Setter Property="Border.Background" Value="LightGray"/>
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding ElementName=adminButton, Path=IsMouseOver}" Value="true">
+                                                    <Setter Property="Border.Background" Value="#d0ecdb"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Border.Style>
+                                </Border>
+                                <TextBlock Style="{StaticResource PrimaryHeaderTextBlockStyle}"
+                                           VerticalAlignment="Center"
+                                           Foreground="#221f1f"
+                                           Text="Панель керування"
+                                           FontWeight="Regular"
+                                           FontSize="23"
+                                           Margin="4 0 0 0"/>
+                            </StackPanel>
+
+                        </Button>
+                        
                         <Button HorizontalAlignment="Left"
                                 Style="{StaticResource MenuItem}"
                                 x:Name="catalogButton"
@@ -1138,6 +1283,7 @@
                         Margin="5 5 5 3"
                         HorizontalContentAlignment="Center"
                         Click="moveToAllCategories">
+
                         <Grid Width="320">
                             <TextBlock Text="Всі категорії"
                                    Style="{StaticResource SecundaryHeaderTextBlockStyle}"
@@ -1147,6 +1293,16 @@
                             <StackPanel Orientation="Horizontal"
                                     HorizontalAlignment="Right"
                                     Margin="0 0 10 0">
+                                <StackPanel.Style>
+                                    <Style TargetType="StackPanel">
+                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding LoginedUser.UserRoles[0].Role.Name}" Value="Admin">
+                                                <Setter Property="Visibility" Value="Visible"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </StackPanel.Style>
                                 <Button HorizontalAlignment="Right" 
                                     Click="AddCategory"
                                     Style="{StaticResource TransperentButtonStyle}"
@@ -1168,57 +1324,87 @@
                         </Grid>
                     </Button>
                     <ItemsControl Name="categoriesItemControl">
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate>
-                                <Button Style="{StaticResource MenuItem}"
-                                Margin="5 5 5 3"
-                                HorizontalContentAlignment="Center"
-                                Click="moveToCategory">
-                                    <Grid Width="320">
-                                        <TextBlock Text="{Binding Name}"
-                                           Style="{StaticResource SecundaryHeaderTextBlockStyle}"
-                                           VerticalAlignment="Center"
-                                           HorizontalAlignment="Left"
-                                           Margin="0 0 5 0"/>
-                                        <StackPanel Orientation="Horizontal"
-                                            HorizontalAlignment="Right"
-                                            Margin="0 0 10 0">
-                                            <Button HorizontalAlignment="Right" 
-                                                Click="EditCategory"
-                                                Style="{StaticResource TransperentButtonStyle}"
-                                                VerticalAlignment="Top"
-                                                Padding="7">
-                                                <Path Data="{StaticResource Edit}"
-                                                  Stretch="Uniform"
-                                                  Width="20" Height="20"
-                                                  Fill="{StaticResource PrimaryBackgroundColor}"
-                                                  HorizontalAlignment="Center">
-                                                    <Path.LayoutTransform>
-                                                        <MatrixTransform Matrix="1 0 0 -1 1 0"/>
-                                                    </Path.LayoutTransform>
-                                                </Path>
-                                            </Button>
-                                            <Button HorizontalAlignment="Right" 
-                                                Click="DeleteCategory"
-                                                Style="{StaticResource TransperentButtonStyle}"
-                                                VerticalAlignment="Top"
-                                                Padding="7">
-                                                <Path Data="{StaticResource Delete}"
-                                                  Stretch="Uniform"
-                                                  Width="20" Height="20"
-                                                  Fill="{StaticResource PrimaryBackgroundColor}"
-                                                  HorizontalAlignment="Center">
-                                                    <Path.LayoutTransform>
-                                                        <MatrixTransform Matrix="1 0 0 -1 1 0"/>
-                                                    </Path.LayoutTransform>
-                                                </Path>
-                                            </Button>
-                                        </StackPanel>
+                        <ItemsControl.Style>
+                            <Style TargetType="ItemsControl">
+                                <Setter Property="ItemTemplate">
+                                    <Setter.Value>
+                                        <DataTemplate>
+                                            <Button Style="{StaticResource MenuItem}"
+                                                    Margin="5 5 5 3"
+                                                    HorizontalContentAlignment="Center"
+                                                    Click="moveToCategory">
+                                                <Grid Width="320">
+                                                    <TextBlock Text="{Binding Name}"
+                                                               Style="{StaticResource SecundaryHeaderTextBlockStyle}"
+                                                               VerticalAlignment="Center"
+                                                               HorizontalAlignment="Left"
+                                                               Margin="0 0 5 0"/>
 
-                                    </Grid>
-                                </Button>
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
+                                                </Grid>
+                                            </Button>
+                                        </DataTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding LoginedUser.UserRoles[0].Role.Name}" Value="Admin">
+                                        <Setter Property="ItemTemplate">
+                                            <Setter.Value>
+                                                <DataTemplate>
+                                                    <Button Style="{StaticResource CategoriesMenuItem}"
+                                                            Margin="5 5 5 3"
+                                                            HorizontalContentAlignment="Center">
+
+                                                        <Grid Width="320">
+                                                            <TextBlock Text="{Binding Name}"
+                                                                       Style="{StaticResource SecundaryHeaderTextBlockStyle}"
+                                                                       VerticalAlignment="Center"
+                                                                       HorizontalAlignment="Left"
+                                                                       Margin="0 0 5 0"/>
+
+                                                            <StackPanel Orientation="Horizontal"
+                                                                        HorizontalAlignment="Right"
+                                                                        Margin="0 0 10 0">
+
+                                                                <Button HorizontalAlignment="Right"
+                                                                        Style="{StaticResource EditCategoryButtonStyle}"
+                                                                        VerticalAlignment="Top"
+                                                                        Padding="7">
+                                                                    <Path Data="{StaticResource Edit}"
+                                                                          Stretch="Uniform"
+                                                                          Width="20" Height="20"
+                                                                          Fill="{StaticResource PrimaryBackgroundColor}"
+                                                                          HorizontalAlignment="Center">
+                                                                        <Path.LayoutTransform>
+                                                                            <MatrixTransform Matrix="1 0 0 -1 1 0"/>
+                                                                        </Path.LayoutTransform>
+                                                                    </Path>
+                                                                </Button>
+                                                                <Button HorizontalAlignment="Right"
+                                                                        Style="{StaticResource DeleteCategoryButtonStyle}"
+                                                                        VerticalAlignment="Top"
+                                                                        Padding="7">
+                                                                    <Path Data="{StaticResource Delete}"
+                                                                          Stretch="Uniform"
+                                                                          Width="20" Height="20"
+                                                                          Fill="{StaticResource PrimaryBackgroundColor}"
+                                                                          HorizontalAlignment="Center">
+                                                                        <Path.LayoutTransform>
+                                                                            <MatrixTransform Matrix="1 0 0 -1 1 0"/>
+                                                                        </Path.LayoutTransform>
+                                                                    </Path>
+                                                                </Button>
+                                                            </StackPanel>
+
+
+                                                        </Grid>
+                                                    </Button>
+                                                </DataTemplate>
+                                            </Setter.Value>
+                                        </Setter>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </ItemsControl.Style>
                         <ItemsControl.Template>
                             <ControlTemplate>
                                 <Border CornerRadius="4" Background="White" Padding="{TemplateBinding Padding}">

@@ -3,6 +3,7 @@ using BAL.Interfaces;
 using BAL.Services;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Reflection.Metadata;
 using System.Text;
 using System.Windows;
@@ -20,13 +21,35 @@ namespace RozetkaUI.Pages
     /// <summary>
     /// Interaction logic for ProductListPage.xaml
     /// </summary>
-    public partial class ProductListPage : Page
+    public partial class ProductListPage : Page, INotifyPropertyChanged
     {
+        public event PropertyChangedEventHandler PropertyChanged;
+        protected virtual void OnPropertyChanged(string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+        private UserEntityDTO _loginedUser;
+
+        public UserEntityDTO LoginedUser
+        {
+            get => _loginedUser;
+            set
+            {
+                _loginedUser = value;
+                OnPropertyChanged();
+            }
+        }
         public ProductListPage(CategoryEntityDTO category)
         {
             InitializeComponent();
             DataContext = this;
             Category= category;
+            var mainWindow = (App.Current.MainWindow as MainWindow);
+            mainWindow.OnLoginedUserChanged += () =>
+            {
+                LoginedUser = mainWindow.LoginedUser;
+            };
+            LoginedUser = mainWindow.LoginedUser;
         }
         public CategoryEntityDTO Category { get; }
 

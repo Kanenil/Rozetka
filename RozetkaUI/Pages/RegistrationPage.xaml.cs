@@ -1,4 +1,5 @@
-﻿using BAL.Interfaces;
+﻿using BAL.DTO.Models;
+using BAL.Interfaces;
 using BAL.Services;
 using System;
 using System.Collections.Generic;
