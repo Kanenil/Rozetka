@@ -48,6 +48,11 @@ namespace RozetkaUI.Pages
                         basketBtn.Visibility = Visibility.Collapsed;
                     }
                 }
+                else
+                {
+                    inBasketBtn.Visibility = Visibility.Collapsed;
+                    basketBtn.Visibility = Visibility.Visible;
+                }
             };
 
             if (mainWindow.IsLogined)

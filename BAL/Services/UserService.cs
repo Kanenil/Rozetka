@@ -101,6 +101,9 @@ namespace BAL.Services
             {
                 _mapper.Map<UserRoleEntity,UserRoleEntityDTO>(role)
             };
+            entity.Baskets = new List<BasketEntityDTO>();
+            entity.Orders = new List<OrderEntityDTO>();
+
 
             entity.Id = user.Id;
         }
