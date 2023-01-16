@@ -38,9 +38,16 @@ namespace RozetkaUI.Pages
 
         private async void Plus_Click(object sender, RoutedEventArgs e)
         {
-            var content = (BasketEntityDTO)((sender as Button).TemplatedParent as ContentPresenter).Content;
+            try
+            {
+                var content = (BasketEntityDTO)((sender as Button).TemplatedParent as ContentPresenter).Content;
 
-            await ChangeItemContent(sender, content, (short)(content.Count + 1));
+                await ChangeItemContent(sender, content, (short)(content.Count + 1));
+            }
+            catch 
+            {
+
+            }
         }
 
         private void ChangeSumBalance()
@@ -98,19 +105,27 @@ namespace RozetkaUI.Pages
 
         private async void DeleteClick(object sender, RoutedEventArgs e)
         {
-            var content = (BasketEntityDTO)((sender as Button).TemplatedParent as ContentPresenter).Content;
-
-            await DeleteBasket(content);
-            User.Baskets.Remove(content);
-            ChangeSumBalance();
-
-            if (User.Baskets.Count == 0)
+            try
             {
-                productsEmpty.Visibility = Visibility.Visible;
-                productsList.Visibility = Visibility.Collapsed;
+                var content = (BasketEntityDTO)((sender as Button).TemplatedParent as ContentPresenter).Content;
+
+                await DeleteBasket(content);
+                User.Baskets.Remove(content);
+                ChangeSumBalance();
+
+                if (User.Baskets.Count == 0)
+                {
+                    productsEmpty.Visibility = Visibility.Visible;
+                    productsList.Visibility = Visibility.Collapsed;
+                }
+
+                CollectionViewSource.GetDefaultView(User.Baskets).Refresh();
+            }
+            catch 
+            {
+
             }
 
-            CollectionViewSource.GetDefaultView(User.Baskets).Refresh();
         }
 
         private async Task DeleteBasket(BasketEntityDTO basketEntity)

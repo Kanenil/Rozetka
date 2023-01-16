@@ -59,12 +59,34 @@ namespace DAL.Repository
 
         public async Task<UserEntity> FindByEmailOrPhone(string findBy)
         {
-            return await _dbContext.Set<UserEntity>()
-                .AsNoTracking()
-                .Include(x => x.Baskets)
-                .Include(x => x.UserRoles)
-                .Where(e=>e.IsDelete == false)
-                .FirstOrDefaultAsync(e => e.Email.ToLower() == findBy.ToLower() || e.Phone == findBy);
+            var user = await _dbContext.Set<UserEntity>()
+                                .AsNoTracking()
+                                .Include(x => x.Baskets)
+                                    .ThenInclude(x => x.Product)
+                                        .ThenInclude(x => x.Category)
+                                .Include(x => x.Baskets)
+                                    .ThenInclude(x => x.Product)
+                                        .ThenInclude(x => x.Images)
+                                .Include(x => x.UserRoles)
+                                    .ThenInclude(x => x.Role)
+                                .Include(x => x.Orders)
+                                    .ThenInclude(x => x.OrderStatus)
+                                .FirstOrDefaultAsync(e => e.Email.ToLower() == findBy.ToLower() || e.Phone == findBy);
+            return user;
+        }
+
+        public IEnumerable<UserEntity> GetAllUsers()
+        {
+            return GetAll().Include(x => x.Baskets)
+                                .ThenInclude(x => x.Product)
+                                    .ThenInclude(x => x.Category)
+                           .Include(x => x.Baskets)
+                                .ThenInclude(x => x.Product)
+                                    .ThenInclude(x => x.Images)
+                           .Include(x => x.UserRoles)
+                                .ThenInclude(x => x.Role)
+                           .Include(x => x.Orders)
+                                .ThenInclude(x => x.OrderStatus);
         }
 
         public IEnumerable<RoleEntity> GetAllRoles()

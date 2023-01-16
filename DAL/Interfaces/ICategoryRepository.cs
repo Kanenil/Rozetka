@@ -7,5 +7,6 @@ namespace DAL.Interfaces
 {
     public interface ICategoryRepository : IGenericRepository<CategoryEntity, int>
     {
+        IEnumerable<CategoryEntity> GetAllCategories();
     }
 }

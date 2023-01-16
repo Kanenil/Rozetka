@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using BAL.DTO.Models;
 using BAL.Interfaces;
+using BAL.Mapper;
 using BAL.Utilities;
 using DAL.Constants;
 using DAL.Data;
@@ -19,30 +20,35 @@ namespace BAL.Services
     public class UserService : IUserService
     {
         private readonly IUserRepository _userRepository;
-        private readonly ICategoryRepository _categoryRepository;
+        private readonly IMapper _mapper;
         public UserService()
         {
             EFAppContext context = new EFAppContext();
             _userRepository = new UserRepository(context);
-            _categoryRepository = new CategoryRepository(context);
+
+            var configuration = new MapperConfiguration(cfg =>
+            {
+                cfg.AddProfile<MappingProfile>();
+            });
+            _mapper = configuration.CreateMapper();
         }
 
         public async Task AddProductToBasket(BasketEntityDTO entityDTO)
         {
-            var basket = MapBasket<BasketEntityDTO, BasketEntity>(entityDTO);
+            var basket = _mapper.Map<BasketEntityDTO, BasketEntity>(entityDTO);
 
             await _userRepository.AddProductToBasket(basket);
         }
         public async Task EditProductBasket(BasketEntityDTO entity)
         {
-            var basket = MapBasket<BasketEntityDTO, BasketEntity>(entity);
+            var basket = _mapper.Map<BasketEntityDTO, BasketEntity>(entity);
             basket.Product = null;
             basket.User = null;
             await _userRepository.EditProductBasket(basket);
         }
         public async Task DeleteProductBasket(BasketEntityDTO entity)
         {
-            var basket = MapBasket<BasketEntityDTO, BasketEntity>(entity);
+            var basket = _mapper.Map<BasketEntityDTO, BasketEntity>(entity);
             basket.Product = null;
             basket.User = null;
             await _userRepository.DeleteProductBasket(basket);
@@ -50,37 +56,16 @@ namespace BAL.Services
 
         public async Task<UserEntityDTO> Login(UserEntityDTO entity)
         {
-            var user = MapUser<UserEntity, UserEntityDTO>(await _userRepository.FindByEmailOrPhone(entity.Email));
-            var roles = MapUser<IEnumerable<RoleEntity>, IEnumerable<RoleEntityDTO>>(_userRepository.GetAllRoles());
-            foreach (var item in user.UserRoles)
-            {
-                item.Role = roles.First(x => x.Id == item.RoleId);
-            }
+            var user = _mapper.Map<UserEntity, UserEntityDTO>(await _userRepository.FindByEmailOrPhone(entity.Email));
 
             if (user == null)
                 throw new Exception("login error");
             else if(user.Password != PasswordHasher.Hash(entity.Password))
                 throw new Exception("password error");
 
-            var list = MapCategory<IEnumerable<CategoryEntity>, IEnumerable<CategoryEntityDTO>>(_categoryRepository.GetAll().Include(x => x.Products).ThenInclude(x => x.Images));
-            foreach (var category in list)
-                foreach (var product in category.Products)
-                    product.Images = product.Images.OrderBy(x => x.Priority).ToList();
-
-
-            foreach (var category in list)
+            foreach (var basket in user.Baskets)
             {
-                foreach (var basket in user.Baskets)
-                {
-                    foreach (var product in category.Products)
-                    {
-                        if (product.Id == basket.ProductId)
-                        {
-                            basket.Product = product;
-                            break;
-                        }
-                    }
-                }
+                basket.Product.Images = basket.Product.Images.OrderBy(x => x.Priority).ToList();
             }
 
             return user;
@@ -88,7 +73,7 @@ namespace BAL.Services
 
         public async Task Registrate(UserEntityDTO entity)
         {
-            var user = MapUser<UserEntityDTO, UserEntity>(entity);
+            var user = _mapper.Map<UserEntityDTO, UserEntity>(entity);
             user.DateCreated = DateTime.Now;
             user.Password = PasswordHasher.Hash(entity.Password);
 
@@ -114,7 +99,7 @@ namespace BAL.Services
 
             entity.UserRoles = new List<UserRoleEntityDTO>()
             {
-                MapUser<UserRoleEntity,UserRoleEntityDTO>(role)
+                _mapper.Map<UserRoleEntity,UserRoleEntityDTO>(role)
             };
 
             entity.Id = user.Id;
@@ -122,18 +107,19 @@ namespace BAL.Services
 
         public IEnumerable<UserEntityDTO> GetAllUsers()
         {
-            var users = MapUser<IEnumerable<UserEntity>, IEnumerable<UserEntityDTO>>(_userRepository.GetAll().Include(x => x.UserRoles));
-            var roles = MapUser<IEnumerable<RoleEntity>, IEnumerable<RoleEntityDTO>>(_userRepository.GetAllRoles());
-            foreach (var user in users)
+            var list = _mapper.Map<IEnumerable<UserEntity>, IEnumerable<UserEntityDTO>>(_userRepository.GetAllUsers());
+            if (list != null)
             {
-                user.UserRoles.First().Role = roles.First(x => x.Id == user.UserRoles.First().RoleId);
+                foreach (var user in list)
+                    foreach (var basket in user.Baskets)
+                        basket.Product.Images = basket.Product.Images.OrderBy(x => x.Priority).ToList();
             }
-            return users;
+            return list;
         }
 
         public async Task EditUserRole(UserRoleEntityDTO old, string entityDTO)
         {
-            var oldUserRole = MapUser<UserRoleEntityDTO, UserRoleEntity>(old);
+            var oldUserRole = _mapper.Map<UserRoleEntityDTO, UserRoleEntity>(old);
             oldUserRole.User = null;
             oldUserRole.Role = null;
 
@@ -145,83 +131,7 @@ namespace BAL.Services
             });
 
             old.RoleId = roles.FirstOrDefault(x => x.Name == entityDTO).Id;
-            old.Role = MapUser<RoleEntity, RoleEntityDTO>(roles.FirstOrDefault(x => x.Name == entityDTO));
+            old.Role = _mapper.Map<RoleEntity, RoleEntityDTO>(roles.FirstOrDefault(x => x.Name == entityDTO));
         }
-
-        private TEntityTo MapUser<TEntityFrom, TEntityTo>(TEntityFrom entityDTOs)
-        {
-            var config = new MapperConfiguration(cfg =>
-            {
-                cfg.CreateMap<UserEntityDTO, UserEntity>()
-                   .ForMember(dto => dto.Orders, opt => opt.MapFrom(x => x.Orders));
-                cfg.CreateMap<OrderEntityDTO, OrderEntity>();
-                cfg.CreateMap<BasketEntityDTO, BasketEntity>();
-                cfg.CreateMap<UserRoleEntityDTO, UserRoleEntity>()
-                    .ForMember(dto => dto.Role, opt => opt.MapFrom(x => x.Role));
-                cfg.CreateMap<RoleEntityDTO, RoleEntity>();
-
-                cfg.CreateMap<UserEntity, UserEntityDTO>()
-                   .ForMember(dto => dto.Orders, opt => opt.MapFrom(x => x.Orders));
-                cfg.CreateMap<OrderEntity, OrderEntityDTO>();
-                cfg.CreateMap<BasketEntity, BasketEntityDTO>();
-                cfg.CreateMap<UserRoleEntity, UserRoleEntityDTO>()
-                   .ForMember(dto => dto.Role, opt => opt.MapFrom(x => x.Role));
-                cfg.CreateMap<RoleEntity, RoleEntityDTO>();
-            });
-            var mapper = new Mapper(config);
-
-            return mapper.Map<TEntityFrom, TEntityTo>(entityDTOs);
-        }
-
-        private TEntityTo MapBasket<TEntityFrom, TEntityTo>(TEntityFrom entityDTOs)
-        {
-            var config = new MapperConfiguration(cfg =>
-            {
-                cfg.CreateMap<BasketEntityDTO, BasketEntity>();
-                cfg.CreateMap<UserEntityDTO, UserEntity>()
-                   .ForMember(dto => dto.Orders, opt => opt.MapFrom(x => x.Orders));
-                cfg.CreateMap<UserRoleEntityDTO, UserRoleEntity>()
-                    .ForMember(dto => dto.Role, opt => opt.MapFrom(x => x.Role));
-                cfg.CreateMap<RoleEntityDTO, RoleEntity>();
-                cfg.CreateMap<OrderEntityDTO, OrderEntity>();
-                cfg.CreateMap<CategoryEntityDTO, CategoryEntity>();
-                cfg.CreateMap<ProductImageEntityDTO, ProductImageEntity>();
-                cfg.CreateMap<ProductEntityDTO, ProductEntity>()
-                    .ForMember(dto => dto.Category, opt => opt.MapFrom(x => x.Category));
-
-                cfg.CreateMap<BasketEntity, BasketEntityDTO>();
-                cfg.CreateMap<UserEntity, UserEntityDTO>();
-                cfg.CreateMap<CategoryEntity, CategoryEntityDTO>();
-                cfg.CreateMap<ProductImageEntity, ProductImageEntityDTO>();
-                cfg.CreateMap<ProductEntity, ProductEntityDTO>()
-                    .ForMember(dto => dto.Category, opt => opt.MapFrom(x => x.Category));
-
-            });
-            var mapper = new Mapper(config);
-
-            return mapper.Map<TEntityFrom, TEntityTo>(entityDTOs);
-        }
-
-        private TEntityTo MapCategory<TEntityFrom, TEntityTo>(TEntityFrom entityDTOs)
-        {
-            var config = new MapperConfiguration(cfg =>
-            {
-                cfg.CreateMap<ProductImageEntity, ProductImageEntityDTO>();
-                cfg.CreateMap<CategoryEntity, CategoryEntityDTO>()
-                   .ForMember(dto => dto.Products, opt => opt.MapFrom(x => x.Products));
-                cfg.CreateMap<ProductEntity, ProductEntityDTO>()
-                   .ForMember(dto => dto.Images, opt => opt.MapFrom(x => x.Images));
-
-                cfg.CreateMap<ProductImageEntityDTO, ProductImageEntity>();
-                cfg.CreateMap<CategoryEntityDTO, CategoryEntity>()
-                   .ForMember(dto => dto.Products, opt => opt.MapFrom(x => x.Products));
-                cfg.CreateMap<ProductEntityDTO, ProductEntity>()
-                   .ForMember(dto => dto.Images, opt => opt.MapFrom(x => x.Images));
-            });
-            var mapper = new Mapper(config);
-
-            return mapper.Map<TEntityFrom, TEntityTo>(entityDTOs);
-        }
-
     }
 }

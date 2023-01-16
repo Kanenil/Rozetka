@@ -79,8 +79,17 @@ namespace RozetkaUI.Components
 
         private void LogoutClick(object sender, RoutedEventArgs e)
         {
-            (App.Current.MainWindow as MainWindow).LoginedUser = null;
-            (App.Current.MainWindow as MainWindow).pageFrame.Navigate(new Main_Page());
+            var mainWindow = (MainWindow)Application.Current.MainWindow;
+
+            mainWindow.LoginedUser = null;
+
+            if (mainWindow.pageFrame.Content.GetType() == typeof(BasketPage) || 
+                mainWindow.pageFrame.Content.GetType() == typeof(AdminPanelPage) ||
+                mainWindow.pageFrame.Content.GetType() == typeof(AddCategoryPage) ||
+                mainWindow.pageFrame.Content.GetType() == typeof(AddProductPage))
+            {
+                mainWindow.pageFrame.Navigate(new Main_Page());
+            }
         }
 
         private void navBar_Loaded(object sender, RoutedEventArgs e)

@@ -1,4 +1,5 @@
-﻿using BAL.DTO.Models;
+﻿using AutoMapper;
+using BAL.DTO.Models;
 using DAL.Data;
 using RozetkaUI.Pages;
 using System;

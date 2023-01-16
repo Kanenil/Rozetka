@@ -34,7 +34,22 @@ namespace RozetkaUI.Pages
             DataContext = this;
             _prevPage= prevPage;
 
+
+
             var mainWindow = (MainWindow)App.Current.MainWindow;
+
+            mainWindow.OnLoginedUserChanged += () =>
+            {
+                if (mainWindow.IsLogined)
+                {
+                    if (mainWindow.LoginedUser.Baskets.Where(x => x.ProductId == product.Id).FirstOrDefault() != null)
+                    {
+                        inBasketBtn.Visibility = Visibility.Visible;
+                        basketBtn.Visibility = Visibility.Collapsed;
+                    }
+                }
+            };
+
             if (mainWindow.IsLogined)
             {
                 if (mainWindow.LoginedUser.Baskets.Where(x=>x.ProductId == product.Id).FirstOrDefault() != null)
