@@ -150,6 +150,8 @@ namespace RozetkaUI.Pages
                 return;
             }
 
+            (sender as Button).IsEnabled = false;
+
             var user = mainWindow.LoginedUser;
             var basketItem = new BasketEntityDTO()
             {
@@ -167,6 +169,8 @@ namespace RozetkaUI.Pages
 
             inBasketBtn.Visibility = Visibility.Visible;
             basketBtn.Visibility = Visibility.Collapsed;
+
+            (sender as Button).IsEnabled = true;
         }
 
         private void MoveToBasket(object sender, RoutedEventArgs e)

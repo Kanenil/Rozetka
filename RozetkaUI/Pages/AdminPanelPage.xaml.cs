@@ -113,6 +113,7 @@ namespace RozetkaUI.Pages
                 await _userService.EditUserRole(user.UserRoles.First(), "Admin");
                 Users.Remove(user);
                 Admins.Add(user);
+                CollectionViewSource.GetDefaultView(Admins).Refresh();
             }
         }
 
@@ -124,6 +125,7 @@ namespace RozetkaUI.Pages
                 await _userService.EditUserRole(user.UserRoles.First(), "User");
                 Admins.Remove(user);
                 Users.Add(user);
+                CollectionViewSource.GetDefaultView(Users).Refresh();
             }
         }
     }

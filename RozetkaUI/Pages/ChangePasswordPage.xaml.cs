@@ -88,6 +88,7 @@ namespace RozetkaUI.Pages
                 String.IsNullOrWhiteSpace(passwordHidden2.Password) ||
                 !Regex.IsMatch(passwordHidden1.Password, @"^[a-zA-Z0-9_]+$") ||
                 passwordHidden1.Password != passwordHidden2.Password ||
+                passwordHidden2.Password == passwordHidden.Password ||
                 PasswordHasher.Hash(passwordHidden.Password) != _user.Password)
             {
                 savePassword.IsEnabled = false;

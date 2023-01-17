@@ -72,8 +72,6 @@ namespace BAL.Services
         public async Task Registrate(UserEntityDTO entity)
         {
             var user = _mapper.Map<UserEntityDTO, UserEntity>(entity);
-            user.DateCreated = DateTime.Now;
-            user.Password = PasswordHasher.Hash(entity.Password);
 
             if (await _userRepository.FindByEmailOrPhone(entity.Email) != null)
                 throw new Exception("email error");

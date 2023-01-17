@@ -175,7 +175,7 @@
                                         Binding="{Binding FirstName}"/>
                             <DataGridTextColumn Header="Прізвище"
                                         Width="*"
-                                        Binding="{Binding FirstName}"/>
+                                        Binding="{Binding SecondName}"/>
                         </DataGrid.Columns>
                     </DataGrid>
                     <DataGrid ItemsSource="{Binding Users}"
@@ -196,7 +196,7 @@
                                         Binding="{Binding FirstName}"/>
                             <DataGridTextColumn Header="Прізвище"
                                         Width="*"
-                                        Binding="{Binding FirstName}"/>
+                                        Binding="{Binding SecondName}"/>
                             <DataGridTemplateColumn Width="*">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
@@ -235,7 +235,7 @@
                                         Binding="{Binding FirstName}"/>
                             <DataGridTextColumn Header="Прізвище"
                                         Width="*"
-                                        Binding="{Binding FirstName}"/>
+                                        Binding="{Binding SecondName}"/>
                         </DataGrid.Columns>
                     </DataGrid>
                     <DataGrid ItemsSource="{Binding Admins}"
@@ -256,7 +256,7 @@
                                         Binding="{Binding FirstName}"/>
                             <DataGridTextColumn Header="Прізвище"
                                         Width="*"
-                                        Binding="{Binding FirstName}"/>
+                                        Binding="{Binding SecondName}"/>
                             <DataGridTemplateColumn Width="*">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
