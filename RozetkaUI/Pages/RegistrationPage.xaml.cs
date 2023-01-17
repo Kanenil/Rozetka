@@ -1,5 +1,8 @@
-﻿using BAL.Interfaces;
+﻿using BAL.DTO.Models;
+using BAL.Interfaces;
 using BAL.Services;
+using BAL.Utilities;
+using DAL.Data.Entities;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -77,6 +80,8 @@ namespace RozetkaUI.Pages
             if (!Validate(firstName, secondName, email, password))
                 return;
 
+            (sender as Button).IsEnabled = false;
+
             try
             {
                 IUserService userService = new UserService();
@@ -86,7 +91,8 @@ namespace RozetkaUI.Pages
                     SecondName = secondName,
                     Phone = phone,
                     Email = email,
-                    Password = password
+                    Password = PasswordHasher.Hash(password),
+                    DateCreated = DateTime.Now
                 };
                 await userService.Registrate(user);
 
@@ -108,7 +114,7 @@ namespace RozetkaUI.Pages
                         break;
                 }
             }
-
+            (sender as Button).IsEnabled = true;
         }
 
         private bool Validate(string firstName, string secondName, string email, string password)
@@ -145,7 +151,7 @@ namespace RozetkaUI.Pages
                 isValid = false;
             }
 
-            if (password.Length == 0)
+            if (password.Length == 0 || !Regex.IsMatch(password, @"^[a-zA-Z0-9_]+$"))
             {
                 passwordHidden.BorderBrush = new SolidColorBrush(Colors.Red);
                 isValid = false;

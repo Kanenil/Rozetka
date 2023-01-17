@@ -330,6 +330,9 @@ namespace RozetkaUI.Pages
 
         private async void add_Click(object sender, RoutedEventArgs e)
         {
+            (sender as Button).IsEnabled = false;
+            returnBack.IsEnabled = false;
+
             var name = categoryNameTextBox.Text;
             string photo = null;
             try
@@ -434,6 +437,8 @@ namespace RozetkaUI.Pages
                 timer.Start();
             }
 
+            (sender as Button).IsEnabled = true;
+            returnBack.IsEnabled = true;
         }
     }
 }

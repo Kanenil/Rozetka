@@ -47,6 +47,15 @@ namespace DAL.Repository
 
         public async Task Update(int id, TEntity entity)
         {
+            var local = _dbContext.Set<TEntity>()
+                                 .Local
+                                 .FirstOrDefault(entry => entry.Id == entity.Id);
+
+            if (local != null)
+            {
+                _dbContext.Entry(local).State = EntityState.Detached;
+            }
+
             _dbContext.Set<TEntity>().Update(entity);
             await _dbContext.SaveChangesAsync();
         }

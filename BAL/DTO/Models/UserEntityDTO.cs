@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DAL.Data.Entities;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -13,5 +14,6 @@ namespace BAL.DTO.Models
         public string Password { get; set; }
         public virtual ICollection<BasketEntityDTO> Baskets { get; set; }
         public virtual ICollection<OrderEntityDTO> Orders { get; set; }
+        public virtual ICollection<UserRoleEntityDTO> UserRoles { get; set; }
     }
 }

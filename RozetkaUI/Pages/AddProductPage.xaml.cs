@@ -367,6 +367,9 @@ namespace RozetkaUI.Pages
         }
         private async void add_Click(object sender, RoutedEventArgs e)
         {
+            (sender as Button).IsEnabled = false;
+            returnBack.IsEnabled = false;
+
             var title = productNameTextBox.Text;
             var description = productDescriptionTextBox.Text;
             var images = new List<string>();
@@ -492,7 +495,8 @@ namespace RozetkaUI.Pages
                 };
                 timer.Start();
             }
-
+            returnBack.IsEnabled = true;
+            (sender as Button).IsEnabled = true;
         }
 
         private void Page_Loaded(object sender, RoutedEventArgs e)
@@ -511,7 +515,10 @@ namespace RozetkaUI.Pages
 
         private void ReturnBackClick(object sender, RoutedEventArgs e)
         {
-            //(App.Current.MainWindow as MainWindow).pageFrame.Navigate(new ProductListPage(_category));
+            if (_prevPage.GetType() == typeof(ProductListPage))
+            {
+                CollectionViewSource.GetDefaultView((_prevPage as ProductListPage).Category.Products).Refresh();
+            }
             (App.Current.MainWindow as MainWindow).pageFrame.Navigate(_prevPage);
         }
     }

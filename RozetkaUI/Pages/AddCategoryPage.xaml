@@ -138,6 +138,7 @@
                     <Button Margin="10 25 0 50"
                         HorizontalAlignment="Left"
                         Padding="10"
+                            Name="returnBack"
                         Click="ReturnBackClick"
                         Style="{StaticResource PrimaryButtonStyle}"
                         Content="Повернутись назад"/>

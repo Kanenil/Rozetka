@@ -6,6 +6,7 @@ using RozetkaUI.Pages;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
 using System.Reflection.Metadata;
 using System.Text;
@@ -32,6 +33,7 @@ namespace RozetkaUI.Components
         {
             InitializeComponent();
         }
+
         private void UserControl_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             var size = e.NewSize;
@@ -75,9 +77,20 @@ namespace RozetkaUI.Components
             mainWindow.modalFrame.Navigate(new RegistrationPage());
         }
 
-        private void LogoutClick(object sender, RoutedEventArgs e)
+        public void LogoutClick(object sender, RoutedEventArgs e)
         {
-            (App.Current.MainWindow as MainWindow).LoginedUser = null;
+            var mainWindow = (MainWindow)Application.Current.MainWindow;
+
+            mainWindow.LoginedUser = null;
+
+            if (mainWindow.pageFrame.Content.GetType() == typeof(BasketPage) || 
+                mainWindow.pageFrame.Content.GetType() == typeof(AdminPanelPage) ||
+                mainWindow.pageFrame.Content.GetType() == typeof(AddCategoryPage) ||
+                mainWindow.pageFrame.Content.GetType() == typeof(AddProductPage) ||
+                mainWindow.pageFrame.Content.GetType() == typeof(ProfilePage))
+            {
+                mainWindow.pageFrame.Navigate(new Main_Page());
+            }
         }
 
         private void navBar_Loaded(object sender, RoutedEventArgs e)
@@ -137,19 +150,25 @@ namespace RozetkaUI.Components
 
         private void moveToAllCategories(object sender, RoutedEventArgs e)
         {
-            (App.Current.MainWindow as MainWindow).pageFrame.Navigate(new AllCategoriesPage(Categories.ToList()));
+            var mainWindow = (MainWindow)Application.Current.MainWindow;
+            if (mainWindow.pageFrame.Content.GetType() != typeof(AllCategoriesPage))
+                mainWindow.pageFrame.Navigate(new AllCategoriesPage(Categories.ToList()));
             closeCategories.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
         }
 
         private void HomeMenuClick(object sender, RoutedEventArgs e)
         {
-            (App.Current.MainWindow as MainWindow).pageFrame.Navigate(new Main_Page());
+            var mainWindow = (MainWindow)Application.Current.MainWindow;
+            if (mainWindow.pageFrame.Content.GetType() != typeof(Main_Page))
+                mainWindow.pageFrame.Navigate(new Main_Page());
             closeMenu.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
         }
 
         private void HomeClick(object sender, RoutedEventArgs e)
         {
-            (App.Current.MainWindow as MainWindow).pageFrame.Navigate(new Main_Page());
+            var mainWindow = (MainWindow)Application.Current.MainWindow;
+            if (mainWindow.pageFrame.Content.GetType() != typeof(Main_Page))
+                mainWindow.pageFrame.Navigate(new Main_Page());
         }
 
         private void QuestionClick(object sender, RoutedEventArgs e)
@@ -276,6 +295,73 @@ namespace RozetkaUI.Components
                 FileName = "https://t.me/rrozetka",
                 UseShellExecute = true
             });
+        }
+
+        private void BasketClick(object sender, RoutedEventArgs e)
+        {
+            var mainWindow = (MainWindow)Application.Current.MainWindow;
+            if (!(App.Current.MainWindow as MainWindow).IsLogined)
+            {
+                mainWindow.modalFrame.Navigate(new LoginPage());
+            }
+            else
+            {
+                if (mainWindow.pageFrame.Content.GetType() != typeof(BasketPage))
+                    mainWindow.pageFrame.Navigate(new BasketPage(mainWindow.LoginedUser));
+            }
+
+        }
+
+        private void BasketMenuClick(object sender, RoutedEventArgs e)
+        {
+            var mainWindow = (MainWindow)Application.Current.MainWindow;
+            if (!(App.Current.MainWindow as MainWindow).IsLogined)
+            {
+                mainWindow.modalFrame.Navigate(new LoginPage());
+            }
+            else
+            {
+                if (mainWindow.pageFrame.Content.GetType() != typeof(BasketPage))
+                    mainWindow.pageFrame.Navigate(new BasketPage(mainWindow.LoginedUser));
+                closeMenu.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+            }
+        }
+
+        private void AdminPanelClick(object sender, RoutedEventArgs e)
+        {
+            var mainWindow = (MainWindow)Application.Current.MainWindow;
+
+            if (mainWindow.pageFrame.Content.GetType() != typeof(AdminPanelPage))
+                mainWindow.pageFrame.Navigate(new AdminPanelPage());
+
+            closeMenu.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+        }
+
+        private void ToProfilePageClick(object sender, RoutedEventArgs e)
+        {
+            var mainWindow = (MainWindow)Application.Current.MainWindow;
+
+            if (mainWindow.pageFrame.Content.GetType() != typeof(ProfilePage))
+                mainWindow.pageFrame.Navigate(new ProfilePage(mainWindow.LoginedUser));
+
+            closeMenu.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+        }
+    }
+    public class IfAdminConverter : IValueConverter
+    {
+
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value is UserEntityDTO)
+            {
+                return (value as UserEntityDTO).UserRoles.FirstOrDefault(x => x.Role.Name == "Admin") == null ? Visibility.Collapsed : Visibility.Visible;
+            }
+            return Visibility.Collapsed;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
         }
     }
 }

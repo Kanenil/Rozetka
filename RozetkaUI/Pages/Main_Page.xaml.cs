@@ -27,7 +27,7 @@ namespace RozetkaUI.Pages
             DataContext = this;
             _categoryService = new CategoryService();
 
-            var categories = GetCategoriesList();
+            var categories = _categoryService.GetCategories().ToList();
 
             Category1 = categories[0];
             Category2 = categories[1];
@@ -38,17 +38,6 @@ namespace RozetkaUI.Pages
         public CategoryEntityDTO Category2 { get; }
         public CategoryEntityDTO Category3 { get; }
 
-
-        private List<CategoryEntityDTO> GetCategoriesList()
-        {
-            List<CategoryEntityDTO> list = new List<CategoryEntityDTO>();
-            var tempList = _categoryService.GetCategories();
-            foreach (CategoryEntityDTO item in tempList)
-            {
-                list.Add(item);
-            }
-            return list;
-        }
         private void MoreNotebooks_Click(object sender, RoutedEventArgs e)
         {
             (App.Current.MainWindow as MainWindow).pageFrame.Navigate(new ProductListPage(Category1));
