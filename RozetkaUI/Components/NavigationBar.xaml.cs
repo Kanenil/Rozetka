@@ -77,7 +77,7 @@ namespace RozetkaUI.Components
             mainWindow.modalFrame.Navigate(new RegistrationPage());
         }
 
-        private void LogoutClick(object sender, RoutedEventArgs e)
+        public void LogoutClick(object sender, RoutedEventArgs e)
         {
             var mainWindow = (MainWindow)Application.Current.MainWindow;
 
@@ -86,7 +86,8 @@ namespace RozetkaUI.Components
             if (mainWindow.pageFrame.Content.GetType() == typeof(BasketPage) || 
                 mainWindow.pageFrame.Content.GetType() == typeof(AdminPanelPage) ||
                 mainWindow.pageFrame.Content.GetType() == typeof(AddCategoryPage) ||
-                mainWindow.pageFrame.Content.GetType() == typeof(AddProductPage))
+                mainWindow.pageFrame.Content.GetType() == typeof(AddProductPage) ||
+                mainWindow.pageFrame.Content.GetType() == typeof(ProfilePage))
             {
                 mainWindow.pageFrame.Navigate(new Main_Page());
             }
@@ -149,19 +150,25 @@ namespace RozetkaUI.Components
 
         private void moveToAllCategories(object sender, RoutedEventArgs e)
         {
-            (App.Current.MainWindow as MainWindow).pageFrame.Navigate(new AllCategoriesPage(Categories.ToList()));
+            var mainWindow = (MainWindow)Application.Current.MainWindow;
+            if (mainWindow.pageFrame.Content.GetType() != typeof(AllCategoriesPage))
+                mainWindow.pageFrame.Navigate(new AllCategoriesPage(Categories.ToList()));
             closeCategories.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
         }
 
         private void HomeMenuClick(object sender, RoutedEventArgs e)
         {
-            (App.Current.MainWindow as MainWindow).pageFrame.Navigate(new Main_Page());
+            var mainWindow = (MainWindow)Application.Current.MainWindow;
+            if (mainWindow.pageFrame.Content.GetType() != typeof(Main_Page))
+                mainWindow.pageFrame.Navigate(new Main_Page());
             closeMenu.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
         }
 
         private void HomeClick(object sender, RoutedEventArgs e)
         {
-            (App.Current.MainWindow as MainWindow).pageFrame.Navigate(new Main_Page());
+            var mainWindow = (MainWindow)Application.Current.MainWindow;
+            if (mainWindow.pageFrame.Content.GetType() != typeof(Main_Page))
+                mainWindow.pageFrame.Navigate(new Main_Page());
         }
 
         private void QuestionClick(object sender, RoutedEventArgs e)
@@ -299,7 +306,8 @@ namespace RozetkaUI.Components
             }
             else
             {
-                mainWindow.pageFrame.Navigate(new BasketPage(mainWindow.LoginedUser));
+                if (mainWindow.pageFrame.Content.GetType() != typeof(BasketPage))
+                    mainWindow.pageFrame.Navigate(new BasketPage(mainWindow.LoginedUser));
             }
 
         }
@@ -313,7 +321,8 @@ namespace RozetkaUI.Components
             }
             else
             {
-                mainWindow.pageFrame.Navigate(new BasketPage(mainWindow.LoginedUser));
+                if (mainWindow.pageFrame.Content.GetType() != typeof(BasketPage))
+                    mainWindow.pageFrame.Navigate(new BasketPage(mainWindow.LoginedUser));
                 closeMenu.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
             }
         }
@@ -321,7 +330,20 @@ namespace RozetkaUI.Components
         private void AdminPanelClick(object sender, RoutedEventArgs e)
         {
             var mainWindow = (MainWindow)Application.Current.MainWindow;
-            mainWindow.pageFrame.Navigate(new AdminPanelPage());
+
+            if (mainWindow.pageFrame.Content.GetType() != typeof(AdminPanelPage))
+                mainWindow.pageFrame.Navigate(new AdminPanelPage());
+
+            closeMenu.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+        }
+
+        private void ToProfilePageClick(object sender, RoutedEventArgs e)
+        {
+            var mainWindow = (MainWindow)Application.Current.MainWindow;
+
+            if (mainWindow.pageFrame.Content.GetType() != typeof(ProfilePage))
+                mainWindow.pageFrame.Navigate(new ProfilePage(mainWindow.LoginedUser));
+
             closeMenu.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
         }
     }

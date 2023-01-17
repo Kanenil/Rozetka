@@ -643,62 +643,6 @@
                             <Border Width="45" Height="45"
                                 CornerRadius="30"
                                 Background="#FF393636">
-                            <Path Data="{StaticResource Account}"
-                                  Stretch="Uniform"
-                                  Margin="0 0 0 0"
-                                  Width="30" Height="30"
-                                  Fill="{StaticResource PrimaryTextColor}"
-                                  HorizontalAlignment="Center">
-                                <Path.LayoutTransform>
-                                    <MatrixTransform Matrix="1 0 0 -1 1 0"/>
-                                </Path.LayoutTransform>
-                            </Path>
-                        </Border>
-                            <StackPanel >
-
-                            <StackPanel Orientation="Horizontal">
-
-                                    <Button Style="{StaticResource LoginButtonMenu}"
-                                        Content="Вхід"
-                                        Click="LoginClick"/>
-                                    <Button Style="{StaticResource RegistartionButtonMenu}"
-                                        Content="Реєстрація"
-                                        Click="RegistrationClick"/>
-
-                                    <TextBlock Style="{StaticResource PrimaryHeaderTextBlockStyle}"
-                                           Text="{Binding LoginedUser.FirstName}"
-                                           Margin="10 0 0 0"/>
-                                <TextBlock Style="{StaticResource PrimaryHeaderTextBlockStyle}"
-                                           Text="{Binding LoginedUser.SecondName}"
-                                           Margin="5 0 0 0"/>
-
-
-                            </StackPanel>
-
-                                <TextBlock Text="Авторизуйтесь для отримання розширених можливостей"
-                                           Name="tipProfile"
-                                       Margin="10 0 0 0"
-                                       Width="200"
-                                       Style="{StaticResource CommonText}"/>
-
-                            </StackPanel>
-                        </StackPanel>
-                        <StackPanel Orientation="Horizontal"
-                                Name="loginedProfile"
-                                Margin="10 30 0 10"
-                                    Visibility="Collapsed">
-                            <StackPanel.Style>
-                                <Style TargetType="StackPanel">
-                                    <Style.Triggers>
-                                        <DataTrigger Binding="{Binding IsLogined}" Value="true">
-                                            <Setter Property="Visibility" Value="Visible"/>
-                                        </DataTrigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </StackPanel.Style>
-                            <Border Width="45" Height="45"
-                                CornerRadius="30"
-                                Background="#FF393636">
                                 <Path Data="{StaticResource Account}"
                                   Stretch="Uniform"
                                   Margin="0 0 0 0"
@@ -710,14 +654,37 @@
                                     </Path.LayoutTransform>
                                 </Path>
                             </Border>
-                            <StackPanel >
+                            <StackPanel>
 
                                 <StackPanel Orientation="Horizontal">
 
-                                    
+                                    <Button Style="{StaticResource LoginButtonMenu}"
+                                        Content="Вхід"
+                                        Click="LoginClick"/>
+                                    <Button Style="{StaticResource RegistartionButtonMenu}"
+                                        Content="Реєстрація"
+                                        Click="RegistrationClick"/>
+
+                                    <Button Style="{StaticResource MyButton}"
+                                            Click="ToProfilePageClick">
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock Style="{StaticResource PrimaryHeaderTextBlockStyle}"
+                                                       Text="{Binding LoginedUser.FirstName}"
+                                                       Margin="10 0 0 0"/>
+                                            <TextBlock Style="{StaticResource PrimaryHeaderTextBlockStyle}"
+                                                       Text="{Binding LoginedUser.SecondName}"
+                                                       Margin="5 0 0 0"/>
+                                        </StackPanel>
+                                    </Button>
 
 
                                 </StackPanel>
+
+                                <TextBlock Text="Авторизуйтесь для отримання розширених можливостей"
+                                           Name="tipProfile"
+                                       Margin="10 0 0 0"
+                                       Width="200"
+                                       Style="{StaticResource CommonText}"/>
 
                             </StackPanel>
                         </StackPanel>

@@ -53,10 +53,9 @@ namespace BAL.Services
             basket.User = null;
             await _userRepository.DeleteProductBasket(basket);
         }
-
         public async Task<UserEntityDTO> Login(UserEntityDTO entity)
         {
-            var user = _mapper.Map<UserEntity, UserEntityDTO>(await _userRepository.FindByEmailOrPhone(entity.Email));
+            var user = await FindUserByEmailOrPhone(entity.Email);
 
             if (user == null)
                 throw new Exception("login error");
@@ -70,7 +69,6 @@ namespace BAL.Services
 
             return user;
         }
-
         public async Task Registrate(UserEntityDTO entity)
         {
             var user = _mapper.Map<UserEntityDTO, UserEntity>(entity);
@@ -107,7 +105,6 @@ namespace BAL.Services
 
             entity.Id = user.Id;
         }
-
         public IEnumerable<UserEntityDTO> GetAllUsers()
         {
             var list = _mapper.Map<IEnumerable<UserEntity>, IEnumerable<UserEntityDTO>>(_userRepository.GetAllUsers());
@@ -119,7 +116,6 @@ namespace BAL.Services
             }
             return list;
         }
-
         public async Task EditUserRole(UserRoleEntityDTO old, string entityDTO)
         {
             var oldUserRole = _mapper.Map<UserRoleEntityDTO, UserRoleEntity>(old);
@@ -135,6 +131,19 @@ namespace BAL.Services
 
             old.RoleId = roles.FirstOrDefault(x => x.Name == entityDTO).Id;
             old.Role = _mapper.Map<RoleEntity, RoleEntityDTO>(roles.FirstOrDefault(x => x.Name == entityDTO));
+        }
+        public async Task EditUserInformation(UserEntityDTO entity)
+        {
+            var user = _mapper.Map<UserEntityDTO, UserEntity>(entity);
+            user.Orders = null;
+            user.Baskets = null;
+            user.UserRoles = null;
+            await _userRepository.Update(user.Id, user);
+        }
+
+        public async Task<UserEntityDTO> FindUserByEmailOrPhone(string findBy)
+        {
+            return _mapper.Map<UserEntity, UserEntityDTO>(await _userRepository.FindByEmailOrPhone(findBy));
         }
     }
 }
