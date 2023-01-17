@@ -1,5 +1,6 @@
 ﻿using BAL.Interfaces;
 using BAL.Services;
+using BAL.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -55,7 +56,7 @@ namespace RozetkaUI.Pages
                 var user = await userService.Login(new BAL.DTO.Models.UserEntityDTO()
                 {
                     Email = login,
-                    Password = password
+                    Password = PasswordHasher.Hash(password)
                 });
 
                 (App.Current.MainWindow as MainWindow).LoginedUser = user;

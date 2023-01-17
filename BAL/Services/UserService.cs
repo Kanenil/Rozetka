@@ -59,7 +59,7 @@ namespace BAL.Services
 
             if (user == null)
                 throw new Exception("login error");
-            else if(user.Password != PasswordHasher.Hash(entity.Password))
+            else if(user.Password != entity.Password)
                 throw new Exception("password error");
 
             foreach (var basket in user.Baskets)
