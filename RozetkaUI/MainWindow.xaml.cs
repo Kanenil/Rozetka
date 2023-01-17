@@ -35,10 +35,6 @@ namespace RozetkaUI
             DataContext = this;
             IsLogined = false;
             pageFrame.Content = new Main_Page();
-
-
-            
-
         }
 
         private UserEntityDTO _loginedUser;
@@ -127,7 +123,7 @@ namespace RozetkaUI
                     Email = Settings.Default.Login,
                     Password = Settings.Default.Password
                 };
-                LoginedUser = await userService.FindUserByEmailOrPhone(user.Email);
+                LoginedUser = await userService.Login(user);
             } 
         }
     }

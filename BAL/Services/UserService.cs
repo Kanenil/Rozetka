@@ -62,11 +62,6 @@ namespace BAL.Services
             else if(user.Password != entity.Password)
                 throw new Exception("password error");
 
-            foreach (var basket in user.Baskets)
-            {
-                basket.Product.Images = basket.Product.Images.OrderBy(x => x.Priority).ToList();
-            }
-
             return user;
         }
         public async Task Registrate(UserEntityDTO entity)
@@ -105,14 +100,7 @@ namespace BAL.Services
         }
         public IEnumerable<UserEntityDTO> GetAllUsers()
         {
-            var list = _mapper.Map<IEnumerable<UserEntity>, IEnumerable<UserEntityDTO>>(_userRepository.GetAllUsers());
-            if (list != null)
-            {
-                foreach (var user in list)
-                    foreach (var basket in user.Baskets)
-                        basket.Product.Images = basket.Product.Images.OrderBy(x => x.Priority).ToList();
-            }
-            return list;
+            return _mapper.Map<IEnumerable<UserEntity>, IEnumerable<UserEntityDTO>>(_userRepository.GetAllUsers());
         }
         public async Task EditUserRole(UserRoleEntityDTO old, string entityDTO)
         {
