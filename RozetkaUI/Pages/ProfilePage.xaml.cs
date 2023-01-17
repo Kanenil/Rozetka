@@ -105,15 +105,16 @@ namespace RozetkaUI.Pages
         private void ChangePassword(object sender, RoutedEventArgs e)
         {
             var mainWindow = App.Current.MainWindow as MainWindow;
-            mainWindow.modalFrame.Navigate(new ChangePasswordPage());
+            mainWindow.modalFrame.Navigate(new ChangePasswordPage(User));
         }
 
         private void DeleteAccount(object sender, RoutedEventArgs e)
         {
-
+            var mainWindow = App.Current.MainWindow as MainWindow;
+            mainWindow.modalFrame.Navigate(new DeleteAccountPage(User));
         }
 
-        private void LogoutAccount(object sender, RoutedEventArgs e)
+        public void LogoutAccount(object sender, RoutedEventArgs e)
         {
             var mainWindow = (MainWindow)Application.Current.MainWindow;
             mainWindow.navBar.LogoutClick(sender, e);

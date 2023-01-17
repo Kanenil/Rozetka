@@ -146,7 +146,7 @@ namespace RozetkaUI.Pages
                 isValid = false;
             }
 
-            if (password.Length == 0)
+            if (password.Length == 0 || !Regex.IsMatch(password, @"^[a-zA-Z0-9_]+$"))
             {
                 passwordHidden.BorderBrush = new SolidColorBrush(Colors.Red);
                 isValid = false;

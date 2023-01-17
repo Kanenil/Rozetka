@@ -1,6 +1,11 @@
-﻿using System;
+﻿using BAL.DTO.Models;
+using BAL.Interfaces;
+using BAL.Services;
+using BAL.Utilities;
+using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -18,9 +23,26 @@ namespace RozetkaUI.Pages
     /// </summary>
     public partial class ChangePasswordPage : Page
     {
-        public ChangePasswordPage()
+        private UserEntityDTO _user;
+        public ChangePasswordPage(UserEntityDTO user)
         {
             InitializeComponent();
+            _user = user;
+            passwordHidden.PasswordChanged += (s,e) =>
+            {
+                CheckPassword();
+            };
+
+            passwordHidden1.PasswordChanged += (s,e) =>
+            {
+                CheckPassword();
+            };
+
+            passwordHidden2.PasswordChanged += (s,e) =>
+            {
+                CheckPassword();
+            };
+
         }
 
         private void ShowPassword_PreviewMouseDown(object sender, MouseButtonEventArgs e) => ShowPasswordFunction(showPasswordIcon, passwordUnmask, passwordHidden);
@@ -37,7 +59,7 @@ namespace RozetkaUI.Pages
             path.Data = this.FindResource("Eye") as PathGeometry;
             textBlock.Visibility = Visibility.Visible;
             passwordBox.Foreground = this.FindResource("SecundaryBackgroundColor") as SolidColorBrush;
-            textBlock.Text = passwordHidden.Password;
+            textBlock.Text = passwordBox.Password;
         }
         private void HidePasswordFunction(Path path, TextBlock textBlock, PasswordBox passwordBox)
         {
@@ -46,9 +68,32 @@ namespace RozetkaUI.Pages
             passwordBox.Foreground = this.FindResource("SecundaryTextColor") as SolidColorBrush;
         }
 
-        private void saveClick(object sender, RoutedEventArgs e)
+        private async void saveClick(object sender, RoutedEventArgs e)
         {
+            IUserService userService = new UserService();
 
+            _user.Password = PasswordHasher.Hash(passwordHidden2.Password);
+
+            await userService.EditUserInformation(_user);
+
+            (App.Current.MainWindow as MainWindow).LoginedUser = _user;
+
+            CloseModal();
+        }
+
+        private void CheckPassword()
+        {
+            if (String.IsNullOrWhiteSpace(passwordHidden.Password) ||
+                String.IsNullOrWhiteSpace(passwordHidden1.Password) ||
+                String.IsNullOrWhiteSpace(passwordHidden2.Password) ||
+                !Regex.IsMatch(passwordHidden1.Password, @"^[a-zA-Z0-9_]+$") ||
+                passwordHidden1.Password != passwordHidden2.Password ||
+                PasswordHasher.Hash(passwordHidden.Password) != _user.Password)
+            {
+                savePassword.IsEnabled = false;
+                return;
+            }
+            savePassword.IsEnabled = true;
         }
 
         private void CloseModal()

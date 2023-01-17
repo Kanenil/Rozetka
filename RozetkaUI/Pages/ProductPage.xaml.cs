@@ -99,7 +99,7 @@ namespace RozetkaUI.Pages
                 if (rightBlock.ActualWidth > 280 && ActualWidth <= 980)
                 {
                     var newSize = rightBlock.ActualWidth - (e.PreviousSize.Width - e.NewSize.Width);
-                    if (newSize < 0)
+                    if (newSize <= 300)
                     {
                         rightBlock.Width = ActualWidth - 350;
                     }
