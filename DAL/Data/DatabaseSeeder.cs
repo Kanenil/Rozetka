@@ -19,6 +19,22 @@ namespace DAL.Data
                 SeedProducts(dataContext);
                 SeedImages(dataContext);
                 SeedRoles(dataContext);
+                SeedOrderStatuses(dataContext);
+            }
+        }
+        private static void SeedOrderStatuses(EFAppContext dataContext)
+        {
+            if (!dataContext.OrderStatuses.Any())
+            {
+                foreach (var order in OrderStatuses.All)
+                {
+                    dataContext.OrderStatuses.Add(new OrderStatusEntity()
+                    {
+                        DateCreated = DateTime.Now,
+                        Name = order
+                    });
+                }
+                dataContext.SaveChanges();
             }
         }
         private static void SeedRoles(EFAppContext dataContext)

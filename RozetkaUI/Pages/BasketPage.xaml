@@ -306,7 +306,8 @@
                         <Button Style="{StaticResource PrimaryButtonStyle}"
                                 Padding="15"
                                 Margin="40 0 0 0"
-                                Content="Оформити замовлення"/>
+                                Content="Оформити замовлення"
+                                Click="SubmitOrder"/>
 
                     </StackPanel>
                 </Border>
