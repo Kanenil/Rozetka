@@ -4,6 +4,8 @@ using BAL.Services;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Globalization;
+using System.Linq;
 using System.Reflection.Metadata;
 using System.Text;
 using System.Windows;
@@ -51,7 +53,7 @@ namespace RozetkaUI.Pages
             };
             LoginedUser = mainWindow.LoginedUser;
         }
-        public CategoryEntityDTO Category { get; }
+        public CategoryEntityDTO Category { get; set; }
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
@@ -82,6 +84,50 @@ namespace RozetkaUI.Pages
                 Category.Products.Remove(content);
                 CollectionViewSource.GetDefaultView(Category.Products).Refresh();
             }
+        }
+    }
+
+    public class SalePriceConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value is ProductEntityDTO)
+            {
+                var val = (ProductEntityDTO)value;
+
+                var price = val.Price.ToString("C");
+
+                if (val.Sales_Products.Count != 0)
+                {
+                    price = (val.Sales_Products.Count != 0 ? decimal.Round(val.Price - (val.Sales_Products.First().Sale.DecreasePercent * val.Price / 100), 2, MidpointRounding.AwayFromZero) : val.Price).ToString("C");
+                }
+
+                return price;
+            }
+            else
+            {
+                var val = (ProductEntityDTO)(value as TextBlock).DataContext;
+
+                var price = val.Price.ToString("C");
+
+                if (val.Sales_Products.Count != 0)
+                {
+                    price = (val.Sales_Products.Count != 0 ? decimal.Round(val.Price - (val.Sales_Products.First().Sale.DecreasePercent * val.Price / 100), 2, MidpointRounding.AwayFromZero) : val.Price).ToString("C");
+                }
+                else
+                {
+                    (value as TextBlock).Foreground = Brushes.Black;
+                }
+
+                return price;
+
+            }
+
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
         }
     }
 }

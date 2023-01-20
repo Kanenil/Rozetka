@@ -24,6 +24,8 @@
                 </Setter.Value>
             </Setter>
         </Style>
+        <local:BooleanToVisibilityConverter x:Key="BooleanCountConverter" True="Collapsed" False="Visible" />
+        <local:BooleanToVisibilityConverter x:Key="ReverseBooleanCountConverter" True="Visible" False="Collapsed" />
     </Page.Resources>
     
     <StackPanel Background="White">
@@ -83,16 +85,42 @@
                     Padding="10"
                     VerticalAlignment="Top">
                     <StackPanel Orientation="Horizontal">
+
                         <TextBlock Style="{StaticResource SecundaryHeaderTextBlockStyle}"
+                                   Background="White"
+                                   Padding="2"
                                Foreground="Black"
-                               Margin="10 0 0 0"
-                               FontSize="36"
-                               Text="{Binding Product.Price}"/>
+                               Margin="10 -25 0 50"
+                               FontSize="17"
+                                   Visibility="{Binding SalePrice, Converter={StaticResource BooleanCountConverter}}">
+                            <TextBlock.TextDecorations>
+                                <TextDecoration Location="Strikethrough">
+                                    <TextDecoration.Pen>
+                                        <Pen Brush="Red" />
+                                    </TextDecoration.Pen>
+                                </TextDecoration>
+                            </TextBlock.TextDecorations>
+                            <Run Text="{Binding Product.Price}"/>
+                            <Run Text="₴"/>
+                        </TextBlock>
+
                         <TextBlock Style="{StaticResource SecundaryHeaderTextBlockStyle}"
-                               Foreground="Black"
-                               Margin="5 12 0 0"
-                               FontSize="24"
-                               Text="₴"/>
+                                   Foreground="Red"
+                                   Margin="-65 0 0 0"
+                                   FontSize="36"
+                                   Visibility="{Binding SalePrice, Converter={StaticResource BooleanCountConverter}}">
+                            <Run Text="{Binding SalePrice}"/>
+                            <Run Text="₴" FontSize="24"/>
+                        </TextBlock>
+                        
+                        <TextBlock Style="{StaticResource SecundaryHeaderTextBlockStyle}"
+                                   Foreground="Black"
+                                   Margin="10 0 0 0"
+                                   FontSize="36"
+                                   Visibility="{Binding SalePrice, Converter={StaticResource ReverseBooleanCountConverter}}">
+                            <Run Text="{Binding Product.Price}"/>
+                            <Run Text="₴" FontSize="24"/>
+                        </TextBlock>
                         <Button Style="{StaticResource MyButton}"
                                 Margin="20 0 0 0"
                                 Name="inBasketBtn"
