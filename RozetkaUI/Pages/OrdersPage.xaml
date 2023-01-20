@@ -80,7 +80,28 @@
                 </Trigger>
             </Style.Triggers>
         </Style>
-
+        <Style x:Key="OrderButton" TargetType="Button">
+            <Setter Property="OverridesDefaultStyle" Value="True" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="BorderBrush" Value="LightGray" />
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border BorderThickness="1" BorderBrush="{TemplateBinding BorderBrush}" Background="{TemplateBinding Background}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="BorderBrush" Value="LightGray" />
+                    <Setter Property="Background" Value="{StaticResource ThirdBackgroundColor}" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        <local:SumPriceConverter x:Key="PriceConverter"/>
     </Page.Resources>
 
     <StackPanel Background="White">
@@ -163,13 +184,14 @@
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="100"/>
-                    <ColumnDefinition/>
-                    <ColumnDefinition/>
-                    <ColumnDefinition/>
-                    <ColumnDefinition/>
+                    <ColumnDefinition Width="200"/>
+                    <ColumnDefinition Width="160"/>
+                    <ColumnDefinition Width="180"/>
+                    <ColumnDefinition Width="170"/>
                 </Grid.ColumnDefinitions>
 
                 <Button Style="{StaticResource TransperentBTN}"
+                        HorizontalAlignment="Center"
                         Content="#"
                         Click="SortByNumber"/>
                 <Button Style="{StaticResource TransperentBTN}"
@@ -187,44 +209,50 @@
 
                 <ItemsControl Grid.Row="1"
                               Grid.ColumnSpan="5"
-                              ItemsSource="{Binding User.Orders}">
+                              ItemsSource="{Binding Orders}">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <Border Padding="5"
+                            <Button Style="{StaticResource OrderButton}">
+                                <Border Padding="5"
                                     BorderBrush="LightGray"
                                     Margin="0 5 0 0"
                                     CornerRadius="3">
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="100"/>
-                                        <ColumnDefinition/>
-                                        <ColumnDefinition/>
-                                        <ColumnDefinition/>
-                                        <ColumnDefinition/>
-                                    </Grid.ColumnDefinitions>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="100"/>
+                                            <ColumnDefinition Width="200"/>
+                                            <ColumnDefinition Width="160"/>
+                                            <ColumnDefinition Width="180"/>
+                                            <ColumnDefinition Width="170"/>
+                                        </Grid.ColumnDefinitions>
 
-                                    <TextBlock Text="{Binding Id}"
-                                               HorizontalAlignment="Center"/>
-                                    <Image Grid.Column="1"
+                                        <TextBlock Text="{Binding Id}"
+                                               HorizontalAlignment="Center"
+                                               VerticalAlignment="Center"/>
+                                        <Image Grid.Column="1"
                                            HorizontalAlignment="Center"
                                            Width="100"
                                            Height="100"
                                            Source="{Binding OrderItems[0].Product.Images[0].Name}"/>
 
-                                    <TextBlock Text="{Binding Id}"
+                                        <TextBlock Text="{Binding OrderItems,Converter={StaticResource PriceConverter}}"
                                                Grid.Column="2"
-                                               HorizontalAlignment="Center"/>
+                                               HorizontalAlignment="Center"
+                                               VerticalAlignment="Center"/>
 
-                                    <TextBlock Text="{Binding OrderItems.Count}"
+                                        <TextBlock Text="{Binding OrderItems.Count}"
                                                Grid.Column="3"
-                                               HorizontalAlignment="Center"/>
+                                               HorizontalAlignment="Center"
+                                               VerticalAlignment="Center"/>
 
-                                    <TextBlock Text="{Binding OrderStatus.Name}"
+                                        <TextBlock Text="{Binding OrderStatus.Name}"
                                                Grid.Column="4"
-                                               HorizontalAlignment="Center"/>
+                                               HorizontalAlignment="Center"
+                                               VerticalAlignment="Center"/>
 
-                                </Grid>
-                            </Border>
+                                    </Grid>
+                                </Border>
+                            </Button>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
