@@ -420,7 +420,13 @@ namespace RozetkaUI.Pages
                    Name = title,
                    Price = price,
                 };
+
+
                 await productService.CreateProduct(product);
+
+                product.Sales_Products = new List<Sales_ProductEntityDTO>();
+                product.OrderItems = new List<OrderItemEntityDTO>();
+                product.Baskets = new List<BasketEntityDTO>();
 
                 _category.Products.Add(product);
 

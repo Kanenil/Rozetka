@@ -68,6 +68,9 @@ namespace BAL.Services
 
             product.Images = null;
             product.Category = null;
+            product.Baskets = null;
+            product.Sales_Products = null;
+            product.OrderItems = null;
 
             await _productRepository.Update(product.Id, product);
 
