@@ -131,6 +131,8 @@
                     <RowDefinition/>
                     <RowDefinition/>
                     <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
                 </Grid.RowDefinitions>
 
                 <StackPanel Orientation="Horizontal"
@@ -223,8 +225,6 @@
                           HorizontalAlignment="Left"
                           ItemsSource="{Binding Statuses}"
                           SelectedIndex="{Binding Order.OrderStatusId, Converter={StaticResource IndexConverter}}"
-                          SelectedItem="{Binding Order.OrderStatus}"
-                          SelectedValue="{Binding Order.OrderStatus}"
                           Style="{StaticResource PrimaryComboBoxStyle}"
                           DisplayMemberPath="Name"
                           Visibility="{Binding IsAdmin, Converter={StaticResource BoleanFalseConverter}}"
@@ -288,9 +288,87 @@
 
                 </StackPanel>
 
+                <StackPanel Orientation="Horizontal"
+                            Margin="20 20 20 0"
+                            Grid.Row="5">
+                    <Border Width="20"
+                            Height="20"
+                            Background="LightGray"
+                            Padding="5"
+                            CornerRadius="20">
+                        <TextBlock Text="3"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center"/>
+                    </Border>
+                    <TextBlock Text="Контактні дані отримувача замовлення"
+                               Margin="5 0 0 0"/>
+
+                </StackPanel>
+
+                <Grid Grid.Row="6"
+                      Margin="40 10 20 20">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Style="{StaticResource SecundaryHeaderTextBlockStyle}"
+                               FontSize="12"
+                               Text="Прізвище"/>
+
+                    <TextBlock FontSize="14"
+                               Margin="0 2 0 0"
+                               Text="{Binding Order.User.SecondName}"
+                               Grid.Row="1"/>
+
+                    <TextBlock Style="{StaticResource SecundaryHeaderTextBlockStyle}"
+                               FontSize="12"
+                               Grid.Column="1"
+                               Text="Ім'я"/>
+
+                    <TextBlock FontSize="14"
+                               Grid.Column="1"
+                               Margin="0 2 0 0"
+                               Text="{Binding Order.User.FirstName}"
+                               Grid.Row="1"/>
+
+                    <TextBlock Style="{StaticResource SecundaryHeaderTextBlockStyle}"
+                               FontSize="12"
+                               Grid.Row="2"
+                               Grid.Column="1"
+                               Margin="0 10 0 0"
+                               Text="Мобільний телефон"/>
+
+                    <TextBlock FontSize="14"
+                               Grid.Column="1"
+                               Margin="0 2 0 0"
+                               Text="{Binding Order.User.Phone}"
+                               Grid.Row="3"/>
+
+                    <TextBlock Style="{StaticResource SecundaryHeaderTextBlockStyle}"
+                               FontSize="12"
+                               Grid.Row="2"
+                               Margin="0 10 0 0"
+                               Text="Електронна пошта"/>
+
+                    <TextBlock FontSize="14"
+                               Margin="0 2 0 0"
+                               Text="{Binding Order.User.Email}"
+                               Grid.Row="3"/>
+
+
+
+                </Grid>
+
                 <ToggleButton Style="{StaticResource PrimaryNoBorderButtonStyle}"
                               Content="Повернутись назад"
-                              Grid.Row="5"
+                              Grid.Row="7"
                               Click="ReturnBack"
                               Padding="10"
                               Margin="20 10 0 20"/>    

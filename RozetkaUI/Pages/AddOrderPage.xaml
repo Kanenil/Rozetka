@@ -111,7 +111,7 @@
         </StackPanel>
 
         <StackPanel Margin="40 10 20 0">
-            <RadioButton Content="Оплата під час отримання продукту" Margin="0 5 0 0" IsChecked="True"/>
+            <RadioButton Content="Оплата під час отримання товару" Margin="0 5 0 0" IsChecked="True"/>
             <RadioButton Content="Оплати зараз" Margin="0 5 0 0"/>
         </StackPanel>
 

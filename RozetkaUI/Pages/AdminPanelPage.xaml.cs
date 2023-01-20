@@ -5,8 +5,10 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Globalization;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -48,7 +50,10 @@ namespace RozetkaUI.Pages
                 userSuperPanel.Visibility = Visibility.Collapsed;
             }
         }
-        private void Page_Loaded(object sender, RoutedEventArgs e)
+
+        private string _prevSort;
+        private IOrderService _orderService;
+        private async void Page_Loaded(object sender, RoutedEventArgs e)
         {
             var allusers = _userService.GetAllUsers().ToList();
 
@@ -56,6 +61,19 @@ namespace RozetkaUI.Pages
 
             Users = allusers.Where(x => x.UserRoles.First().Role.Name == "User").ToList();
             Admins = allusers.Where(x => x.UserRoles.First().Role.Name == "Admin" && x.UserRoles.Count == 1 && x.UserRoles.First().UserId != mainWindow.LoginedUser.Id).ToList();
+
+            if (Orders.Count == 0)
+            {
+                _orderService = new OrderService();
+                var list = await _orderService.GetOrdersBy(x => true, 0, 5);
+                Orders = list.ToList();
+                SortBy<int>(x => x.Id, true);
+                _prevSort = "number";
+            }
+            else
+            {
+                CollectionViewSource.GetDefaultView(Orders).Refresh();
+            }
         }
 
         public bool IsSuperAdmin { get; set; }
@@ -79,6 +97,29 @@ namespace RozetkaUI.Pages
             }
         }
 
+        private List<OrderEntityDTO> _orders;
+
+        public List<OrderEntityDTO> Orders
+        {
+            get
+            {
+                if (_orders != null)
+                {
+                    CollectionViewSource.GetDefaultView(_orders).Refresh();
+                    GeneralSum.Text = _orders.Select(x=>x.OrderItems.Select(x=>x.PriceBuy * x.Count).Sum()).Sum().ToString("C");
+                    GeneralProducts.Text = _orders.Select(x=>x.OrderItems.Count).Sum().ToString();
+                }
+                return _orders ?? (_orders = new List<OrderEntityDTO>());
+            }
+            set
+            {
+                if (_orders == value)
+                    return;
+                _orders = value;
+                OnPropertyChanged();
+            }
+        }
+
         private List<UserEntityDTO> _admins;
 
         public List<UserEntityDTO> Admins
@@ -97,7 +138,6 @@ namespace RozetkaUI.Pages
                 OnPropertyChanged();
             }
         }
-
 
         public event PropertyChangedEventHandler PropertyChanged;
         protected virtual void OnPropertyChanged(string propertyName = null)
@@ -127,6 +167,112 @@ namespace RozetkaUI.Pages
                 Users.Add(user);
                 CollectionViewSource.GetDefaultView(Users).Refresh();
             }
+        }
+
+        private void SortByNumber(object sender, RoutedEventArgs e)
+        {
+            if (_prevSort != "number")
+            {
+                _prevSort = "number";
+                SortBy<int>(x => x.Id, true);
+            }
+            else
+            {
+                _prevSort = string.Empty;
+                SortBy<int>(x => x.Id);
+            }
+        }
+
+        private void SortByPrice(object sender, RoutedEventArgs e)
+        {
+            if (_prevSort != "price")
+            {
+                _prevSort = "price";
+                SortBy(x => x.OrderItems.Select(x => x.PriceBuy * x.Count).Sum());
+            }
+            else
+            {
+                _prevSort = string.Empty;
+                SortBy(x => x.OrderItems.Select(x => x.PriceBuy * x.Count).Sum(), true);
+            }
+        }
+
+        private void SortByCountProducts(object sender, RoutedEventArgs e)
+        {
+            if (_prevSort != "countProducts")
+            {
+                _prevSort = "countProducts";
+                SortBy(x => x.OrderItems.Count);
+            }
+            else
+            {
+                _prevSort = string.Empty;
+                SortBy(x => x.OrderItems.Count, true);
+            }
+        }
+
+        private void SortByStatus(object sender, RoutedEventArgs e)
+        {
+            if (_prevSort != "status")
+            {
+                _prevSort = "status";
+                SortBy(x => x.OrderStatus.Name, true);
+            }
+            else
+            {
+                _prevSort = string.Empty;
+                SortBy(x => x.OrderStatus.Name);
+            }
+        }
+        private void SortByUser(object sender, RoutedEventArgs e)
+        {
+            if (_prevSort != "user")
+            {
+                _prevSort = "user";
+                SortBy(x => x.User.FirstName + " " + x.User.SecondName, true);
+            }
+            else
+            {
+                _prevSort = string.Empty;
+                SortBy(x => x.User.FirstName + " " + x.User.SecondName);
+            }
+        }
+
+        private void SortBy<T>(Func<OrderEntityDTO, T> predicate, bool isDescending = false)
+        {
+            Orders = isDescending ? Orders.OrderBy(predicate).ToList() : Orders.OrderByDescending(predicate).ToList();
+        }
+
+        private void OrderInfoClick(object sender, RoutedEventArgs e)
+        {
+            var mainWindow = (MainWindow)App.Current.MainWindow;
+            var content = (OrderEntityDTO)((sender as Button).TemplatedParent as ContentPresenter).Content;
+            mainWindow.pageFrame.Navigate(new OrderInfoPage(this, content, true));
+        }
+
+        private async void LoadMore(object sender, RoutedEventArgs e)
+        {
+            (sender as Button).IsEnabled = false;
+            var list = await _orderService.GetOrdersBy(x => true, Orders.Count, 5);
+            Task.WaitAll(Task.FromResult(list));
+            Orders.AddRange(list);
+            CollectionViewSource.GetDefaultView(Orders).Refresh();
+            (sender as Button).IsEnabled = true;
+        }
+    }
+
+    public class UserNameConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            var val = value as UserEntityDTO;
+
+            return val.FirstName + " " + val.SecondName;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
         }
     }
 }

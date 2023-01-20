@@ -126,6 +126,101 @@
                 </Setter.Value>
             </Setter>
         </Style>
+
+        <Style x:Key="LinkButton"
+           BasedOn="{StaticResource ResourceKey={x:Type Button}}"
+           TargetType="Button">
+
+            <Setter Property="Width" Value="Auto"/>
+            <Setter Property="FontSize" Value="18"/>
+
+
+
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <ContentPresenter VerticalAlignment="Center"
+                                      Content="{TemplateBinding Content}"
+                                      ContentTemplate="{TemplateBinding ContentTemplate}" >
+                            <ContentPresenter.Resources>
+                                <Style TargetType="{x:Type TextBlock}">
+                                    <Setter Property="TextDecorations" Value="None" />
+                                    <Setter Property="TextWrapping" Value="WrapWithOverflow" />
+                                    <Setter Property="Foreground" Value="#3e77aa" />
+                                    <Setter Property="Cursor" Value="{x:Null}"/>
+                                </Style>
+                            </ContentPresenter.Resources>
+                        </ContentPresenter>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="Button">
+                                <ContentPresenter VerticalAlignment="Center"
+                                      Content="{TemplateBinding Content}"
+                                      ContentTemplate="{TemplateBinding ContentTemplate}" >
+                                    <ContentPresenter.Resources>
+                                        <Style TargetType="{x:Type TextBlock}">
+                                            <Setter Property="TextDecorations" Value="Underline" />
+                                            <Setter Property="TextWrapping" Value="WrapWithOverflow" />
+                                            <Setter Property="Foreground" Value="#f84170" />
+                                            <Setter Property="Cursor" Value="Hand"/>
+                                        </Style>
+                                    </ContentPresenter.Resources>
+                                </ContentPresenter>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        <Style x:Key="TransperentBTN" TargetType="Button">
+            <Setter Property="OverridesDefaultStyle" Value="True" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Foreground" Value="#3e77aa" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border BorderThickness="0" BorderBrush="Black" Background="{TemplateBinding Background}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Foreground" Value="#ff7878" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        <Style x:Key="OrderButton" TargetType="Button">
+            <Setter Property="OverridesDefaultStyle" Value="True" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="BorderBrush" Value="LightGray" />
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border BorderThickness="1" BorderBrush="{TemplateBinding BorderBrush}" Background="{TemplateBinding Background}">
+                            <ContentPresenter HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="BorderBrush" Value="LightGray" />
+                    <Setter Property="Background" Value="{StaticResource ThirdBackgroundColor}" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        <local:SumPriceConverter x:Key="PriceConverter"/>
+        <local:UserNameConverter x:Key="UserNameConverter"/>
+
     </Page.Resources>
     
     <Grid>
@@ -155,7 +250,7 @@
                     </Setter>
                 </Style>
             </TabControl.Resources>
-            <TabItem Header="Users">
+            <TabItem Header="Користувачі">
                 <Grid>
                     <DataGrid ItemsSource="{Binding Users}"
                           IsReadOnly="True" AutoGenerateColumns="False"
@@ -215,7 +310,7 @@
                     </DataGrid>
                 </Grid>
             </TabItem>
-            <TabItem Header="Admins" >
+            <TabItem Header="Адміністратори" >
                 <Grid>
                     <DataGrid ItemsSource="{Binding Admins}"
                           IsReadOnly="True" AutoGenerateColumns="False"
@@ -276,35 +371,167 @@
                 </Grid>
             </TabItem>
             <TabItem Header="Замовлення" >
-                <StackPanel>
+                <Grid>
+                    
                     <Grid>
+                        <Grid.Style>
+                            <Style TargetType="Grid">
+                                <Setter Property="Visibility" Value="Collapsed" />
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding Orders.Count}" Value="0">
+                                        <Setter Property="Visibility" Value="Visible" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Grid.Style>
                         <Grid.RowDefinitions>
                             <RowDefinition/>
-                            <RowDefinition Height="0.3*"/>
                             <RowDefinition Height="0.3*"/>
                             <RowDefinition Height="0.3*"/>
                         </Grid.RowDefinitions>
                         <Image HorizontalAlignment="Center"
                                VerticalAlignment="Center"
-                               Source="../Images/OrdersImage.png"/>
+                               Source="../Images/OrdersImage.png"
+                               Width="300"/>
                         <TextBlock Text="Список замовлень пустий"
                                    HorizontalAlignment="Center"
-                                   VerticalAlignment="Bottom"
+                                   VerticalAlignment="Center"
                                    FontSize="28"
                                    FontWeight="SemiBold"
                                    Style="{StaticResource SecundaryHeaderTextBlockStyle}"
                                    Grid.Row="1"/>
                         <TextBlock Text="Користувачі ще нічого не заказували"
                                HorizontalAlignment="Center"
-                               VerticalAlignment="Center"
+                               VerticalAlignment="Top"
                                FontSize="20"
                                FontWeight="SemiBold"
                                Style="{StaticResource SecundaryHeaderTextBlockStyle}"
                                Grid.Row="2"/>
 
                     </Grid>
+
+                    <Grid>
+                        <Grid.Style>
+                            <Style TargetType="Grid">
+                                <Setter Property="Visibility" Value="Visible" />
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding Orders.Count}" Value="0">
+                                        <Setter Property="Visibility" Value="Collapsed" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Grid.Style>
+
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition/>
+                            <RowDefinition Height="auto"/>
+                        </Grid.RowDefinitions>
+
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="0.1*" MinWidth="50"/>
+                            <ColumnDefinition Width="0.2*" MinWidth="100"/>
+                            <ColumnDefinition Width="0.25*" MinWidth="120"/>
+                            <ColumnDefinition Width="0.3*" MinWidth="150"/>
+                            <ColumnDefinition Width="0.2*" MinWidth="100"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Button Style="{StaticResource TransperentBTN}"
+                                HorizontalAlignment="Center"
+                                Content="#"
+                                Click="SortByNumber"/>
+                        <Button Style="{StaticResource TransperentBTN}"
+                                HorizontalAlignment="Center"
+                                Grid.Column="1"
+                                Content="Користувач"
+                                Click="SortByUser"/>
+                        <Button Style="{StaticResource TransperentBTN}"
+                                Grid.Column="2"
+                                Content="Ціна"
+                                Click="SortByPrice"/>
+                        <Button Style="{StaticResource TransperentBTN}"
+                                Grid.Column="3"
+                                Content="Кількість товарів"
+                                Click="SortByCountProducts"/>
+                        <Button Style="{StaticResource TransperentBTN}"
+                                Grid.Column="4"
+                                Content="Статус"
+                                Click="SortByStatus"/>
+
+                        <ItemsControl Grid.Row="1"
+                                      Grid.ColumnSpan="5"
+                                      ItemsSource="{Binding Orders}"
+                                      HorizontalAlignment="Stretch">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Button Style="{StaticResource OrderButton}"
+                                            Click="OrderInfoClick">
+                                        <Border Padding="5"
+                                                BorderBrush="LightGray"
+                                                Margin="0 5 0 0"
+                                                CornerRadius="3">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="0.1*" MinWidth="50"/>
+                                                    <ColumnDefinition Width="0.2*" MinWidth="100"/>
+                                                    <ColumnDefinition Width="0.25*" MinWidth="120"/>
+                                                    <ColumnDefinition Width="0.3*" MinWidth="150"/>
+                                                    <ColumnDefinition Width="0.2*" MinWidth="100"/>
+                                                </Grid.ColumnDefinitions>
+
+                                                <TextBlock Text="{Binding Id}"
+                                                           HorizontalAlignment="Center"
+                                                           VerticalAlignment="Center"/>
+                                                
+                                                <TextBlock Text="{Binding User,Converter={StaticResource UserNameConverter}}"
+                                                           Grid.Column="1"
+                                                           TextWrapping="WrapWithOverflow"
+                                                           HorizontalAlignment="Center"
+                                                           VerticalAlignment="Center"/>
+
+                                                <TextBlock Text="{Binding OrderItems,Converter={StaticResource PriceConverter}}"
+                                                           Grid.Column="2"
+                                                           HorizontalAlignment="Center"
+                                                           VerticalAlignment="Center"/>
+
+                                                <TextBlock Text="{Binding OrderItems.Count}"
+                                               Grid.Column="3"
+                                               HorizontalAlignment="Center"
+                                               VerticalAlignment="Center"/>
+
+                                                <TextBlock Text="{Binding OrderStatus.Name}"
+                                               Grid.Column="4"
+                                               HorizontalAlignment="Center"
+                                               VerticalAlignment="Center"/>
+
+                                            </Grid>
+                                        </Border>
+                                    </Button>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+
+                        <Button Style="{StaticResource LinkButton}"
+                                Content="Загрузити ще..."
+                                Click="LoadMore"
+                                Margin="20 10 0 10"
+                                Grid.ColumnSpan="2"
+                                HorizontalAlignment="Left"
+                                Grid.Row="2"/>
+
+                        <TextBlock Grid.Row="2"
+                                   Grid.Column="2"
+                                   Grid.ColumnSpan="3"
+                                   VerticalAlignment="Center"
+                                   Margin="10 0 0 0"
+                                   TextWrapping="WrapWithOverflow">
+                            Загальна сума товарів <Run Name="GeneralSum"/><LineBreak/>
+                            Загальна кількість товарів <Run Name="GeneralProducts"/>
+                        </TextBlock>
+
+                    </Grid>
                     
-                </StackPanel>
+                </Grid>
 
             </TabItem>
         </TabControl>

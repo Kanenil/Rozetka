@@ -73,9 +73,18 @@ namespace RozetkaUI.Pages
 
         private void ReturnBack(object sender, RoutedEventArgs e)
         {
-            var order = (_prevPage as OrdersPage).Orders.FirstOrDefault(x=>x.Id == _order.Id);
-            order = Order;
-            CollectionViewSource.GetDefaultView((_prevPage as OrdersPage).Orders).Refresh();
+            if (_prevPage is OrdersPage)
+            {
+                var order = (_prevPage as OrdersPage).Orders.FirstOrDefault(x=>x.Id == _order.Id);
+                order = Order;
+                CollectionViewSource.GetDefaultView((_prevPage as OrdersPage).Orders).Refresh();
+            }
+            else
+            {
+                var order = (_prevPage as AdminPanelPage).Orders.FirstOrDefault(x => x.Id == _order.Id);
+                order = Order;
+                CollectionViewSource.GetDefaultView((_prevPage as AdminPanelPage).Orders).Refresh();
+            }
             (App.Current.MainWindow as MainWindow).pageFrame.Navigate(_prevPage);
         }
 
@@ -101,6 +110,7 @@ namespace RozetkaUI.Pages
             {
                 IOrderService orderService = new OrderService();
                 await orderService.EditOrder(Order);
+                Order.OrderStatus = Statuses.FirstOrDefault(x => x.Id == Order.OrderStatusId);
             }
             catch 
             {

@@ -116,11 +116,13 @@ namespace RozetkaUI.Pages
             }
             User.Baskets.Clear();
 
+            User.Orders.Add(order);
+
             mainWindow.LoginedUser = User;
 
             (sender as ToggleButton).IsEnabled = true;
 
-            mainWindow.pageFrame.Navigate(new Main_Page());
+            mainWindow.pageFrame.Navigate(new OrdersPage(User));
         }
     }
     public class CountConverter : IValueConverter

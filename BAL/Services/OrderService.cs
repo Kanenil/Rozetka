@@ -61,9 +61,12 @@ namespace BAL.Services
             await _orderRepository.Update(order.Id, order);
         }
 
-        public async Task<ICollection<OrderEntityDTO>> GetOrdersBy(Func<OrderEntityDTO, bool> predicate)
+        public async Task<ICollection<OrderEntityDTO>> GetOrdersBy(Func<OrderEntityDTO, bool> predicate, int skip, int take)
         {
-            return _mapper.Map<ICollection<OrderEntity>, ICollection<OrderEntityDTO>>(await _orderRepository.Orders.ToListAsync()).Where(predicate).ToList();
+            var list = await _orderRepository.Orders.ToListAsync();
+            list = list.Skip(skip).ToList();
+            list = list.Take(take).ToList();
+            return _mapper.Map<ICollection<OrderEntity>, ICollection<OrderEntityDTO>>(list).Where(predicate).ToList();
         }
 
         public async Task<ICollection<OrderStatusEntityDTO>> GetOrderStatuses()
