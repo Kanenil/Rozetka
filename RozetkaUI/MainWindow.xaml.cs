@@ -118,12 +118,20 @@ namespace RozetkaUI
             if (!String.IsNullOrEmpty(Settings.Default.Login) && !String.IsNullOrEmpty(Settings.Default.Password))
             {
                 IUserService userService = new UserService();
-                var user = new UserEntityDTO()
+                try
                 {
-                    Email = Settings.Default.Login,
-                    Password = Settings.Default.Password
-                };
-                LoginedUser = await userService.Login(user);
+                    var user = new UserEntityDTO()
+                    {
+                        Email = Settings.Default.Login,
+                        Password = Settings.Default.Password
+                    };
+                    LoginedUser = await userService.Login(user);
+                }
+                catch
+                {
+
+                    
+                }
             } 
         }
     }

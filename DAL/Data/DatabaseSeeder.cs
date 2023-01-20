@@ -2,6 +2,7 @@
 using DAL.Data.Entities;
 using DAL.Interfaces;
 using DAL.Repository;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -138,7 +139,7 @@ namespace DAL.Data
 
                 var asusTufGaming = new ProductEntity
                 {
-                    Name = "Lenovo ASUS TUF Gaming F15 (90NR0704-M00CW0) Graphite Black",
+                    Name = "ASUS TUF Gaming F15 (90NR0704-M00CW0) Graphite Black",
                     Description = "Екран 15.6\" IPS (1920x1080) Full HD 144 Гц, матовий / Intel Core i5-11400H (2.7 - 4.5 ГГц) / RAM 16 ГБ / SSD 512 ГБ / nVidia GeForce RTX 3050 Ti, 4 ГБ / без ОД / LAN / Wi-Fi / Bluetooth / веб-камера / без ОС / 2.3 кг / чорний",
                     Price = 40999,
                     CategoryId = notebook,
@@ -754,14 +755,14 @@ namespace DAL.Data
                     DateCreated = DateTime.Now
                 };
 
-                dataContext.ProductImages.Add(AcerAspirephoto1);
-                dataContext.ProductImages.Add(AcerAspirephoto2);
-                dataContext.ProductImages.Add(AcerAspirephoto3);
-                dataContext.ProductImages.Add(AcerAspirephoto4);
-                dataContext.ProductImages.Add(AcerAspirephoto5);
+                dataContext.ProductImages.Add(LenovoYoga7photo1);
+                dataContext.ProductImages.Add(LenovoYoga7photo2);
+                dataContext.ProductImages.Add(LenovoYoga7photo3);
+                dataContext.ProductImages.Add(LenovoYoga7photo4);
+                dataContext.ProductImages.Add(LenovoYoga7photo5);
                 #endregion
                 #region Acer Aspire 3 (NX.A6LEU.01A) Pure Silver
-                var AcerAspire3 = products.Where(x => x.Name == "Acer Aspire 7 A715-42G-R8BL (NH.QDLEU.008) Charcoal Black").First().Id;
+                var AcerAspire3 = products.Where(x => x.Name == "Acer Aspire 3 (NX.A6LEU.01A) Pure Silver").First().Id;
 
                 var AcerAspire3photo1 = new ProductImageEntity
                 {
