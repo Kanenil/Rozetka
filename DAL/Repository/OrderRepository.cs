@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace DAL.Repository
 {
@@ -27,5 +28,11 @@ namespace DAL.Repository
                                                             .ThenInclude(x => x.Images);
 
         public IQueryable<OrderStatusEntity> OrderStatuses => _dbContext.OrderStatuses.AsNoTracking();
+
+        public async Task CreateOrderItem(OrderItemEntity entity)
+        {
+            await _dbContext.Set<OrderItemEntity>().AddAsync(entity);
+            await _dbContext.SaveChangesAsync();
+        }
     }
 }

@@ -13,5 +13,6 @@ namespace BAL.Interfaces
         Task EditOrder(OrderEntityDTO entity);
         Task<ICollection<OrderEntityDTO>> GetOrdersBy(Func<OrderEntityDTO, bool> predicate);
         Task<ICollection<OrderStatusEntityDTO>> GetOrderStatuses();
+        Task CreateOrderItemRange(ICollection<OrderItemEntityDTO> entitys);
     }
 }

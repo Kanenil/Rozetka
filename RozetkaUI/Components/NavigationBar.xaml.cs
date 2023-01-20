@@ -346,6 +346,21 @@ namespace RozetkaUI.Components
 
             closeMenu.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
         }
+
+        private void OrdersClick(object sender, RoutedEventArgs e)
+        {
+            var mainWindow = (MainWindow)Application.Current.MainWindow;
+
+            mainWindow.pageFrame.Navigate(new OrdersPage(mainWindow.LoginedUser));
+        }
+
+        private void OrdersMenuClick(object sender, RoutedEventArgs e)
+        {
+            var mainWindow = (MainWindow)Application.Current.MainWindow;
+
+            mainWindow.pageFrame.Navigate(new OrdersPage(mainWindow.LoginedUser));
+            closeMenu.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+        }
     }
     public class IfAdminConverter : IValueConverter
     {

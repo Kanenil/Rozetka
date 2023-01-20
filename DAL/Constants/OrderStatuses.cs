@@ -11,11 +11,13 @@ namespace DAL.Constants
             InProcessing,
             Deliver,
             Successfully,
-            UnSuccessfully
+            UnSuccessfully,
+            Canceled
         };
         public const string InProcessing = "В обробці";
         public const string Deliver = "Доставляється";
         public const string Successfully = "Успішно";
         public const string UnSuccessfully = "Не успішно";
+        public const string Canceled = "Скасовано";
     }
 }

@@ -11,5 +11,6 @@ namespace DAL.Interfaces
     {
         IQueryable<OrderEntity> Orders { get; }
         IQueryable<OrderStatusEntity> OrderStatuses { get; }
+        Task CreateOrderItem(OrderItemEntity entity);
     }
 }

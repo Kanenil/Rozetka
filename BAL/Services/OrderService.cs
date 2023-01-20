@@ -35,8 +35,21 @@ namespace BAL.Services
             var order = _mapper.Map<OrderEntityDTO, OrderEntity>(entity);
             order.OrderStatus = null;
             order.User = null;
+            order.OrderItems = null;
             await _orderRepository.Create(order);
             entity.Id = order.Id;
+        }
+
+        public async Task CreateOrderItemRange(ICollection<OrderItemEntityDTO> entitys)
+        {
+            for (int i = 0; i < entitys.Count; i++)
+            {
+                var item = _mapper.Map<OrderItemEntityDTO, OrderItemEntity>(entitys.ElementAt(i));
+                item.Order = null;
+                item.Product = null;
+                await _orderRepository.CreateOrderItem(item);
+                entitys.ElementAt(i).Id = item.Id;
+            }
         }
 
         public async Task EditOrder(OrderEntityDTO entity)
@@ -44,6 +57,7 @@ namespace BAL.Services
             var order = _mapper.Map<OrderEntityDTO, OrderEntity>(entity);
             order.OrderStatus = null;
             order.User = null;
+            order.OrderItems = null;
             await _orderRepository.Update(order.Id, order);
         }
 

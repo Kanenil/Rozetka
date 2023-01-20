@@ -1,6 +1,7 @@
 ﻿using BAL.DTO.Models;
 using BAL.Interfaces;
 using BAL.Services;
+using DAL.Data.Entities;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -9,6 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
@@ -34,11 +36,23 @@ namespace RozetkaUI.Pages
             InitializeComponent();
             User = user;
             OrderCount = user.Orders.Count;
-            Summury = user.Baskets.Select(x=>x.Product.Price).Sum();
+            Summury = user.Baskets.Select(x=>x.Product.Price * x.Count).Sum();
         }
 
-        public int OrderCount { get; set; }
-        public decimal Summury { get; set; }
+        private int _orderCount;
+
+        public int OrderCount
+        {
+            get { return _orderCount; }
+            set { _orderCount = value; OnPropertyChanged(); }
+        }
+        private decimal _summury;
+
+        public decimal Summury
+        {
+            get { return _summury; }
+            set { _summury = value; OnPropertyChanged(); }
+        }
 
         private UserEntityDTO _user;
 
@@ -57,13 +71,56 @@ namespace RozetkaUI.Pages
 
         private async void ApplyOrder(object sender, RoutedEventArgs e)
         {
-            (sender as Button).IsEnabled= false;
+            (sender as ToggleButton).IsEnabled = false;
+            var mainWindow = (MainWindow)Application.Current.MainWindow;
 
             IOrderService orderService = new OrderService();
 
             var statuses = await orderService.GetOrderStatuses();
 
-            (sender as Button).IsEnabled= true;
+            var order = new OrderEntityDTO()
+            {
+                DateCreated= DateTime.Now,
+                OrderStatus = statuses.Where(x=>x.Name == "В обробці").FirstOrDefault(),
+                OrderStatusId = statuses.Where(x=>x.Name == "В обробці").FirstOrDefault().Id,
+                User = User,
+                UserId = User.Id,
+            };
+
+            await orderService.CreateOrder(order);
+
+            var itemOrders = new List<OrderItemEntityDTO>();
+            foreach (var item in User.Baskets)
+            {
+                itemOrders.Add(new OrderItemEntityDTO()
+                {
+                    Count= item.Count,
+                    DateCreated= DateTime.Now,
+                    Order = order,
+                    OrderId = order.Id,
+                    PriceBuy = item.Product.Price,
+                    Product = item.Product,
+                    ProductId= item.ProductId
+                });
+            }
+
+            await orderService.CreateOrderItemRange(itemOrders);
+
+            order.OrderItems = itemOrders;
+
+
+            IUserService userService = new UserService();
+            foreach (var basketEntity in User.Baskets)
+            {
+                await userService.DeleteProductBasket(basketEntity);
+            }
+            User.Baskets.Clear();
+
+            mainWindow.LoginedUser = User;
+
+            (sender as ToggleButton).IsEnabled = true;
+
+            mainWindow.pageFrame.Navigate(new Main_Page());
         }
     }
     public class CountConverter : IValueConverter
