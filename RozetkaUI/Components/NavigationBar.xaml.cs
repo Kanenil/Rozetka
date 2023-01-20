@@ -87,7 +87,9 @@ namespace RozetkaUI.Components
                 mainWindow.pageFrame.Content.GetType() == typeof(AdminPanelPage) ||
                 mainWindow.pageFrame.Content.GetType() == typeof(AddCategoryPage) ||
                 mainWindow.pageFrame.Content.GetType() == typeof(AddProductPage) ||
-                mainWindow.pageFrame.Content.GetType() == typeof(ProfilePage))
+                mainWindow.pageFrame.Content.GetType() == typeof(ProfilePage) ||
+                mainWindow.pageFrame.Content.GetType() == typeof(OrdersPage) ||
+                mainWindow.pageFrame.Content.GetType() == typeof(OrderInfoPage))
             {
                 mainWindow.pageFrame.Navigate(new Main_Page());
             }
@@ -350,15 +352,15 @@ namespace RozetkaUI.Components
         private void OrdersClick(object sender, RoutedEventArgs e)
         {
             var mainWindow = (MainWindow)Application.Current.MainWindow;
-
-            mainWindow.pageFrame.Navigate(new OrdersPage(mainWindow.LoginedUser));
+            if (mainWindow.pageFrame.Content.GetType() != typeof(OrdersPage))
+                mainWindow.pageFrame.Navigate(new OrdersPage(mainWindow.LoginedUser));
         }
 
         private void OrdersMenuClick(object sender, RoutedEventArgs e)
         {
             var mainWindow = (MainWindow)Application.Current.MainWindow;
-
-            mainWindow.pageFrame.Navigate(new OrdersPage(mainWindow.LoginedUser));
+            if (mainWindow.pageFrame.Content.GetType() != typeof(OrdersPage))
+                mainWindow.pageFrame.Navigate(new OrdersPage(mainWindow.LoginedUser));
             closeMenu.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
         }
     }

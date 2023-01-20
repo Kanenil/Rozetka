@@ -120,6 +120,13 @@ namespace RozetkaUI.Pages
         {
             Orders = isDescending ? Orders.OrderBy(predicate).ToList() : Orders.OrderByDescending(predicate).ToList();
         }
+
+        private void OrderInfoClick(object sender, RoutedEventArgs e)
+        {
+            var mainWindow = (MainWindow)App.Current.MainWindow;
+            var content = (OrderEntityDTO)((sender as Button).TemplatedParent as ContentPresenter).Content;
+            mainWindow.pageFrame.Navigate(new OrderInfoPage(this, content));
+        }
     }
 
     public class SumPriceConverter : IValueConverter
@@ -136,5 +143,4 @@ namespace RozetkaUI.Pages
             throw new NotImplementedException();
         }
     }
-
 }
