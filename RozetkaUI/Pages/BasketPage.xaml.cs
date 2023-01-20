@@ -141,6 +141,12 @@ namespace RozetkaUI.Pages
             var mainWindow = (MainWindow)App.Current.MainWindow;
             mainWindow.pageFrame.Navigate(new ProductPage(this, content.Product, content.Product.Category));
         }
+
+        private void SubmitOrder(object sender, RoutedEventArgs e)
+        {
+            var mainWindow = (MainWindow)App.Current.MainWindow;
+            mainWindow.pageFrame.Navigate(new AddOrderPage(User));
+        }
     }
     public class BasketPriceConverter : IMultiValueConverter
     {
