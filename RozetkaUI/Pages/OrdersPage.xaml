@@ -203,20 +203,25 @@
                                         <ColumnDefinition/>
                                     </Grid.ColumnDefinitions>
 
-                                    <TextBlock Text="{Binding Id}"/>
+                                    <TextBlock Text="{Binding Id}"
+                                               HorizontalAlignment="Center"/>
                                     <Image Grid.Column="1"
-                                       Width="100"
-                                       Height="100"
-                                       Source="{Binding OrderItems[0].Product.Images[0].Name}"/>
+                                           HorizontalAlignment="Center"
+                                           Width="100"
+                                           Height="100"
+                                           Source="{Binding OrderItems[0].Product.Images[0].Name}"/>
 
                                     <TextBlock Text="{Binding Id}"
-                                           Grid.Column="2"/>
+                                               Grid.Column="2"
+                                               HorizontalAlignment="Center"/>
 
                                     <TextBlock Text="{Binding OrderItems.Count}"
-                                           Grid.Column="3"/>
+                                               Grid.Column="3"
+                                               HorizontalAlignment="Center"/>
 
                                     <TextBlock Text="{Binding OrderStatus.Name}"
-                                           Grid.Column="4"/>
+                                               Grid.Column="4"
+                                               HorizontalAlignment="Center"/>
 
                                 </Grid>
                             </Border>

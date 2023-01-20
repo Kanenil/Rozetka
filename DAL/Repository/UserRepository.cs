@@ -73,6 +73,8 @@ namespace DAL.Repository
                                     .ThenInclude(x => x.OrderStatus)
                                 .Include(x => x.Orders)
                                     .ThenInclude(x => x.OrderItems)
+                                        .ThenInclude(x=>x.Product)
+                                            .ThenInclude(x=>x.Images)
                                 .FirstOrDefaultAsync(e => e.Email.ToLower() == findBy.ToLower() || e.Phone == findBy);
             return user;
         }
@@ -90,7 +92,9 @@ namespace DAL.Repository
                            .Include(x => x.Orders)
                                 .ThenInclude(x => x.OrderStatus)
                            .Include(x => x.Orders)
-                                    .ThenInclude(x => x.OrderItems);
+                                .ThenInclude(x => x.OrderItems)
+                                    .ThenInclude(x => x.Product)
+                                        .ThenInclude(x => x.Images);
         }
 
         public IEnumerable<RoleEntity> GetAllRoles()
