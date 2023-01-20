@@ -25,7 +25,11 @@ namespace DAL.Repository
                                                             .ThenInclude(x=>x.Category)
                                                     .Include(x => x.OrderItems)
                                                         .ThenInclude(x => x.Product)
-                                                            .ThenInclude(x => x.Images);
+                                                            .ThenInclude(x => x.Images)
+                                                    .Include(x => x.OrderItems)
+                                                        .ThenInclude(x => x.Product)
+                                                            .ThenInclude(x => x.Sales_Products)
+                                                                .ThenInclude(x => x.Sale);
 
         public IQueryable<OrderStatusEntity> OrderStatuses => _dbContext.OrderStatuses.AsNoTracking();
 

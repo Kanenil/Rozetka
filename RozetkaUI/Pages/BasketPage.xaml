@@ -251,7 +251,7 @@
                                             </Path.LayoutTransform>
                                         </Path>
                                     </Button>
-                                    
+
                                     <TextBlock Foreground="Black"
                                            Margin="10 0 0 0"
                                            FontSize="16">
@@ -259,21 +259,16 @@
                                             <Style TargetType="TextBlock">
                                                 <Setter Property="Text">
                                                     <Setter.Value>
-                                                        <MultiBinding Converter="{StaticResource PriceConverter}">
+                                                        <MultiBinding Converter="{StaticResource PriceConverter}" ConverterCulture="ua-UA">
                                                             <Binding Path="Product.Price" />
                                                             <Binding Path="Count" />
+                                                            <Binding Path="Product" />
                                                         </MultiBinding>
                                                     </Setter.Value>
                                                 </Setter>
                                             </Style>
                                         </TextBlock.Style>
                                     </TextBlock>
-                                    <TextBlock Style="{StaticResource SecundaryHeaderTextBlockStyle}"
-                                           Foreground="Black"
-                                           FontWeight="SemiBold"
-                                           Margin="5 0 0 0"
-                                           FontSize="16"
-                                           Text="₴"/>
                                 </StackPanel>
                             </StackPanel>
                         </DataTemplate>

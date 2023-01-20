@@ -27,7 +27,9 @@ namespace BAL.Mapper
                 .ForMember(x => x.Baskets, opt => opt.MapFrom(x => x.Baskets))
                 .ForMember(x => x.Images, opt => opt.MapFrom(x => x.Images))
                 .ForMember(x => x.OrderItems, opt => opt.MapFrom(x => x.OrderItems))
-                .AfterMap((foo, dto) => { dto.Images = dto.Images.OrderBy(x => x.Priority).ToList(); });
+                .ForMember(x => x.Sales_Products, opt => opt.MapFrom(x => x.Sales_Products))
+                .AfterMap((foo, dto) => { dto.Images = dto.Images.OrderBy(x => x.Priority).ToList(); })
+                .AfterMap((foo, dto) => { dto.Sales_Products = dto.Sales_Products.OrderBy(x => x.Sale.DecreasePercent).ToList(); });
 
             CreateMap<UserEntity, UserEntityDTO>()
                 .ForMember(x => x.Baskets, opt => opt.MapFrom(x => x.Baskets))
@@ -77,7 +79,8 @@ namespace BAL.Mapper
                 .ForMember(x => x.Category, opt => opt.MapFrom(x => x.Category))
                 .ForMember(x => x.Baskets, opt => opt.MapFrom(x => x.Baskets))
                 .ForMember(x => x.Images, opt => opt.MapFrom(x => x.Images))
-                .ForMember(x => x.OrderItems, opt => opt.MapFrom(x => x.OrderItems));
+                .ForMember(x => x.OrderItems, opt => opt.MapFrom(x => x.OrderItems))
+                .ForMember(x => x.Sales_Products, opt => opt.MapFrom(x => x.Sales_Products));
 
             CreateMap<UserEntityDTO, UserEntity>()
                 .ForMember(x => x.Baskets, opt => opt.MapFrom(x => x.Baskets))

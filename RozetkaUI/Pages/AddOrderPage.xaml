@@ -11,6 +11,7 @@
 
     <Page.Resources>
         <local:CountConverter x:Key="countConverter"/>
+        <local:SalePriceConverter x:Key="saleConverter"/>
     </Page.Resources>
 
     <StackPanel Background="White">
@@ -67,7 +68,7 @@
                                     Binding="{Binding Product.Name}"/>
                 <DataGridTextColumn Header="Ціна"
                                     Width="*"
-                                    Binding="{Binding Product.Price}"/>
+                                    Binding="{Binding Product, Converter={StaticResource saleConverter}}"/>
                 <DataGridTextColumn Header="Кількість"
                                     Width="*"
                                     Binding="{Binding Count}"/>

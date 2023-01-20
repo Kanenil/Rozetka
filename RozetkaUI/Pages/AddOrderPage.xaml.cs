@@ -36,7 +36,7 @@ namespace RozetkaUI.Pages
             InitializeComponent();
             User = user;
             OrderCount = user.Orders.Count;
-            Summury = user.Baskets.Select(x=>x.Product.Price * x.Count).Sum();
+            Summury = user.Baskets.Select(x=> x.Product.Sales_Products.Count == 0? x.Product.Price * x.Count: decimal.Round(x.Product.Price - (x.Product.Sales_Products.First().Sale.DecreasePercent * x.Product.Price / 100), 2, MidpointRounding.AwayFromZero)).Sum();
         }
 
         private int _orderCount;
@@ -98,7 +98,7 @@ namespace RozetkaUI.Pages
                     DateCreated= DateTime.Now,
                     Order = order,
                     OrderId = order.Id,
-                    PriceBuy = item.Product.Price,
+                    PriceBuy = item.Product.Sales_Products.Count == 0?item.Product.Price: decimal.Round(item.Product.Price - (item.Product.Sales_Products.First().Sale.DecreasePercent * item.Product.Price / 100), 2, MidpointRounding.AwayFromZero),
                     Product = item.Product,
                     ProductId= item.ProductId
                 });
