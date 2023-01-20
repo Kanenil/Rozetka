@@ -1,6 +1,7 @@
 ﻿using BAL.DTO.Models;
 using BAL.Services;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -26,14 +27,18 @@ namespace RozetkaUI.Pages
             InitializeComponent();
             DataContext = this;
             _categoryService = new CategoryService();
+            _saleService = new SaleService();
 
+            Sales = _saleService.GetAllSales();
             var categories = _categoryService.GetCategories().ToList();
 
             Category1 = categories[0];
             Category2 = categories[1];
             Category3 = categories[2];
         }
+        private SaleService _saleService;
         private CategoryService _categoryService;
+        public IEnumerable<SaleEntityDTO> Sales { get; set; }
         public CategoryEntityDTO Category1 { get; }
         public CategoryEntityDTO Category2 { get; }
         public CategoryEntityDTO Category3 { get; }
@@ -103,6 +108,11 @@ namespace RozetkaUI.Pages
         {
             string product = (((sender as Button).Parent as StackPanel).Children[1] as TextBlock).Text;
             (App.Current.MainWindow as MainWindow).pageFrame.Navigate(new ProductPage(this,GetProduct3(product), Category3));
+        }
+
+        private void SaleBoard_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }
