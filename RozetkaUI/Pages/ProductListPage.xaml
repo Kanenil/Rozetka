@@ -159,7 +159,7 @@
                 </Trigger>
             </Style.Triggers>
         </Style>
-
+        <local:SalePriceConverter x:Key="SaleConverter"/>
     </Page.Resources>
     
     <StackPanel Background="White">
@@ -224,7 +224,7 @@
                                                        Style="{StaticResource SecundaryHeaderTextBlockStyle}"
                                                        VerticalAlignment="Center"
                                                        Margin="0 0 5 0"/>
-                                            <TextBlock Text="{Binding Price}"
+                                            <TextBlock Text="{Binding RelativeSource={RelativeSource Self}, Converter={StaticResource SaleConverter}}"
                                                        TextWrapping="WrapWithOverflow"
                                                        FontSize="20"
                                                        Foreground="Red"
@@ -260,7 +260,7 @@
                                                                Style="{StaticResource SecundaryHeaderTextBlockStyle}"
                                                                VerticalAlignment="Center"
                                                                Margin="0 0 5 0"/>
-                                                    <TextBlock Text="{Binding Price}"
+                                                    <TextBlock Text="{Binding RelativeSource={RelativeSource Self}, Converter={StaticResource SaleConverter}}"
                                                                TextWrapping="WrapWithOverflow"
                                                                FontSize="20"
                                                                Foreground="Red"

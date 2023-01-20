@@ -55,7 +55,14 @@ namespace RozetkaUI.Pages
             decimal sum = 0;
             foreach (var basket in User.Baskets)
             {
-                sum += basket.Count * basket.Product.Price;
+                if (basket.Product.Sales_Products.Count == 0)
+                {
+                    sum += basket.Count * basket.Product.Price;
+                }
+                else
+                {
+                    sum += basket.Count * decimal.Round(basket.Product.Price - (basket.Product.Sales_Products.First().Sale.DecreasePercent * basket.Product.Price / 100), 2, MidpointRounding.AwayFromZero);
+                }
             }
 
             sumBalance.Text = sum.ToString();
@@ -141,13 +148,27 @@ namespace RozetkaUI.Pages
             var mainWindow = (MainWindow)App.Current.MainWindow;
             mainWindow.pageFrame.Navigate(new ProductPage(this, content.Product, content.Product.Category));
         }
+
+        private void SubmitOrder(object sender, RoutedEventArgs e)
+        {
+            var mainWindow = (MainWindow)App.Current.MainWindow;
+            mainWindow.pageFrame.Navigate(new AddOrderPage(User));
+        }
     }
     public class BasketPriceConverter : IMultiValueConverter
     {
 
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
-            return ((decimal)values[0] * (short)values[1]).ToString();
+            var product = values[2] as ProductEntityDTO;
+            if (product.Sales_Products.Count == 0)
+            {
+                return ((decimal)values[0] * (short)values[1]).ToString("C");
+            }
+            else
+            {
+                return decimal.Round(product.Price - (product.Sales_Products.First().Sale.DecreasePercent * product.Price / 100), 2, MidpointRounding.AwayFromZero).ToString("C");
+            }
         }
 
         public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)

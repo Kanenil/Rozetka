@@ -4,6 +4,7 @@ using BAL.Services;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Globalization;
 using System.Linq;
 using System.Reflection.Metadata;
 using System.Text;
@@ -34,6 +35,10 @@ namespace RozetkaUI.Pages
             DataContext = this;
             _prevPage= prevPage;
 
+            if (Product.Sales_Products.Count > 0)
+            {
+                SalePrice = decimal.Round(Product.Price - (Product.Sales_Products.First().Sale.DecreasePercent * Product.Price / 100), 2, MidpointRounding.AwayFromZero);
+            }
 
 
             var mainWindow = (MainWindow)App.Current.MainWindow;
@@ -66,6 +71,7 @@ namespace RozetkaUI.Pages
         }
         private CategoryEntityDTO _category;
         public ProductEntityDTO Product { get; }
+        public decimal SalePrice { get; set; }
 
         private ProductImageEntityDTO _selectedImage;
 

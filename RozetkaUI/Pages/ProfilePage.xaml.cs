@@ -133,7 +133,7 @@ namespace RozetkaUI.Pages
 
         public virtual object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            return value is bool && ((bool)value) ? True : False;
+            return value is bool && ((bool)value) || value is decimal && ((decimal)value) == decimal.Zero ? True : False;
         }
 
         public virtual object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

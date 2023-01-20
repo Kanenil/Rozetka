@@ -2,6 +2,7 @@
 using DAL.Data.Entities;
 using DAL.Interfaces;
 using DAL.Repository;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,6 +20,22 @@ namespace DAL.Data
                 SeedProducts(dataContext);
                 SeedImages(dataContext);
                 SeedRoles(dataContext);
+                SeedOrderStatuses(dataContext);
+            }
+        }
+        private static void SeedOrderStatuses(EFAppContext dataContext)
+        {
+            if (!dataContext.OrderStatuses.Any())
+            {
+                foreach (var order in OrderStatuses.All)
+                {
+                    dataContext.OrderStatuses.Add(new OrderStatusEntity()
+                    {
+                        DateCreated = DateTime.Now,
+                        Name = order
+                    });
+                }
+                dataContext.SaveChanges();
             }
         }
         private static void SeedRoles(EFAppContext dataContext)
@@ -120,9 +137,69 @@ namespace DAL.Data
                     DateCreated = DateTime.Now
                 };
 
+                var asusTufGaming = new ProductEntity
+                {
+                    Name = "ASUS TUF Gaming F15 (90NR0704-M00CW0) Graphite Black",
+                    Description = "Екран 15.6\" IPS (1920x1080) Full HD 144 Гц, матовий / Intel Core i5-11400H (2.7 - 4.5 ГГц) / RAM 16 ГБ / SSD 512 ГБ / nVidia GeForce RTX 3050 Ti, 4 ГБ / без ОД / LAN / Wi-Fi / Bluetooth / веб-камера / без ОС / 2.3 кг / чорний",
+                    Price = 40999,
+                    CategoryId = notebook,
+                    DateCreated = DateTime.Now
+                };
+
+                var asusRogStrix = new ProductEntity
+                {
+                    Name = "Asus ROG Strix G15 (90NR0502-M003L0) Eclipse Gray",
+                    Description = "Екран 15.6\" IPS (1920x1080) Full HD 144 Гц, матовий / AMD Ryzen 7 4800H (2.9 - 4.2 ГГц) / RAM 16 ГБ / SSD 512 ГБ / nVidia GeForce RTX 3050, 4 ГБ / без ОД / LAN / Wi-Fi / Bluetooth / без ОС / 2.1 кг / сірий",
+                    Price = 39999,
+                    CategoryId = notebook,
+                    DateCreated = DateTime.Now
+                };
+
+                var lenovoLegion5 = new ProductEntity
+                {
+                    Name = "Lenovo Legion 5 15IAH7H (82RB00QKRA) Storm Grey",
+                    Description = "Экран 15.6\" IPS (2560x1440) WQHD 165 Гц, матовый / Intel Core i7-12700H (3.5 - 4.7 ГГц) / RAM 16 ГБ / SSD 512 ГБ / nVidia GeForce RTX 3070, 8 ГБ / без ОД / LAN / Wi-Fi / Bluetooth / веб-камера / без ОС / 2.4 кг / серый",
+                    Price = 75999,
+                    CategoryId = notebook,
+                    DateCreated = DateTime.Now
+                };
+
+                var asusZenBookFlip15 = new ProductEntity
+                {
+                    Name = "ASUS ZenBook Flip 15 (90NB0VJ2-M00110) Light Grey",
+                    Description = "Екран 15.6\" IPS (1920x1080) Full HD, Multi-touch, глянсовий / AMD Ryzen 7 5700U (1.8 — 4.3 ГГц) / RAM 16 ГБ / SSD 512 ГБ / nVidia GeForce MX450, 2 ГБ / без ОД / Wi-Fi / Bluetooth / веб-камера / без ОС / 1.9 кг / сірий / стилус",
+                    Price = 34999,
+                    CategoryId = notebook,
+                    DateCreated = DateTime.Now
+                };
+
+                var lenovoYoga7 = new ProductEntity
+                {
+                    Name = "Lenovo Yoga 7 (82N7009QRA) Slate Grey",
+                    Description = "Екран 14\" IPS (1920x1080) Full HD, Multi-Touch, глянсовий / AMD Ryzen 7 5800U (1.9 - 4.4 ГГц) / RAM 16 ГБ / SSD 512 ГБ / AMD Radeon Graphics / без ОД / Wi-Fi / Bluetooth / веб-камера / Windows 11 Home 64bit / 1.45 кг / сірий",
+                    Price = 47777,
+                    CategoryId = notebook,
+                    DateCreated = DateTime.Now
+                };
+
+                var acerAspire3 = new ProductEntity
+                {
+                    Name = "Acer Aspire 3 (NX.A6LEU.01A) Pure Silver",
+                    Description = "Екран 15.6\" (1920x1080) Full HD, матовий / Intel Celeron N4500 (1.1 - 2.8 ГГц) / RAM 4 ГБ / SSD 128 ГБ / Intel UHD Graphics / без ОД / LAN / Wi-Fi / Bluetooth / веб-камера / без ОС / 1.7 кг / срібний",
+                    Price = 12999,
+                    CategoryId = notebook,
+                    DateCreated = DateTime.Now
+                };
+
                 dataContext.Products.Add(acerAspire);
                 dataContext.Products.Add(macBookAir);
                 dataContext.Products.Add(lenovoIdeaPad);
+                dataContext.Products.Add(asusTufGaming);
+                dataContext.Products.Add(asusRogStrix);
+                dataContext.Products.Add(lenovoLegion5);
+                dataContext.Products.Add(asusZenBookFlip15);
+                dataContext.Products.Add(lenovoYoga7);
+                dataContext.Products.Add(acerAspire3);
                 #endregion
                 #region Комп'ютери
                 var computers = categories.Where(c => c.Name == "Комп'ютери").First().Id;
@@ -145,8 +222,48 @@ namespace DAL.Data
                     DateCreated = DateTime.Now
                 };
 
+                var artlineGamingX88 = new ProductEntity
+                {
+                    Name = "Artline Gaming X88 v09 (X88v09)",
+                    Description = "AMD Ryzen 9 5900X (3.7 — 4.8 ГГц) / RAM 32 ГБ / SSD 1 ТБ / nVidia GeForce RTX 3080, 10 ГБ / без ОД / LAN / без ОС",
+                    Price = 75999,
+                    CategoryId = computers,
+                    DateCreated = DateTime.Now
+                };
+
+                var COBRAAdvanced = new ProductEntity
+                {
+                    Name = "COBRA Advanced (I14F.16.H1S2.165.12983)",
+                    Description = "Intel Core i5-10400F (2.9 - 4.3 ГГц) / RAM 16 ГБ / HDD 1 ТБ + SSD 240 ГБ / GeForce GTX 1650, 4 ГБ / без ОД / LAN / Linux",
+                    Price = 22799,
+                    CategoryId = computers,
+                    DateCreated = DateTime.Now
+                };
+
+                var artlineGaming1 = new ProductEntity
+                {
+                    Name = "Artline Gaming X35v41",
+                    Description = "Intel Core i5-12400F (2.5 — 4.4 ГГц) / RAM 16 ГБ / HDD 1 ТБ + SSD 480 ГБ / nVidia GeForce RTX 3050, 8 ГБ / без ОД / LAN / без ОС",
+                    Price = 24799,
+                    CategoryId = computers,
+                    DateCreated = DateTime.Now
+                };
+
+                var ARTLINEOverlord = new ProductEntity
+                {
+                    Name = "ARTLINE Overlord CG10 (CG10v04UA)",
+                    Description = "Intel Core i5-10400F (2.9 - 4.3 ГГц) / RAM 16 ГБ / HDD 1 ТБ + SSD 480 ГБ / nVidia GeForce RTX 3060, 12 ГБ / без ОД / LAN / без ОС",
+                    Price = 37499,
+                    CategoryId = computers,
+                    DateCreated = DateTime.Now
+                };
+
                 dataContext.Products.Add(artlineGaming);
                 dataContext.Products.Add(QUBE);
+                dataContext.Products.Add(artlineGamingX88);
+                dataContext.Products.Add(COBRAAdvanced);
+                dataContext.Products.Add(artlineGaming1);
+                dataContext.Products.Add(ARTLINEOverlord);
                 #endregion
                 #region Монітори
                 var monitor = categories.Where(c => c.Name == "Монітори").First().Id;
@@ -169,8 +286,48 @@ namespace DAL.Data
                     DateCreated = DateTime.Now
                 };
 
+                var samsungCurved = new ProductEntity
+                {
+                    Name = "Samsung Curved C24F396F (LC24F396FHIXCI)",
+                    Description = "Діагональ дисплея\r\n23.5\"\r\nМаксимальна роздільна здатність дисплея\r\n1920x1080 (FullHD)\r\nЧас реакції матриці\r\n4 мс\r\nЯскравість дисплея\r\n250 кд/м²\r\nТип матриці\r\nVA\r\nКонтрастність дисплея\r\n3000:1",
+                    Price = 5199,
+                    CategoryId = monitor,
+                    DateCreated = DateTime.Now
+                };
+
+                var dell = new ProductEntity
+                {
+                    Name = "Dell S2721QS",
+                    Description = "Діагональ дисплея\r\n27\"\r\nМаксимальна роздільна здатність дисплея\r\n3840x2160 (4K UltraHD)\r\nЧас реакції матриці\r\n4 мс\r\nЯскравість дисплея\r\n350 кд/м²\r\nТип матриці\r\nIPS\r\nКонтрастність дисплея\r\n1300:1",
+                    Price = 13599,
+                    CategoryId = monitor,
+                    DateCreated = DateTime.Now
+                };
+
+                var asusProArtDisplay = new ProductEntity
+                {
+                    Name = "Asus ProArt Display PA278CV",
+                    Description = "Діагональ дисплея\r\n27\"\r\nМаксимальна роздільна здатність дисплея\r\n2560x1440 (2K QHD)\r\nЧас реакції матриці\r\n5 мс\r\nЯскравість дисплея\r\n350 кд/м²\r\nТип матриці\r\nIPS\r\nКонтрастність дисплея\r\n1000:1",
+                    Price = 16499,
+                    CategoryId = monitor,
+                    DateCreated = DateTime.Now
+                };
+
+                var philips = new ProductEntity
+                {
+                    Name = "Philips - IPS 8-Bit 165Гц/ sRGB 123,9% / nVidia G-Sync Compatible / AMD FreeSync Premium",
+                    Description = "Діагональ дисплея\r\n23.8\"\r\nМаксимальна роздільна здатність дисплея\r\n1920x1080 (FullHD)\r\nЧас реакції матриці\r\n1 мс (MPRT), 4 мс (серый к серому)\r\nЯскравість дисплея\r\n250 кд/м²\r\nТип матриці\r\nIPS\r\nКонтрастність дисплея\r\n1100:1",
+                    Price = 7799,
+                    CategoryId = monitor,
+                    DateCreated = DateTime.Now
+                };
+
                 dataContext.Products.Add(samsungOdyssey);
                 dataContext.Products.Add(asusTUF);
+                dataContext.Products.Add(samsungCurved);
+                dataContext.Products.Add(dell);
+                dataContext.Products.Add(asusProArtDisplay);
+                dataContext.Products.Add(philips);
                 #endregion
                 #region Мобільні телефони
                 var phone = categories.Where(c => c.Name == "Мобільні телефони").First().Id;
@@ -359,6 +516,300 @@ namespace DAL.Data
                 dataContext.ProductImages.Add(LenovoIdeaPadphoto4);
                 dataContext.ProductImages.Add(LenovoIdeaPadphoto5);
                 #endregion
+                #region ASUS TUF Gaming F15 (90NR0704-M00CW0) Graphite Black
+                var AsusTufGaming = products.Where(x => x.Name == "ASUS TUF Gaming F15 (90NR0704-M00CW0) Graphite Black").First().Id;
+
+                var AsusTufGamingphoto1 = new ProductImageEntity
+                {
+                    Name = @"https://content1.rozetka.com.ua/goods/images/big/283529272.jpg",
+                    Priority = 1,
+                    ProductId = AsusTufGaming,
+                    DateCreated = DateTime.Now
+                };
+
+                var AsusTufGamingphoto2 = new ProductImageEntity
+                {
+                    Name = @"https://content1.rozetka.com.ua/goods/images/big/283529275.jpg",
+                    Priority = 2,
+                    ProductId = AsusTufGaming,
+                    DateCreated = DateTime.Now
+                };
+
+                var AsusTufGamingphoto3 = new ProductImageEntity
+                {
+                    Name = @"https://content2.rozetka.com.ua/goods/images/big/283529281.jpg",
+                    Priority = 3,
+                    ProductId = AsusTufGaming,
+                    DateCreated = DateTime.Now
+                };
+
+                var AsusTufGamingphoto4 = new ProductImageEntity
+                {
+                    Name = @"https://content.rozetka.com.ua/goods/images/big/283529282.jpg",
+                    Priority = 4,
+                    ProductId = AsusTufGaming,
+                    DateCreated = DateTime.Now
+                };
+
+                var AsusTufGamingphoto5 = new ProductImageEntity
+                {
+                    Name = @"https://content.rozetka.com.ua/goods/images/big/283529284.jpg",
+                    Priority = 5,
+                    ProductId = AsusTufGaming,
+                    DateCreated = DateTime.Now
+                };
+
+                dataContext.ProductImages.Add(AsusTufGamingphoto1);
+                dataContext.ProductImages.Add(AsusTufGamingphoto2);
+                dataContext.ProductImages.Add(AsusTufGamingphoto3);
+                dataContext.ProductImages.Add(AsusTufGamingphoto4);
+                dataContext.ProductImages.Add(AsusTufGamingphoto5);
+                #endregion
+                #region Asus ROG Strix G15 (90NR0502-M003L0) Eclipse Gray
+                var AsusRogStrix = products.Where(x => x.Name == "Asus ROG Strix G15 (90NR0502-M003L0) Eclipse Gray").First().Id;
+
+                var AsusRogStrixphoto1 = new ProductImageEntity
+                {
+                    Name = @"https://content1.rozetka.com.ua/goods/images/big/283528165.jpg",
+                    Priority = 1,
+                    ProductId = AsusRogStrix,
+                    DateCreated = DateTime.Now
+                };
+
+                var AsusRogStrixphoto2 = new ProductImageEntity
+                {
+                    Name = @"https://content.rozetka.com.ua/goods/images/big/283528166.jpg",
+                    Priority = 2,
+                    ProductId = AsusRogStrix,
+                    DateCreated = DateTime.Now
+                };
+
+                var AsusRogStrixphoto3 = new ProductImageEntity
+                {
+                    Name = @"https://content.rozetka.com.ua/goods/images/big/283528167.jpg",
+                    Priority = 3,
+                    ProductId = AsusRogStrix,
+                    DateCreated = DateTime.Now
+                };
+
+                var AsusRogStrixphoto4 = new ProductImageEntity
+                {
+                    Name = @"https://content1.rozetka.com.ua/goods/images/big/283528168.jpg",
+                    Priority = 4,
+                    ProductId = AsusRogStrix,
+                    DateCreated = DateTime.Now
+                };
+
+                var AsusRogStrixphoto5 = new ProductImageEntity
+                {
+                    Name = @"https://content1.rozetka.com.ua/goods/images/big/283528171.jpg",
+                    Priority = 5,
+                    ProductId = AsusRogStrix,
+                    DateCreated = DateTime.Now
+                };
+
+                dataContext.ProductImages.Add(AsusRogStrixphoto1);
+                dataContext.ProductImages.Add(AsusRogStrixphoto2);
+                dataContext.ProductImages.Add(AsusRogStrixphoto3);
+                dataContext.ProductImages.Add(AsusRogStrixphoto4);
+                dataContext.ProductImages.Add(AsusRogStrixphoto5);
+                #endregion
+                #region Lenovo Legion 5 15IAH7H (82RB00QKRA) Storm Grey
+                var LenovoLegion5 = products.Where(x => x.Name == "Lenovo Legion 5 15IAH7H (82RB00QKRA) Storm Grey").First().Id;
+
+                var LenovoLegion5photo1 = new ProductImageEntity
+                {
+                    Name = @"https://content.rozetka.com.ua/goods/images/big/308669792.jpg",
+                    Priority = 1,
+                    ProductId = LenovoLegion5,
+                    DateCreated = DateTime.Now
+                };
+
+                var LenovoLegion5photo2 = new ProductImageEntity
+                {
+                    Name = @"https://content2.rozetka.com.ua/goods/images/big/308669793.jpg",
+                    Priority = 2,
+                    ProductId = LenovoLegion5,
+                    DateCreated = DateTime.Now
+                };
+
+                var LenovoLegion5photo3 = new ProductImageEntity
+                {
+                    Name = @"https://content.rozetka.com.ua/goods/images/big/308669794.jpg",
+                    Priority = 3,
+                    ProductId = LenovoLegion5,
+                    DateCreated = DateTime.Now
+                };
+
+                var LenovoLegion5photo4 = new ProductImageEntity
+                {
+                    Name = @"https://content2.rozetka.com.ua/goods/images/big/308669797.jpg",
+                    Priority = 4,
+                    ProductId = LenovoLegion5,
+                    DateCreated = DateTime.Now
+                };
+
+                var LenovoLegion5photo5 = new ProductImageEntity
+                {
+                    Name = @"https://content.rozetka.com.ua/goods/images/big/308669795.jpg",
+                    Priority = 5,
+                    ProductId = LenovoLegion5,
+                    DateCreated = DateTime.Now
+                };
+
+                dataContext.ProductImages.Add(LenovoLegion5photo1);
+                dataContext.ProductImages.Add(LenovoLegion5photo2);
+                dataContext.ProductImages.Add(LenovoLegion5photo3);
+                dataContext.ProductImages.Add(LenovoLegion5photo4);
+                dataContext.ProductImages.Add(LenovoLegion5photo5);
+                #endregion
+                #region ASUS ZenBook Flip 15 (90NB0VJ2-M00110) Light Grey
+                var AsusZenBookFlip15 = products.Where(x => x.Name == "ASUS ZenBook Flip 15 (90NB0VJ2-M00110) Light Grey").First().Id;
+
+                var AsusZenBookFlip15photo1 = new ProductImageEntity
+                {
+                    Name = @"https://content1.rozetka.com.ua/goods/images/big/300283555.jpg",
+                    Priority = 1,
+                    ProductId = AsusZenBookFlip15,
+                    DateCreated = DateTime.Now
+                };
+
+                var AsusZenBookFlip15photo2 = new ProductImageEntity
+                {
+                    Name = @"https://content2.rozetka.com.ua/goods/images/big/300283557.jpg",
+                    Priority = 2,
+                    ProductId = AsusZenBookFlip15,
+                    DateCreated = DateTime.Now
+                };
+
+                var AsusZenBookFlip15photo3 = new ProductImageEntity
+                {
+                    Name = @"https://content.rozetka.com.ua/goods/images/big/300283558.jpg",
+                    Priority = 3,
+                    ProductId = AsusZenBookFlip15,
+                    DateCreated = DateTime.Now
+                };
+
+                var AsusZenBookFlip15photo4 = new ProductImageEntity
+                {
+                    Name = @"https://content1.rozetka.com.ua/goods/images/big/300283561.jpg",
+                    Priority = 4,
+                    ProductId = AsusZenBookFlip15,
+                    DateCreated = DateTime.Now
+                };
+
+                var AsusZenBookFlip15photo5 = new ProductImageEntity
+                {
+                    Name = @"https://content2.rozetka.com.ua/goods/images/big/300283565.jpg",
+                    Priority = 5,
+                    ProductId = AsusZenBookFlip15,
+                    DateCreated = DateTime.Now
+                };
+
+                dataContext.ProductImages.Add(AsusZenBookFlip15photo1);
+                dataContext.ProductImages.Add(AsusZenBookFlip15photo2);
+                dataContext.ProductImages.Add(AsusZenBookFlip15photo3);
+                dataContext.ProductImages.Add(AsusZenBookFlip15photo4);
+                dataContext.ProductImages.Add(AsusZenBookFlip15photo5);
+                #endregion
+                #region Lenovo Yoga 7 (82N7009QRA) Slate Grey
+                var LenovoYoga7 = products.Where(x => x.Name == "Lenovo Yoga 7 (82N7009QRA) Slate Grey").First().Id;
+
+                var LenovoYoga7photo1 = new ProductImageEntity
+                {
+                    Name = @"https://content1.rozetka.com.ua/goods/images/big/254116608.jpg",
+                    Priority = 1,
+                    ProductId = LenovoYoga7,
+                    DateCreated = DateTime.Now
+                };
+
+                var LenovoYoga7photo2 = new ProductImageEntity
+                {
+                    Name = @"https://content.rozetka.com.ua/goods/images/big/247773737.jpg",
+                    Priority = 2,
+                    ProductId = LenovoYoga7,
+                    DateCreated = DateTime.Now
+                };
+
+                var LenovoYoga7photo3 = new ProductImageEntity
+                {
+                    Name = @"https://content1.rozetka.com.ua/goods/images/big/247773740.jpg",
+                    Priority = 3,
+                    ProductId = LenovoYoga7,
+                    DateCreated = DateTime.Now
+                };
+
+                var LenovoYoga7photo4 = new ProductImageEntity
+                {
+                    Name = @"https://content2.rozetka.com.ua/goods/images/big/247773744.jpg",
+                    Priority = 4,
+                    ProductId = LenovoYoga7,
+                    DateCreated = DateTime.Now
+                };
+
+                var LenovoYoga7photo5 = new ProductImageEntity
+                {
+                    Name = @"https://content.rozetka.com.ua/goods/images/big/247773745.jpg",
+                    Priority = 5,
+                    ProductId = LenovoYoga7,
+                    DateCreated = DateTime.Now
+                };
+
+                dataContext.ProductImages.Add(LenovoYoga7photo1);
+                dataContext.ProductImages.Add(LenovoYoga7photo2);
+                dataContext.ProductImages.Add(LenovoYoga7photo3);
+                dataContext.ProductImages.Add(LenovoYoga7photo4);
+                dataContext.ProductImages.Add(LenovoYoga7photo5);
+                #endregion
+                #region Acer Aspire 3 (NX.A6LEU.01A) Pure Silver
+                var AcerAspire3 = products.Where(x => x.Name == "Acer Aspire 3 (NX.A6LEU.01A) Pure Silver").First().Id;
+
+                var AcerAspire3photo1 = new ProductImageEntity
+                {
+                    Name = @"https://content.rozetka.com.ua/goods/images/big/163390217.jpg",
+                    Priority = 1,
+                    ProductId = AcerAspire3,
+                    DateCreated = DateTime.Now
+                };
+
+                var AcerAspire3photo2 = new ProductImageEntity
+                {
+                    Name = @"https://content1.rozetka.com.ua/goods/images/big/163390218.jpg",
+                    Priority = 2,
+                    ProductId = AcerAspire3,
+                    DateCreated = DateTime.Now
+                };
+
+                var AcerAspire3photo3 = new ProductImageEntity
+                {
+                    Name = @"https://content1.rozetka.com.ua/goods/images/big/163390219.jpg",
+                    Priority = 3,
+                    ProductId = AcerAspire3,
+                    DateCreated = DateTime.Now
+                };
+
+                var AcerAspire3photo4 = new ProductImageEntity
+                {
+                    Name = @"https://content2.rozetka.com.ua/goods/images/big/163390220.jpg",
+                    Priority = 4,
+                    ProductId = AcerAspire3,
+                    DateCreated = DateTime.Now
+                };
+
+                var AcerAspire3photo5 = new ProductImageEntity
+                {
+                    Name = @"https://content1.rozetka.com.ua/goods/images/big/163390221.jpg",
+                    Priority = 5,
+                    ProductId = AcerAspire3,
+                    DateCreated = DateTime.Now
+                };
+
+                dataContext.ProductImages.Add(AcerAspire3photo1);
+                dataContext.ProductImages.Add(AcerAspire3photo2);
+                dataContext.ProductImages.Add(AcerAspire3photo3);
+                dataContext.ProductImages.Add(AcerAspire3photo4);
+                dataContext.ProductImages.Add(AcerAspire3photo5);
+                #endregion
                 #endregion
                 #region Комп'ютери
                 #region Artline Gaming X51 v07 (X51v07)
@@ -459,6 +910,202 @@ namespace DAL.Data
                 dataContext.ProductImages.Add(QUBEphoto4);
                 dataContext.ProductImages.Add(QUBEphoto5);
                 #endregion
+                #region Artline Gaming X88 v09 (X88v09)
+                var ArtlineGamingX88 = products.Where(x => x.Name == "Artline Gaming X88 v09 (X88v09)").First().Id;
+
+                var ArtlineGamingX88photo1 = new ProductImageEntity
+                {
+                    Name = @"https://content.rozetka.com.ua/goods/images/big/308537718.jpg",
+                    Priority = 1,
+                    ProductId = ArtlineGamingX88,
+                    DateCreated = DateTime.Now
+                };
+
+                var ArtlineGamingX88photo2 = new ProductImageEntity
+                {
+                    Name = @"https://content1.rozetka.com.ua/goods/images/big/308537725.jpg",
+                    Priority = 2,
+                    ProductId = ArtlineGamingX88,
+                    DateCreated = DateTime.Now
+                };
+
+                var ArtlineGamingX88photo3 = new ProductImageEntity
+                {
+                    Name = @"https://content1.rozetka.com.ua/goods/images/big/308537724.jpg",
+                    Priority = 3,
+                    ProductId = ArtlineGamingX88,
+                    DateCreated = DateTime.Now
+                };
+
+                var ArtlineGamingX88photo4 = new ProductImageEntity
+                {
+                    Name = @"https://content1.rozetka.com.ua/goods/images/big/308537733.jpg",
+                    Priority = 4,
+                    ProductId = ArtlineGamingX88,
+                    DateCreated = DateTime.Now
+                };
+
+                var ArtlineGamingX88photo5 = new ProductImageEntity
+                {
+                    Name = @"https://content2.rozetka.com.ua/goods/images/big/308537734.jpg",
+                    Priority = 5,
+                    ProductId = ArtlineGamingX88,
+                    DateCreated = DateTime.Now
+                };
+
+                dataContext.ProductImages.Add(ArtlineGamingX88photo1);
+                dataContext.ProductImages.Add(ArtlineGamingX88photo2);
+                dataContext.ProductImages.Add(ArtlineGamingX88photo3);
+                dataContext.ProductImages.Add(ArtlineGamingX88photo4);
+                dataContext.ProductImages.Add(ArtlineGamingX88photo5);
+                #endregion
+                #region COBRA Advanced (I14F.16.H1S2.165.12983)
+                var COBRAAdvanced = products.Where(x => x.Name == "COBRA Advanced (I14F.16.H1S2.165.12983)").First().Id;
+
+                var COBRAAdvancedphoto1 = new ProductImageEntity
+                {
+                    Name = @"https://content.rozetka.com.ua/goods/images/big/286272849.jpg",
+                    Priority = 1,
+                    ProductId = COBRAAdvanced,
+                    DateCreated = DateTime.Now
+                };
+
+                var COBRAAdvancedphoto2 = new ProductImageEntity
+                {
+                    Name = @"https://content.rozetka.com.ua/goods/images/big/286272851.jpg",
+                    Priority = 2,
+                    ProductId = COBRAAdvanced,
+                    DateCreated = DateTime.Now
+                };
+
+                var COBRAAdvancedphoto3 = new ProductImageEntity
+                {
+                    Name = @"https://content1.rozetka.com.ua/goods/images/big/286272852.jpg",
+                    Priority = 3,
+                    ProductId = COBRAAdvanced,
+                    DateCreated = DateTime.Now
+                };
+
+                var COBRAAdvancedphoto4 = new ProductImageEntity
+                {
+                    Name = @"https://content1.rozetka.com.ua/goods/images/big/286272853.jpg",
+                    Priority = 4,
+                    ProductId = COBRAAdvanced,
+                    DateCreated = DateTime.Now
+                };
+
+                var COBRAAdvancedphoto5 = new ProductImageEntity
+                {
+                    Name = @"https://content1.rozetka.com.ua/goods/images/big/286272855.jpg",
+                    Priority = 5,
+                    ProductId = COBRAAdvanced,
+                    DateCreated = DateTime.Now
+                };
+
+                dataContext.ProductImages.Add(COBRAAdvancedphoto1);
+                dataContext.ProductImages.Add(COBRAAdvancedphoto2);
+                dataContext.ProductImages.Add(COBRAAdvancedphoto3);
+                dataContext.ProductImages.Add(COBRAAdvancedphoto4);
+                dataContext.ProductImages.Add(COBRAAdvancedphoto5);
+                #endregion
+                #region Artline Gaming X35v41
+                var ArtlineGaming1 = products.Where(x => x.Name == "Artline Gaming X35v41").First().Id;
+
+                var ArtlineGaming1photo1 = new ProductImageEntity
+                {
+                    Name = @"https://content1.rozetka.com.ua/goods/images/big/253652590.jpg",
+                    Priority = 1,
+                    ProductId = ArtlineGaming1,
+                    DateCreated = DateTime.Now
+                };
+
+                var ArtlineGaming1photo2 = new ProductImageEntity
+                {
+                    Name = @"https://content.rozetka.com.ua/goods/images/big/253652591.jpg",
+                    Priority = 2,
+                    ProductId = ArtlineGaming1,
+                    DateCreated = DateTime.Now
+                };
+
+                var ArtlineGaming1photo3 = new ProductImageEntity
+                {
+                    Name = @"https://content2.rozetka.com.ua/goods/images/big/253652592.jpg",
+                    Priority = 3,
+                    ProductId = ArtlineGaming1,
+                    DateCreated = DateTime.Now
+                };
+
+                var ArtlineGaming1photo4 = new ProductImageEntity
+                {
+                    Name = @"https://content2.rozetka.com.ua/goods/images/big/253652595.jpg",
+                    Priority = 4,
+                    ProductId = ArtlineGaming1,
+                    DateCreated = DateTime.Now
+                };
+
+                var ArtlineGaming1photo5 = new ProductImageEntity
+                {
+                    Name = @"https://content1.rozetka.com.ua/goods/images/big/253652596.jpg",
+                    Priority = 5,
+                    ProductId = ArtlineGaming1,
+                    DateCreated = DateTime.Now
+                };
+
+                dataContext.ProductImages.Add(ArtlineGaming1photo1);
+                dataContext.ProductImages.Add(ArtlineGaming1photo2);
+                dataContext.ProductImages.Add(ArtlineGaming1photo3);
+                dataContext.ProductImages.Add(ArtlineGaming1photo4);
+                dataContext.ProductImages.Add(ArtlineGaming1photo5);
+                #endregion
+                #region ARTLINE Overlord CG10 (CG10v04UA)
+                var ARTLINEOverlord = products.Where(x => x.Name == "ARTLINE Overlord CG10 (CG10v04UA)").First().Id;
+
+                var ARTLINEOverlordphoto1 = new ProductImageEntity
+                {
+                    Name = @"https://content1.rozetka.com.ua/goods/images/big/276447013.jpg",
+                    Priority = 1,
+                    ProductId = ARTLINEOverlord,
+                    DateCreated = DateTime.Now
+                };
+
+                var ARTLINEOverlordphoto2 = new ProductImageEntity
+                {
+                    Name = @"https://content.rozetka.com.ua/goods/images/big/276447017.jpg",
+                    Priority = 2,
+                    ProductId = ARTLINEOverlord,
+                    DateCreated = DateTime.Now
+                };
+
+                var ARTLINEOverlordphoto3 = new ProductImageEntity
+                {
+                    Name = @"https://content2.rozetka.com.ua/goods/images/big/276447020.jpg",
+                    Priority = 3,
+                    ProductId = ARTLINEOverlord,
+                    DateCreated = DateTime.Now
+                };
+
+                var ARTLINEOverlordphoto4 = new ProductImageEntity
+                {
+                    Name = @"https://content2.rozetka.com.ua/goods/images/big/276447027.jpg",
+                    Priority = 4,
+                    ProductId = ARTLINEOverlord,
+                    DateCreated = DateTime.Now
+                };
+
+                var ARTLINEOverlordphoto5 = new ProductImageEntity
+                {
+                    Name = @"https://content1.rozetka.com.ua/goods/images/big/276447030.jpg",
+                    Priority = 5,
+                    ProductId = ARTLINEOverlord,
+                    DateCreated = DateTime.Now
+                };
+
+                dataContext.ProductImages.Add(ARTLINEOverlordphoto1);
+                dataContext.ProductImages.Add(ARTLINEOverlordphoto2);
+                dataContext.ProductImages.Add(ARTLINEOverlordphoto3);
+                dataContext.ProductImages.Add(ARTLINEOverlordphoto4);
+                dataContext.ProductImages.Add(ARTLINEOverlordphoto5);
+                #endregion
                 #endregion
                 #region Монітори
                 #region Samsung Odyssey G7 S28AG702 (LS28AG702NIXCI) 4K HDR400 / IPS 8-Bit / 144Гц / sRGB 99% / G-SYNC Compatible
@@ -558,6 +1205,202 @@ namespace DAL.Data
                 dataContext.ProductImages.Add(AsusTUFphoto3);
                 dataContext.ProductImages.Add(AsusTUFphoto4);
                 dataContext.ProductImages.Add(AsusTUFphoto5);
+                #endregion
+                #region Samsung Curved C24F396F (LC24F396FHIXCI)
+                var SamsungCurved = products.Where(x => x.Name == "Samsung Curved C24F396F (LC24F396FHIXCI)").First().Id;
+
+                var SamsungCurvedphoto1 = new ProductImageEntity
+                {
+                    Name = @"https://content2.rozetka.com.ua/goods/images/big/106654984.jpg",
+                    Priority = 1,
+                    ProductId = SamsungCurved,
+                    DateCreated = DateTime.Now
+                };
+
+                var SamsungCurvedphoto2 = new ProductImageEntity
+                {
+                    Name = @"https://content1.rozetka.com.ua/goods/images/big/106655028.jpg",
+                    Priority = 2,
+                    ProductId = SamsungCurved,
+                    DateCreated = DateTime.Now
+                };
+
+                var SamsungCurvedphoto3 = new ProductImageEntity
+                {
+                    Name = @"https://content2.rozetka.com.ua/goods/images/big/106655088.jpg",
+                    Priority = 3,
+                    ProductId = SamsungCurved,
+                    DateCreated = DateTime.Now
+                };
+
+                var SamsungCurvedphoto4 = new ProductImageEntity
+                {
+                    Name = @"https://content.rozetka.com.ua/goods/images/big/106655100.jpg",
+                    Priority = 4,
+                    ProductId = SamsungCurved,
+                    DateCreated = DateTime.Now
+                };
+
+                var SamsungCurvedphoto5 = new ProductImageEntity
+                {
+                    Name = @"https://content1.rozetka.com.ua/goods/images/big/106655044.jpg",
+                    Priority = 5,
+                    ProductId = SamsungCurved,
+                    DateCreated = DateTime.Now
+                };
+
+                dataContext.ProductImages.Add(SamsungCurvedphoto1);
+                dataContext.ProductImages.Add(SamsungCurvedphoto2);
+                dataContext.ProductImages.Add(SamsungCurvedphoto3);
+                dataContext.ProductImages.Add(SamsungCurvedphoto4);
+                dataContext.ProductImages.Add(SamsungCurvedphoto5);
+                #endregion
+                #region Dell S2721QS
+                var Dell = products.Where(x => x.Name == "Dell S2721QS").First().Id;
+
+                var Dellphoto1 = new ProductImageEntity
+                {
+                    Name = @"https://content1.rozetka.com.ua/goods/images/big/177849855.jpg",
+                    Priority = 1,
+                    ProductId = Dell,
+                    DateCreated = DateTime.Now
+                };
+
+                var Dellphoto2 = new ProductImageEntity
+                {
+                    Name = @"https://content2.rozetka.com.ua/goods/images/big/177849862.jpg",
+                    Priority = 2,
+                    ProductId = Dell,
+                    DateCreated = DateTime.Now
+                };
+
+                var Dellphoto3 = new ProductImageEntity
+                {
+                    Name = @"https://content1.rozetka.com.ua/goods/images/big/177849860.jpg",
+                    Priority = 3,
+                    ProductId = Dell,
+                    DateCreated = DateTime.Now
+                };
+
+                var Dellphoto4 = new ProductImageEntity
+                {
+                    Name = @"https://content1.rozetka.com.ua/goods/images/big/177849857.jpg",
+                    Priority = 4,
+                    ProductId = Dell,
+                    DateCreated = DateTime.Now
+                };
+
+                var Dellphoto5 = new ProductImageEntity
+                {
+                    Name = @"https://content2.rozetka.com.ua/goods/images/big/177849863.jpg",
+                    Priority = 5,
+                    ProductId = Dell,
+                    DateCreated = DateTime.Now
+                };
+
+                dataContext.ProductImages.Add(Dellphoto1);
+                dataContext.ProductImages.Add(Dellphoto2);
+                dataContext.ProductImages.Add(Dellphoto3);
+                dataContext.ProductImages.Add(Dellphoto4);
+                dataContext.ProductImages.Add(Dellphoto5);
+                #endregion
+                #region Asus ProArt Display PA278CV
+                var AsusProArtDisplay = products.Where(x => x.Name == "Asus ProArt Display PA278CV").First().Id;
+
+                var AsusProArtDisplayphoto1 = new ProductImageEntity
+                {
+                    Name = @"https://content1.rozetka.com.ua/goods/images/big/176729088.jpg",
+                    Priority = 1,
+                    ProductId = AsusProArtDisplay,
+                    DateCreated = DateTime.Now
+                };
+
+                var AsusProArtDisplayphoto2 = new ProductImageEntity
+                {
+                    Name = @"https://content2.rozetka.com.ua/goods/images/big/176729087.jpg",
+                    Priority = 2,
+                    ProductId = AsusProArtDisplay,
+                    DateCreated = DateTime.Now
+                };
+
+                var AsusProArtDisplayphoto3 = new ProductImageEntity
+                {
+                    Name = @"https://content2.rozetka.com.ua/goods/images/big/176729090.jpg",
+                    Priority = 3,
+                    ProductId = AsusProArtDisplay,
+                    DateCreated = DateTime.Now
+                };
+
+                var AsusProArtDisplayphoto4 = new ProductImageEntity
+                {
+                    Name = @"https://content1.rozetka.com.ua/goods/images/big/176729089.jpg",
+                    Priority = 4,
+                    ProductId = AsusProArtDisplay,
+                    DateCreated = DateTime.Now
+                };
+
+                var AsusProArtDisplayphoto5 = new ProductImageEntity
+                {
+                    Name = @"https://content1.rozetka.com.ua/goods/images/big/176729084.jpg",
+                    Priority = 5,
+                    ProductId = AsusProArtDisplay,
+                    DateCreated = DateTime.Now
+                };
+
+                dataContext.ProductImages.Add(AsusProArtDisplayphoto1);
+                dataContext.ProductImages.Add(AsusProArtDisplayphoto2);
+                dataContext.ProductImages.Add(AsusProArtDisplayphoto3);
+                dataContext.ProductImages.Add(AsusProArtDisplayphoto4);
+                dataContext.ProductImages.Add(AsusProArtDisplayphoto5);
+                #endregion
+                #region Philips - IPS 8-Bit 165Гц/ sRGB 123,9% / nVidia G-Sync Compatible / AMD FreeSync Premium
+                var Philips = products.Where(x => x.Name == "Philips - IPS 8-Bit 165Гц/ sRGB 123,9% / nVidia G-Sync Compatible / AMD FreeSync Premium").First().Id;
+
+                var Philipsphoto1 = new ProductImageEntity
+                {
+                    Name = @"https://content.rozetka.com.ua/goods/images/big/302356540.jpg",
+                    Priority = 1,
+                    ProductId = Philips,
+                    DateCreated = DateTime.Now
+                };
+
+                var Philipsphoto2 = new ProductImageEntity
+                {
+                    Name = @"https://content2.rozetka.com.ua/goods/images/big/301346716.jpg",
+                    Priority = 2,
+                    ProductId = Philips,
+                    DateCreated = DateTime.Now
+                };
+
+                var Philipsphoto3 = new ProductImageEntity
+                {
+                    Name = @"https://content1.rozetka.com.ua/goods/images/big/301346715.jpg",
+                    Priority = 3,
+                    ProductId = Philips,
+                    DateCreated = DateTime.Now
+                };
+
+                var Philipsphoto4 = new ProductImageEntity
+                {
+                    Name = @"https://content1.rozetka.com.ua/goods/images/big/301346711.jpg",
+                    Priority = 4,
+                    ProductId = Philips,
+                    DateCreated = DateTime.Now
+                };
+
+                var Philipsphoto5 = new ProductImageEntity
+                {
+                    Name = @"https://content2.rozetka.com.ua/goods/images/big/301346712.jpg",
+                    Priority = 5,
+                    ProductId = Philips,
+                    DateCreated = DateTime.Now
+                };
+
+                dataContext.ProductImages.Add(Philipsphoto1);
+                dataContext.ProductImages.Add(Philipsphoto2);
+                dataContext.ProductImages.Add(Philipsphoto3);
+                dataContext.ProductImages.Add(Philipsphoto4);
+                dataContext.ProductImages.Add(Philipsphoto5);
                 #endregion
                 #endregion
                 #region Мобільні телефони

@@ -77,21 +77,55 @@ namespace BAL.Services
 
             var roles = _userRepository.GetAllRoles();
 
-            var role = new UserRoleEntity()
+            if (user.Id != 1)
             {
-                UserId = user.Id,
-                RoleId = roles.FirstOrDefault(x => x.Name == "User").Id
-            };
+                var role = new UserRoleEntity()
+                {
+                    UserId = user.Id,
+                    RoleId = roles.FirstOrDefault(x => x.Name == Roles.User).Id
+                };
 
-            await _userRepository.AddUserRole(role);
+                await _userRepository.AddUserRole(role);
 
-            role.User = user;
-            role.Role = roles.FirstOrDefault(x => x.Id == role.RoleId);
+                role.User = user;
+                role.Role = roles.FirstOrDefault(x => x.Id == role.RoleId);
 
-            entity.UserRoles = new List<UserRoleEntityDTO>()
+                entity.UserRoles = new List<UserRoleEntityDTO>()
+                {
+                    _mapper.Map<UserRoleEntity,UserRoleEntityDTO>(role)
+                };
+            }
+            else
             {
-                _mapper.Map<UserRoleEntity,UserRoleEntityDTO>(role)
-            };
+                var roleAdmin = new UserRoleEntity()
+                {
+                    UserId = user.Id,
+                    RoleId = roles.FirstOrDefault(x => x.Name == Roles.Admin).Id
+                };
+                var roleSuperAdmin = new UserRoleEntity()
+                {
+                    UserId = user.Id,
+                    RoleId = roles.FirstOrDefault(x => x.Name == Roles.SuperAdmin).Id
+                };
+
+                await _userRepository.AddUserRole(roleAdmin);
+                await _userRepository.AddUserRole(roleSuperAdmin);
+
+                roleAdmin.User = user;
+                roleAdmin.Role = roles.FirstOrDefault(x => x.Id == roleAdmin.RoleId);
+
+                roleSuperAdmin.User = user;
+                roleSuperAdmin.Role = roles.FirstOrDefault(x => x.Id == roleAdmin.RoleId);
+
+                entity.UserRoles = new List<UserRoleEntityDTO>()
+                {
+                    _mapper.Map<UserRoleEntity,UserRoleEntityDTO>(roleAdmin),
+                    _mapper.Map<UserRoleEntity,UserRoleEntityDTO>(roleSuperAdmin)
+                };
+            }
+
+
+
             entity.Baskets = new List<BasketEntityDTO>();
             entity.Orders = new List<OrderEntityDTO>();
 

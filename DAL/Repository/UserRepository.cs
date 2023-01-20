@@ -66,11 +66,19 @@ namespace DAL.Repository
                                         .ThenInclude(x => x.Category)
                                 .Include(x => x.Baskets)
                                     .ThenInclude(x => x.Product)
+                                        .ThenInclude(x => x.Sales_Products)
+                                            .ThenInclude(x => x.Sale)
+                                .Include(x => x.Baskets)
+                                    .ThenInclude(x => x.Product)
                                         .ThenInclude(x => x.Images)
                                 .Include(x => x.UserRoles)
                                     .ThenInclude(x => x.Role)
                                 .Include(x => x.Orders)
                                     .ThenInclude(x => x.OrderStatus)
+                                .Include(x => x.Orders)
+                                    .ThenInclude(x => x.OrderItems)
+                                        .ThenInclude(x=>x.Product)
+                                            .ThenInclude(x=>x.Images)
                                 .FirstOrDefaultAsync(e => e.Email.ToLower() == findBy.ToLower() || e.Phone == findBy);
             return user;
         }
@@ -86,7 +94,11 @@ namespace DAL.Repository
                            .Include(x => x.UserRoles)
                                 .ThenInclude(x => x.Role)
                            .Include(x => x.Orders)
-                                .ThenInclude(x => x.OrderStatus);
+                                .ThenInclude(x => x.OrderStatus)
+                           .Include(x => x.Orders)
+                                .ThenInclude(x => x.OrderItems)
+                                    .ThenInclude(x => x.Product)
+                                        .ThenInclude(x => x.Images);
         }
 
         public IEnumerable<RoleEntity> GetAllRoles()

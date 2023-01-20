@@ -523,7 +523,7 @@
                         </Style>
                     </StackPanel.Style>
                     <Button Style="{StaticResource TransperentButtonStyle}"
-                        Click="LoginClick"
+                        Click="OrdersClick"
                 VerticalAlignment="Top"
                 Margin="10 3 0 0"
                 Grid.Column="6"
@@ -861,6 +861,7 @@
                         <Button HorizontalAlignment="Left"
                                 Style="{StaticResource MenuItem}"
                                 x:Name="ordersButton"
+                                Click="OrdersMenuClick"
                                 Visibility="{Binding IsLogined, Converter={StaticResource VisibleIfTrueConverter}}">
                             <StackPanel Orientation="Horizontal"
                                         HorizontalAlignment="Left">
