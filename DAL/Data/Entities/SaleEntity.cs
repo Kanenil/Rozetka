@@ -12,6 +12,8 @@ namespace DAL.Data.Entities
     {
         [Required, StringLength(255)]
         public string SaleName { get; set; }//Назва акції
+        [Required, StringLength(255)]
+        public string ImagePath { get; set; }//Шлях до зображення банера для акції 
         [StringLength(4000)]
         public string SaleDescription { get; set; }//Опис знижки
         public int DecreasePercent { get; set; }//Процент пониження ціни товару під час акції

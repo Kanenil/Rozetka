@@ -21,9 +21,26 @@
         </Style>
     </Page.Resources>
     <Grid>
-        <StackPanel Background="White">
-            <StackPanel Margin="10" Height="300">
-            </StackPanel>
+        <StackPanel Background="White"> <!--Панель для акцій-->
+            <ScrollViewer HorizontalScrollBarVisibility="Visible">
+                <ItemsControl Height="300" ItemsSource="{Binding Sales}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Orientation="Horizontal"/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Button Height="299" Width="500" x:Name="SaleBoard" Click="SaleBoard_Click">
+                                <Grid>
+                                    <Image Source="{Binding ImagePath}" Stretch="Fill" />
+                                </Grid>
+                            </Button>
+                           
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer> <!---->           
             <Grid x:Name="Notebooks" Margin="30">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition></ColumnDefinition>
