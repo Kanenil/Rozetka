@@ -104,6 +104,19 @@ namespace RozetkaUI.Pages
 
                 return price;
             }
+            else if((value as TextBlock).DataContext is Sales_ProductEntityDTO)
+            {
+                var val = (Sales_ProductEntityDTO)(value as TextBlock).DataContext;
+
+                var price = val.Product.Price.ToString("C");
+
+                if (val.Product.Sales_Products.Count != 0)
+                {
+                    price = (val.Product.Sales_Products.Count != 0 ? decimal.Round(val.Product.Price - (val.Product.Sales_Products.First().Sale.DecreasePercent * val.Product.Price / 100), 2, MidpointRounding.AwayFromZero) : val.Product.Price).ToString("C");
+                }
+
+                return price;
+            }
             else
             {
                 var val = (ProductEntityDTO)(value as TextBlock).DataContext;

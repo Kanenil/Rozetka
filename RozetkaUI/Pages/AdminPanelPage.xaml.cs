@@ -27,10 +27,12 @@ namespace RozetkaUI.Pages
     public partial class AdminPanelPage : Page, INotifyPropertyChanged
     {
         private IUserService _userService;
+        private SaleService _saleService;
         public AdminPanelPage()
         {
             InitializeComponent();
             _userService = new UserService();
+            _saleService = new SaleService();
             DataContext = this;
 
             if ((App.Current.MainWindow as MainWindow).LoginedUser.UserRoles.FirstOrDefault(x => x.Role.Name == "SuperAdmin") != null)
@@ -56,11 +58,13 @@ namespace RozetkaUI.Pages
         private async void Page_Loaded(object sender, RoutedEventArgs e)
         {
             var allusers = _userService.GetAllUsers().ToList();
+            Sales = _saleService.GetAllSales().ToList();
 
             var mainWindow = App.Current.MainWindow as MainWindow;
 
             Users = allusers.Where(x => x.UserRoles.First().Role.Name == "User").ToList();
             Admins = allusers.Where(x => x.UserRoles.First().Role.Name == "Admin" && x.UserRoles.Count == 1 && x.UserRoles.First().UserId != mainWindow.LoginedUser.Id).ToList();
+            
 
             if (Orders.Count == 0)
             {
@@ -93,6 +97,25 @@ namespace RozetkaUI.Pages
                 if (_users == value)
                     return;
                 _users = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private List<SaleEntityDTO> _sales;
+
+        public List<SaleEntityDTO> Sales
+        {
+            get
+            {
+                if (_sales != null)
+                    CollectionViewSource.GetDefaultView(_sales).Refresh();
+                return _sales ?? (_sales = new List<SaleEntityDTO>());
+            }
+            set
+            {
+                if (_sales == value)
+                    return;
+                _sales = value;
                 OnPropertyChanged();
             }
         }
@@ -258,6 +281,35 @@ namespace RozetkaUI.Pages
             Orders.AddRange(list);
             CollectionViewSource.GetDefaultView(Orders).Refresh();
             (sender as Button).IsEnabled = true;
+        }
+
+        private void AddSale(object sender, RoutedEventArgs e)
+        {
+            var mainWindow = App.Current.MainWindow as MainWindow;
+            mainWindow.pageFrame.Navigate(new AddSalePage(this));
+        }
+        private void EditSale(object sender, RoutedEventArgs e)
+        {
+            var sale = (SaleEntityDTO)(sender as Button).DataContext;
+            var mainWindow = App.Current.MainWindow as MainWindow;
+            mainWindow.pageFrame.Navigate(new AddSalePage(this, sale));
+        }
+
+        private async void DeleteSale(object sender, RoutedEventArgs e)
+        {
+            var sale = (SaleEntityDTO)(sender as Button).DataContext;
+            if (MessageBox.Show($"Видалити акцію з назвою {sale.SaleName}?", "Увага!", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+            {
+                await _saleService.DeleteSale(sale);
+                Sales.Remove(sale);
+            }
+        }
+
+        private void EditSaleProducts(object sender, RoutedEventArgs e)
+        {
+            var sale = (SaleEntityDTO)(sender as Button).DataContext;
+            var mainWindow = App.Current.MainWindow as MainWindow;
+            mainWindow.pageFrame.Navigate(new SaleProductsPage(sale));
         }
     }
 
