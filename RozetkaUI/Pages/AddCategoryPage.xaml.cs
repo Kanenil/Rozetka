@@ -379,6 +379,11 @@ namespace RozetkaUI.Pages
                     }
                 }
 
+                categoryNameTextBox.Text = "";
+
+                photosDockPanel.Children.RemoveRange(0, photosDockPanel.Children.Count - 1);
+                photosDockPanel.Children[0].Visibility = Visibility.Visible;
+
                 var timer = new System.Timers.Timer();
                 (sender as Button).Content = "Успішно добавлено";
                 timer.Interval = 5000;

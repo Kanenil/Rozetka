@@ -135,7 +135,7 @@
                 <RowDefinition Height="auto"/>
             </Grid.RowDefinitions>
             <Image Source="{Binding Sale.ImagePath}"
-                   Stretch="UniformToFill"
+                   Stretch="Uniform"
                    Height="400"/>
             <TextBlock Style="{StaticResource SecundaryHeaderTextBlockStyle}"
                    FontSize="35"

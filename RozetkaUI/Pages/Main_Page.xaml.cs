@@ -112,7 +112,8 @@ namespace RozetkaUI.Pages
 
         private void SaleBoard_Click(object sender, RoutedEventArgs e)
         {
-
+            var content = (SaleEntityDTO)((sender as Button).TemplatedParent as ContentPresenter).Content;
+            (App.Current.MainWindow as MainWindow).pageFrame.Navigate(new SaleProductsPage(content));
         }
     }
 }

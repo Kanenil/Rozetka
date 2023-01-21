@@ -395,6 +395,7 @@ namespace RozetkaUI.Pages
                 saleDescriptionTextBox.Text = "";
 
                 photosDockPanel.Children.RemoveRange(0, photosDockPanel.Children.Count - 1);
+                photosDockPanel.Children[0].Visibility = Visibility.Visible;
 
                 decreasePercentTextBox.Text = "";
                 expireTimeDatePicker.SelectedDate = null;
@@ -416,7 +417,7 @@ namespace RozetkaUI.Pages
             {
                 if (photo != null)
                 {
-                    if (!photo.Contains(@"https://") && !photo.Contains(@"solido.tk") && !photo.Contains(@"rozetka.com"))
+                    if (!photo.Contains(@"https://") && !photo.Contains(@"solido.tk") && !photo.Contains(@"rozetka.com") && !photo.Contains(@"media.istockphoto.com"))
                         photo = PhotoSaver.UploadImage(File.ReadAllBytes(photo));
                     else
                         photo = "https://" + photo;

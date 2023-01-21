@@ -4,6 +4,7 @@ using BAL.Services;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Reflection.Metadata;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -20,7 +21,7 @@ namespace RozetkaUI.Pages
     /// <summary>
     /// Interaction logic for SaleProductsPage.xaml
     /// </summary>
-    public partial class SaleProductsPage : Page
+    public partial class SaleProductsPage : Page, INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
         public virtual void OnPropertyChanged(string propertyName = null)
@@ -60,6 +61,7 @@ namespace RozetkaUI.Pages
 
         private void AddProduct(object sender, RoutedEventArgs e)
         {
+            (App.Current.MainWindow as MainWindow).modalFrame.Navigate(new AddProductSalePage(Sale));
 
             //(App.Current.MainWindow as MainWindow).pageFrame.Navigate(new AddProductPage(this, Category));
         }
@@ -71,7 +73,7 @@ namespace RozetkaUI.Pages
             if (MessageBox.Show($"Видалити {content.Product.Name} з списку акцій?", "Увага", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
             {
                 SaleService saleService = new SaleService();
-                await saleService.AddSalesProduct(content);
+                await saleService.DeleteSalesProduct(content);
                 Sale.Sales_Products.Remove(content);
                 CollectionViewSource.GetDefaultView(Sale.Sales_Products).Refresh();
             }
