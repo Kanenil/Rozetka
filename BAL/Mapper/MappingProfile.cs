@@ -28,8 +28,8 @@ namespace BAL.Mapper
                 .ForMember(x => x.Images, opt => opt.MapFrom(x => x.Images))
                 .ForMember(x => x.OrderItems, opt => opt.MapFrom(x => x.OrderItems))
                 .ForMember(x => x.Sales_Products, opt => opt.MapFrom(x => x.Sales_Products))
-                .AfterMap((foo, dto) => { dto.Images = dto.Images.OrderBy(x => x.Priority).ToList(); })
-                .AfterMap((foo, dto) => { dto.Sales_Products = dto.Sales_Products.OrderBy(x => x.Sale.DecreasePercent).ToList(); });
+                .AfterMap((foo, dto) => { dto.Images = dto.Images.OrderBy(x => x.Priority).ToList(); });
+                //.AfterMap((foo, dto) => { dto.Sales_Products = dto.Sales_Products.OrderBy(x => x.Sale.DecreasePercent).ToList(); });
 
             CreateMap<UserEntity, UserEntityDTO>()
                 .ForMember(x => x.Baskets, opt => opt.MapFrom(x => x.Baskets))

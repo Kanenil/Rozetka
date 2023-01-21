@@ -7,5 +7,6 @@ namespace DAL.Interfaces
 {
     public interface IProductRepository : IGenericRepository<ProductEntity, int>
     {
+        ICollection<ProductEntity> GetProducts();
     }
 }

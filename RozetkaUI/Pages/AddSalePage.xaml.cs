@@ -2,6 +2,7 @@
 using BAL.Interfaces;
 using BAL.Services;
 using BAL.Utilities;
+using DAL.Data.Entities;
 using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
@@ -19,32 +20,34 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Xceed.Wpf.Toolkit;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace RozetkaUI.Pages
 {
     /// <summary>
-    /// Interaction logic for AddCategoryPage.xaml
+    /// Interaction logic for AddSalePage.xaml
     /// </summary>
-    public partial class AddCategoryPage : Page
+    public partial class AddSalePage : Page
     {
-        private CategoryEntityDTO _category;
+        private SaleEntityDTO _sale;
         private Page _prevPage;
-        public AddCategoryPage(Page prevPage, CategoryEntityDTO category = null)
+        public AddSalePage(Page prevPage, SaleEntityDTO sale = null)
         {
             InitializeComponent();
-            _category = category;
+            _sale = sale;
             _prevPage = prevPage;
 
-            if (_category != null)
+            if (_sale != null)
             {
                 submit.Content = "Відредагувати";
 
-                categoryNameTextBox.Text = _category.Name;
+                saleNameTextBox.Text = _sale.SaleName;
+                saleDescriptionTextBox.Text = _sale.SaleDescription;
+                decreasePercentTextBox.Text = _sale.DecreasePercent.ToString();
+                expireTimeDatePicker.SelectedDate = _sale.ExpireTime;
 
-                if (!String.IsNullOrEmpty(_category.Image))
+                if (!String.IsNullOrEmpty(_sale.ImagePath))
                 {
-                    photosDockPanel.Children.Insert(photosDockPanel.Children.Count - 1, CreatePhoto(_category.Image));
+                    photosDockPanel.Children.Insert(photosDockPanel.Children.Count - 1, CreatePhoto(_sale.ImagePath));
                     photosDockPanel.Children[1].Visibility = Visibility.Hidden;
                 }
             }
@@ -317,15 +320,7 @@ namespace RozetkaUI.Pages
 
         private void ReturnBackClick(object sender, RoutedEventArgs e)
         {
-            if (_prevPage == null || _prevPage.GetType() != typeof(AllCategoriesPage))
-            {
-                (App.Current.MainWindow as MainWindow).navBar.categoriesButton.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
-                (App.Current.MainWindow as MainWindow).pageFrame.Navigate(_prevPage);
-            }
-            else
-            {
-                (App.Current.MainWindow as MainWindow).pageFrame.Navigate(_prevPage);
-            }
+            (App.Current.MainWindow as MainWindow).pageFrame.Navigate(_prevPage);
         }
 
         private async void add_Click(object sender, RoutedEventArgs e)
@@ -333,56 +328,77 @@ namespace RozetkaUI.Pages
             (sender as Button).IsEnabled = false;
             returnBack.IsEnabled = false;
 
-            var name = categoryNameTextBox.Text;
-            string photo = null;
+            var name = saleNameTextBox.Text;
+            var description = saleDescriptionTextBox.Text;
+            int decreasePercent;
+            try
+            {
+                decreasePercent = int.Parse(decreasePercentTextBox.Text);
+                if (decreasePercent < 0)
+                    throw new Exception();
+            }
+            catch (Exception)
+            {
+                decreasePercentTextBox.BorderBrush = Brushes.Red;
+                decreasePercentTextBox.Focus();
+                return;
+            }
+
+            var expireTime = expireTimeDatePicker.SelectedDate;
+
+            string photo = "";
             try
             {
                 photo = ((photosDockPanel.Children[0] as Border).Background as ImageBrush).ImageSource.ToString();
                 photo = photo.Substring(8);
             }
-            catch 
+            catch
             {
 
             }
 
             if (name.Length == 0)
             {
-                categoryNameTextBox.BorderBrush = Brushes.Red;
-                categoryNameTextBox.Focus();
+                saleNameTextBox.BorderBrush = Brushes.Red;
+                saleNameTextBox.Focus();
                 return;
             }
 
-            ICategoryService categoryService = new CategoryService();
-            if (_category == null)
+            SaleService saleService = new SaleService();
+            if (_sale == null)
             {
                 if (photo != null)
                     photo = PhotoSaver.UploadImage(File.ReadAllBytes(photo));
 
-                var category = new CategoryEntityDTO()
+                var sale = new SaleEntityDTO()
                 {
-                    Name = name,
-                    Image = photo,
-                    DateCreated= DateTime.Now
+                    SaleName = name,
+                    SaleDescription = description,
+                    ImagePath = photo,
+                    DateCreated = DateTime.Now,
+                    DecreasePercent= decreasePercent,
+                    ExpireTime = expireTime.Value,
+                    Sales_Products = new List<Sales_ProductEntityDTO>()
                 };
-                await categoryService.CreateCategory(category);
-                category.Products = new List<ProductEntityDTO>();
-
-                (App.Current.MainWindow as MainWindow).navBar.Categories.Add(category);
-                CollectionViewSource.GetDefaultView((App.Current.MainWindow as MainWindow).navBar.Categories).Refresh();
+                await saleService.CreateSale(sale);
 
                 if (_prevPage != null)
                 {
-                    if (_prevPage.GetType() == typeof(AllCategoriesPage))
+                    if (_prevPage.GetType() == typeof(AdminPanelPage))
                     {
-                        (_prevPage as AllCategoriesPage).Categories.Add(category);
-                        CollectionViewSource.GetDefaultView((_prevPage as AllCategoriesPage).Categories).Refresh();
+                        (_prevPage as AdminPanelPage).Sales.Add(sale);
+                        CollectionViewSource.GetDefaultView((_prevPage as AdminPanelPage).Sales).Refresh();
                     }
                 }
 
-                categoryNameTextBox.Text = "";
+                saleNameTextBox.Text = "";
+                saleDescriptionTextBox.Text = "";
 
                 photosDockPanel.Children.RemoveRange(0, photosDockPanel.Children.Count - 1);
                 photosDockPanel.Children[0].Visibility = Visibility.Visible;
+
+                decreasePercentTextBox.Text = "";
+                expireTimeDatePicker.SelectedDate = null;
 
                 var timer = new System.Timers.Timer();
                 (sender as Button).Content = "Успішно добавлено";
@@ -391,7 +407,7 @@ namespace RozetkaUI.Pages
                 {
                     App.Current.Dispatcher.Invoke(() =>
                     {
-                        (sender as Button).Content = "Добавити категорію";
+                        (sender as Button).Content = "Добавити акцію";
                         timer.Stop();
                     });
                 };
@@ -401,30 +417,31 @@ namespace RozetkaUI.Pages
             {
                 if (photo != null)
                 {
-                    if (!photo.Contains(@"https://") && !photo.Contains(@"solido.tk") && !photo.Contains(@"rozetka.com"))
+                    if (!photo.Contains(@"https://") && !photo.Contains(@"solido.tk") && !photo.Contains(@"rozetka.com") && !photo.Contains(@"media.istockphoto.com"))
                         photo = PhotoSaver.UploadImage(File.ReadAllBytes(photo));
                     else
                         photo = "https://" + photo;
                 }
 
-                _category.Image = photo;
-                _category.Name = name;
+                _sale.ImagePath = photo;
+                _sale.SaleName = name;
+                _sale.DecreasePercent = decreasePercent;
+                _sale.ExpireTime = expireTime.Value;
+                _sale.SaleDescription = description;
 
-                await categoryService.EditCategory(_category);
-
-                var category = (App.Current.MainWindow as MainWindow).navBar.Categories.First(c => c.Id == _category.Id);
-                category.Name = _category.Name;
-                category.Image = _category.Image;
-                CollectionViewSource.GetDefaultView((App.Current.MainWindow as MainWindow).navBar.Categories).Refresh();
+                await saleService.EditSale(_sale);
 
                 if (_prevPage != null)
                 {
-                    if (_prevPage.GetType() == typeof(AllCategoriesPage))
+                    if (_prevPage.GetType() == typeof(AdminPanelPage))
                     {
-                        var cat = (_prevPage as AllCategoriesPage).Categories.First(c => c.Id == _category.Id);
-                        cat.Name = _category.Name;
-                        cat.Image = _category.Image;
-                        CollectionViewSource.GetDefaultView((_prevPage as AllCategoriesPage).Categories).Refresh();
+                        var cat = (_prevPage as AdminPanelPage).Sales.First(c => c.Id == _sale.Id);
+                        cat.SaleName = _sale.SaleName;
+                        cat.SaleDescription = _sale.SaleDescription;
+                        cat.DecreasePercent = _sale.DecreasePercent;
+                        cat.ExpireTime = _sale.ExpireTime;
+                        cat.ImagePath = _sale.ImagePath;
+                        CollectionViewSource.GetDefaultView((_prevPage as AdminPanelPage).Sales).Refresh();
                     }
                 }
 

@@ -11,5 +11,6 @@ namespace BAL.Interfaces
         Task CreateProduct(ProductEntityDTO entity);
         Task EditProduct(ProductEntityDTO entity);
         Task DeleteProduct(ProductEntityDTO entity);
+        ICollection<ProductEntityDTO> GetAllProducts();
     }
 }

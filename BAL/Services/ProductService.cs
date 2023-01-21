@@ -107,5 +107,10 @@ namespace BAL.Services
 
 
         }
+
+        public ICollection<ProductEntityDTO> GetAllProducts()
+        {
+            return _mapper.Map<ICollection<ProductEntity>, ICollection<ProductEntityDTO>>(_productRepository.GetProducts());
+        }
     }
 }

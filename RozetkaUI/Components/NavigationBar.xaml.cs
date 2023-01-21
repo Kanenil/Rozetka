@@ -89,7 +89,8 @@ namespace RozetkaUI.Components
                 mainWindow.pageFrame.Content.GetType() == typeof(AddProductPage) ||
                 mainWindow.pageFrame.Content.GetType() == typeof(ProfilePage) ||
                 mainWindow.pageFrame.Content.GetType() == typeof(OrdersPage) ||
-                mainWindow.pageFrame.Content.GetType() == typeof(OrderInfoPage))
+                mainWindow.pageFrame.Content.GetType() == typeof(OrderInfoPage) ||
+                mainWindow.pageFrame.Content.GetType() == typeof(AddSalePage))
             {
                 mainWindow.pageFrame.Navigate(new Main_Page());
             }
