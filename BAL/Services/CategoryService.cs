@@ -49,7 +49,7 @@ namespace BAL.Services
         public async Task EditCategory(CategoryEntityDTO entity)
         {
             var category = _mapper.Map<CategoryEntityDTO, CategoryEntity>(entity);
-
+            category.Products = null;
             await _categoryRepository.Update(category.Id, category);
         }
 
